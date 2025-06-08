@@ -1,43 +1,4 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
@@ -93,31 +54,82 @@ grid-template-columns: 1fr 2fr;
 gap: 30px;
 }
 
- .copyright-footer {
-            position: fixed;
-            bottom: 0;
-            right: 0;
-            padding: 5px 10px;
-            background-color: #f1f1f1;
-        }
+.copyright-footer {
+position: fixed;
+bottom: 0;
+right: 0;
+padding: 5px 10px;
+background-color: #f1f1f1;
+}
 
-        .copyright-footer p {
-            margin: 0;
-            font-size: 14px;
-        }
+.copyright-footer p {
+margin: 0;
+font-size: 14px;
+}
 
-        @media (max-width: 600px) {
-            .copyright-footer p {
-                font-size: 12px;
-            }
-        }
-        
-@media (max-width: 1024px) {
+/* 平板版面 (768px - 1024px) - 與電腦版相同 */
+@media (max-width: 1024px) and (min-width: 768px) {
+.container {
+grid-template-columns: 1fr 2fr;
+width: 95%;
+margin: 0 auto;
+}
+
+.input-section {
+position: sticky;
+top: 20px;
+height: fit-content;
+}
+}
+
+/* 手機版面 (小於768px) - 原文在上方1/3位置 */
+@media (max-width: 767px) {
+body {
+padding: 10px;
+}
+
 .container {
 grid-template-columns: 1fr;
-}
-width: 90%;
+gap: 15px;
+width: 100%;
 margin: 0 auto;
+padding: 10px;
+}
+
+.input-section {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+height: 33vh;
+z-index: 1000;
+margin: 0;
+border-radius: 0 0 var(--border-radius) var(--border-radius);
+overflow-y: auto;
+padding: 15px;
+}
+
+.output-section {
+margin-top: 35vh;
+grid-column: 1;
+}
+
+.copyright-footer p {
+font-size: 12px;
+}
+}
+
+/* 電腦版面 (大於1024px) - 原有設計 */
+@media (min-width: 1025px) {
+.container {
+grid-template-columns: 1fr 2fr;
+}
+
+.input-section {
+position: sticky;
+top: 20px;
+height: fit-content;
+}
 }
 
 header {
@@ -131,6 +143,15 @@ box-shadow: var(--shadow-medium);
 position: relative;
 overflow: hidden;
 grid-column: 1 / -1;
+}
+
+@media (max-width: 767px) {
+header {
+margin-bottom: 20px;
+padding: 20px 10px;
+position: relative;
+z-index: 999;
+}
 }
 
 header::before {
@@ -154,9 +175,6 @@ position: relative;
 z-index: 1;
 }
 
-
-
-        
 .input-section {
 background: var(--light-color);
 border-radius: var(--border-radius);
@@ -167,14 +185,11 @@ transition: var(--transition);
 position: relative;
 overflow: hidden;
 grid-column: 1;
-position: sticky;
-top: 20px;
-height: fit-content;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 767px) {
 .input-section {
-position: static;
+padding: 15px;
 }
 }
 
@@ -193,6 +208,12 @@ box-shadow: var(--shadow-medium);
 transform: translateY(-2px);
 }
 
+@media (max-width: 767px) {
+.input-section:hover {
+transform: none;
+}
+}
+
 .section-title {
 color: var(--primary-color);
 margin-bottom: 25px;
@@ -204,6 +225,14 @@ font-family: 'Noto Serif TC', serif;
 display: flex;
 align-items: center;
 gap: 10px;
+}
+
+@media (max-width: 767px) {
+.section-title {
+font-size: 1.2rem;
+margin-bottom: 15px;
+padding-bottom: 10px;
+}
 }
 
 .section-title::before {
@@ -228,6 +257,14 @@ background: linear-gradient(to bottom, #fafafa, #ffffff);
 font-family: 'Noto Serif TC', serif;
 }
 
+@media (max-width: 767px) {
+textarea {
+min-height: 120px;
+padding: 15px;
+font-size: 16px;
+}
+}
+
 textarea:focus {
 outline: none;
 border-color: var(--primary-color);
@@ -240,6 +277,13 @@ display: flex;
 gap: 15px;
 margin-top: 25px;
 flex-wrap: wrap;
+}
+
+@media (max-width: 767px) {
+.button-group {
+gap: 10px;
+margin-top: 15px;
+}
 }
 
 button {
@@ -257,6 +301,14 @@ min-width: 130px;
 box-shadow: var(--shadow-light);
 position: relative;
 overflow: hidden;
+}
+
+@media (max-width: 767px) {
+button {
+padding: 12px 20px;
+font-size: 14px;
+min-width: 100px;
+}
 }
 
 button::before {
@@ -277,6 +329,12 @@ left: 100%;
 button:hover {
 transform: translateY(-3px);
 box-shadow: var(--shadow-medium);
+}
+
+@media (max-width: 767px) {
+button:hover {
+transform: translateY(-1px);
+}
 }
 
 button:active {
@@ -318,6 +376,12 @@ grid-column: 1;
 }
 }
 
+@media (max-width: 767px) {
+.output-section {
+padding: 20px;
+}
+}
+
 .output-section::before {
 content: '';
 position: absolute;
@@ -333,6 +397,12 @@ box-shadow: var(--shadow-medium);
 transform: translateY(-2px);
 }
 
+@media (max-width: 767px) {
+.output-section:hover {
+transform: none;
+}
+}
+
 .output-content {
 min-height: 200px;
 padding: 25px;
@@ -341,11 +411,23 @@ border-radius: var(--border-radius-small);
 background: linear-gradient(to bottom, #fafafa, #ffffff);
 }
 
+@media (max-width: 767px) {
+.output-content {
+padding: 15px;
+}
+}
+
 .loading {
 display: none;
 text-align: center;
 padding: 50px;
 color: var(--primary-color);
+}
+
+@media (max-width: 767px) {
+.loading {
+padding: 30px;
+}
 }
 
 .spinner {
@@ -373,6 +455,14 @@ border: 2px solid #f1948a;
 border-radius: var(--border-radius-small);
 }
 
+@media (max-width: 767px) {
+.error-message {
+margin-top: 10px;
+padding: 10px;
+font-size: 14px;
+}
+}
+
 .translation-block {
 margin-bottom: 35px;
 border-bottom: 2px dashed var(--light-accent);
@@ -391,6 +481,13 @@ font-size: 1.3rem;
 font-family: 'Noto Serif TC', serif;
 }
 
+@media (max-width: 767px) {
+.original-title, .translation-title {
+font-size: 1.1rem;
+margin-bottom: 10px;
+}
+}
+
 .original-text {
 font-size: 18px;
 line-height: 2;
@@ -402,6 +499,15 @@ border-radius: var(--border-radius-small);
 font-family: 'Noto Serif TC', serif;
 }
 
+@media (max-width: 767px) {
+.original-text {
+font-size: 16px;
+line-height: 1.8;
+margin-bottom: 15px;
+padding: 15px;
+}
+}
+
 .translation-text {
 background: linear-gradient(135deg, rgba(162, 217, 206, 0.2), rgba(118, 215, 196, 0.1));
 padding: 20px;
@@ -411,6 +517,13 @@ font-size: 16px;
 border-left: 5px solid var(--secondary-color);
 }
 
+@media (max-width: 767px) {
+.translation-text {
+padding: 15px;
+font-size: 14px;
+}
+}
+
 .character-breakdown {
 margin-top: 20px;
 padding: 20px;
@@ -418,6 +531,14 @@ background: linear-gradient(135deg, rgba(169, 204, 227, 0.2), rgba(125, 206, 160
 border-radius: var(--border-radius-small);
 font-size: 15px;
 border-left: 5px solid var(--highlight-color);
+}
+
+@media (max-width: 767px) {
+.character-breakdown {
+margin-top: 15px;
+padding: 15px;
+font-size: 14px;
+}
 }
 
 .character-item {
@@ -482,6 +603,14 @@ z-index: 1001;
 box-shadow: var(--shadow-medium);
 max-width: 300px;
 white-space: normal;
+}
+
+@media (max-width: 767px) {
+.word-explanation {
+font-size: 12px;
+padding: 8px 12px;
+max-width: 200px;
+}
 }
 
 .word-explanation::after {
@@ -604,7 +733,6 @@ border-radius: 4px;
 font-weight: 600;
 }
 
-
 ::-webkit-scrollbar {
 width: 10px;
 }
@@ -623,6 +751,42 @@ border-radius: 5px;
 background: var(--secondary-color);
 }
 </style>
+
+<script type="text/javascript">
+var gk_isXlsx = false;
+var gk_xlsxFileLookup = {};
+var gk_fileData = {};
+function filledCell(cell) {
+  return cell !== '' && cell != null;
+}
+function loadFileData(filename) {
+if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+    try {
+        var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+        var firstSheetName = workbook.SheetNames[0];
+        var worksheet = workbook.Sheets[firstSheetName];
+
+        var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+        var filteredData = jsonData.filter(row => row.some(filledCell));
+
+        var headerRowIndex = filteredData.findIndex((row, index) =>
+          row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+        );
+        if (headerRowIndex === -1 || headerRowIndex > 25) {
+          headerRowIndex = 0;
+        }
+
+        var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
+        csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+        return csv;
+    } catch (e) {
+        console.error(e);
+        return "";
+    }
+}
+return gk_fileData[filename] || "";
+}
+</script>
 </head>
 <body>
 <div class="container">
@@ -656,14 +820,12 @@ background: var(--secondary-color);
 </button>
 </div>
 
-<footer>
+<footer class="copyright-footer">
 <p>Copyright © 2025 黃子謙、陳冠健. All rights reserved</p>
-
 </footer>
 </div>
 
 <script>
-// API 配置信息
 const API_KEYS = [
 "sk-MoqwsgO8P9MEoCrftvdSYA"
 ];
@@ -680,7 +842,6 @@ const translationResult = document.getElementById('translation-result');
 const loading = document.getElementById('loading');
 const errorMessage = document.getElementById('error-message');
 
-// 翻譯按鈕點擊事件
 translateBtn.addEventListener('click', function() {
 const text = classicalText.value.trim();
 
@@ -692,14 +853,12 @@ return;
 translateText(text);
 });
 
-// 清除按鈕點擊事件
 clearBtn.addEventListener('click', function() {
 classicalText.value = '';
 translationResult.innerHTML = '';
 hideError();
 });
 
-// 顯示全部解釋按鈕
 revealAllBtn.addEventListener('click', function() {
 const hiddenElements = document.querySelectorAll('.hidden-text');
 hiddenElements.forEach(el => {
@@ -712,29 +871,23 @@ el.classList.add('revealed');
 });
 });
 
-// 顯示錯誤訊息
 function showError(message) {
 errorMessage.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
 errorMessage.style.display = 'block';
 }
 
-// 隱藏錯誤訊息
 function hideError() {
 errorMessage.style.display = 'none';
 }
 
-// 翻譯文本
 async function translateText(text) {
 try {
-// 顯示載入中
 loading.style.display = 'block';
 translationResult.innerHTML = '';
 hideError();
 
-// 禁用按鈕
 translateBtn.disabled = true;
 
-// 構建提示詞
 const prompt = `請將以下文言文逐字翻譯並解釋(直譯，不要意譯)，格式要求：
 
 原文：
@@ -760,10 +913,8 @@ const prompt = `請將以下文言文逐字翻譯並解釋(直譯，不要意譯
 需要翻譯的文言文：
 ${text}`;
 
-// 調用API
 const response = await callTranslateAPI(prompt);
 
-// 處理回應
 if (response && response.choices && response.choices[0].message.content) {
 const translatedText = response.choices[0].message.content;
 displayFormattedResult(translatedText);
@@ -774,13 +925,11 @@ showError('翻譯失敗，請稍後再試');
 console.error('翻譯錯誤:', error);
 showError('翻譯過程中發生錯誤: ' + error.message);
 } finally {
-// 隱藏載入中，啟用按鈕
 loading.style.display = 'none';
 translateBtn.disabled = false;
 }
 }
 
-// 調用翻譯API
 async function callTranslateAPI(prompt) {
 const apiKey = API_KEYS[currentApiKeyIndex];
 
@@ -811,7 +960,6 @@ throw new Error(`API 請求失敗: ${response.status}`);
 return await response.json();
 } catch (error) {
 console.error('API 調用錯誤:', error);
-// 嘗試下一個API密鑰
 currentApiKeyIndex = (currentApiKeyIndex + 1) % API_KEYS.length;
 if (currentApiKeyIndex === 0) {
 throw new Error('所有API密鑰嘗試失敗');
@@ -820,15 +968,11 @@ return callTranslateAPI(prompt);
 }
 }
 
-// 顯示格式化後的結果
 function displayFormattedResult(text) {
-// 移除<think>標籤內容
 text = text.replace(/<think>.*?<\/think>/gs, '');
 
-// 清理文本格式
 text = cleanTextFormatting(text);
 
-// 分割不同的翻譯塊
 const blocks = splitTranslationBlocks(text);
 let htmlOutput = '';
 
@@ -855,27 +999,22 @@ setupClickToReveal();
 setupWordExplanations();
 }
 
-// 設置詞解功能
 function setupWordExplanations() {
 const commonWords = document.querySelectorAll('.common-word');
 commonWords.forEach(word => {
-// 檢查是否為單個文字字符（排除標點符號）
 const text = word.textContent.trim();
 if (text.length === 1 && /[\u4e00-\u9fff]/.test(text)) {
 word.classList.add('word-with-explanation');
 
-// 添加詞解顯示
 const explanation = document.createElement('span');
 explanation.className = 'word-explanation';
 explanation.textContent = `常見`;
 word.appendChild(explanation);
 
-// 設置點擊顯示詞解
 word.addEventListener('click', function() {
 const explanationSpan = this.querySelector('.word-explanation');
 if (explanationSpan) {
 explanationSpan.classList.toggle('show');
-// 隱藏其他詞解
 commonWords.forEach(otherWord => {
 if (otherWord !== this) {
 const otherExplanation = otherWord.querySelector('.word-explanation');
@@ -889,7 +1028,6 @@ otherExplanation.classList.remove('show');
 }
 });
 
-// 點擊其他地方隱藏詞解
 document.addEventListener('click', function(e) {
 if (!e.target.closest('.word-with-explanation')) {
 const explanations = document.querySelectorAll('.word-explanation');
@@ -900,9 +1038,7 @@ explanation.classList.remove('show');
 });
 }
 
-// 設置點擊顯示功能
 function setupClickToReveal() {
-// 設置逐字解釋的點擊顯示
 const characters = document.querySelectorAll('.character');
 characters.forEach(character => {
 character.addEventListener('click', function() {
@@ -913,7 +1049,6 @@ explanation.classList.toggle('revealed');
 });
 });
 
-// 設置句子翻譯的點擊顯示
 const translationTexts = document.querySelectorAll('.translation-text');
 translationTexts.forEach(textDiv => {
 const sentences = textDiv.innerHTML.split('<br>').filter(s => s.trim());
@@ -931,7 +1066,6 @@ newContent += `
 
 textDiv.innerHTML = newContent;
 
-// 設置句子點擊顯示
 const hiddenSentences = textDiv.querySelectorAll('.hidden-text');
 hiddenSentences.forEach(sentence => {
 sentence.addEventListener('click', function() {
@@ -941,7 +1075,6 @@ this.classList.toggle('revealed');
 });
 }
 
-// 分割翻譯區塊
 function splitTranslationBlocks(text) {
 const blocks = [];
 const lines = text.split('\n');
@@ -977,58 +1110,41 @@ if (currentBlock) blocks.push(currentBlock);
 return blocks;
 }
 
-// 清理文本格式
 function cleanTextFormatting(text) {
-// 移除多餘的星號行
 text = text.replace(/^\*+\s*$/gm, '');
-
-// 移除開頭和結尾的多餘星號
 text = text.replace(/^\*+/, '').replace(/\*+$/, '');
-
-// 合併多個空行
 text = text.replace(/\n{3,}/g, '\n\n');
-
-// 移除多餘的分隔線
 text = text.replace(/^-{3,}\s*$/gm, '');
-
 return text.trim();
 }
 
-// 格式化原文文本
 function formatOriginalText(text) {
 text = cleanSectionText(text);
 return text.replace(/\n/g, '<br>')
 .replace(/\*\*(.*?)\*\*/g, '<span class="common-word">$1</span>');
 }
 
-// 格式化語譯文本
 function formatTranslationText(text) {
 text = cleanSectionText(text);
 return text.replace(/\n/g, '<br>')
 .replace(/\*\*(.*?)\*\*/g, '<span class="common-word">$1</span>');
 }
 
-// 格式化逐字解釋
 function formatCharacterBreakdown(text) {
 text = cleanSectionText(text);
 
-// 處理粗體標記
 text = text.replace(/\*\*(.*?)\*\*/g, '<span class="common-word">$1</span>');
 
-// 分割成行
 const lines = text.split('\n').filter(line => line.trim());
 let html = '';
 
 lines.forEach(line => {
-// 清理每行的多餘星號
 line = line.replace(/^\*+/, '').replace(/\*+$/, '').trim();
 
-// 分割字和解釋
 const parts = line.split(/:|：/);
 if (parts.length >= 2) {
 const character = parts[0].trim();
 const explanation = parts.slice(1).join(':').trim();
-// 只處理文字字符，排除標點符號
 if (/[\u4e00-\u9fff]/.test(character)) {
 html += `
 <div class="character-item">
@@ -1045,17 +1161,10 @@ html += `<div>${line}</div>`;
 return html;
 }
 
-// 清理區塊內文
 function cleanSectionText(text) {
-// 移除開頭和結尾的空白
 text = text.trim();
-
-// 移除開頭和結尾的冒號
 text = text.replace(/^：+/, '').replace(/：+$/, '');
-
-// 移除多餘的星號
 text = text.replace(/^\*+/, '').replace(/\*+$/, '');
-
 return text;
 }
 });
