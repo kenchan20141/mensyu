@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>文樞 - 響應式文言文翻譯工具</title>
-<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<title>文樞</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -42,166 +41,91 @@ font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
 background: linear-gradient(to bottom right, #f8fafa 0%, #f0f8ff 100%);
 color: var(--text-color);
 line-height: 1.6;
+padding: 20px;
 min-height: 100vh;
 }
 
-/* 響應式容器 */
-.responsive-container {
-width: 90%;
+.container {
 max-width: 1400px;
 margin: 0 auto;
 padding: 20px;
-}
-
-@media (min-width: 768px) {
-.responsive-container {
-width: 95%;
-}
-}
-
-@media (min-width: 1024px) {
-.responsive-container {
-width: 100%;
-}
-}
-
-/* 網格佈局 */
-.main-grid {
 display: grid;
+grid-template-columns: 1fr 2fr;
 gap: 30px;
 }
 
-@media (min-width: 1024px) {
-.main-grid {
-grid-template-columns: 1fr 2fr;
-}
-}
-
-/* 懸浮式原文顯示 */
-.floating-original {
+.copyright-footer {
 position: fixed;
-background: rgba(255, 255, 255, 0.98);
-backdrop-filter: blur(10px);
-border: 2px solid var(--primary-color);
+bottom: 0;
+right: 0;
+padding: 5px 10px;
+background-color: #f1f1f1;
+}
+
+.copyright-footer p {
+margin: 0;
+font-size: 14px;
+}
+
+/* 響應式設計 */
+@media (max-width: 1024px) {
+.container {
+grid-template-columns: 1fr;
+width: 90%;
+margin: 0 auto;
+}
+}
+
+@media (max-width: 768px) {
+.container {
+width: 90%;
+padding: 10px;
+}
+
+body {
+padding: 10px;
+}
+
+.copyright-footer p {
+font-size: 12px;
+}
+}
+
+header {
+text-align: center;
+margin-bottom: 40px;
+padding: 40px 20px;
+background: var(--gradient-primary);
+color: var(--light-color);
 border-radius: var(--border-radius);
-box-shadow: var(--shadow-heavy);
-z-index: 1000;
-display: none;
-padding: 20px;
-max-height: 80vh;
-overflow-y: auto;
+box-shadow: var(--shadow-medium);
+position: relative;
+overflow: hidden;
+grid-column: 1 / -1;
 }
 
-/* 桌面版懸浮窗 */
-@media (min-width: 1024px) {
-.floating-original {
-top: 50%;
-left: 20px;
-transform: translateY(-50%);
-width: 350px;
-max-width: 25vw;
-}
-}
-
-/* 平板版懸浮窗 */
-@media (min-width: 768px) and (max-width: 1023px) {
-.floating-original {
-top: 50%;
-left: 20px;
-transform: translateY(-50%);
-width: 300px;
-max-width: 40vw;
-}
-}
-
-/* 手機版懸浮窗 - 覆蓋上方三分之一 */
-@media (max-width: 767px) {
-.floating-original {
+header::before {
+content: '';
+position: absolute;
 top: 0;
 left: 0;
 right: 0;
-width: 100%;
-height: 33.33vh;
-max-height: 33.33vh;
-border-radius: 0 0 var(--border-radius) var(--border-radius);
-transform: none;
-}
+bottom: 0;
+background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="80" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="60" cy="30" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
+pointer-events: none;
 }
 
-.floating-original.show {
-display: block;
-animation: slideIn 0.3s ease-out;
-}
-
-@keyframes slideIn {
-from {
-opacity: 0;
-transform: translateY(-50%) translateX(-20px);
-}
-to {
-opacity: 1;
-transform: translateY(-50%) translateX(0);
-}
-}
-
-@media (max-width: 767px) {
-@keyframes slideIn {
-from {
-opacity: 0;
-transform: translateY(-100%);
-}
-to {
-opacity: 1;
-transform: translateY(0);
-}
-}
-}
-
-.floating-toggle {
-position: absolute;
-top: 10px;
-right: 10px;
-background: var(--primary-color);
-color: white;
-border: none;
-border-radius: 50%;
-width: 32px;
-height: 32px;
-cursor: pointer;
-font-size: 14px;
-transition: var(--transition);
-display: none;
-}
-
-/* 只在平板和手機顯示開關按鈕 */
-@media (max-width: 1023px) {
-.floating-toggle {
-display: flex;
-align-items: center;
-justify-content: center;
-}
-}
-
-.floating-toggle:hover {
-background: var(--secondary-color);
-transform: scale(1.1);
-}
-
-.floating-original-content {
-font-size: 16px;
-line-height: 1.8;
-color: var(--text-color);
-}
-
-.floating-original h3 {
-color: var(--primary-color);
+h1 {
 margin-bottom: 15px;
-font-size: 1.2rem;
-font-weight: 600;
+font-size: clamp(2rem, 4vw, 3rem);
+font-weight: 300;
+letter-spacing: 3px;
+font-family: 'Noto Serif TC', serif;
+position: relative;
+z-index: 1;
 }
 
-/* 原有樣式保持不變 */
-.section-card {
+.input-section {
 background: var(--light-color);
 border-radius: var(--border-radius);
 box-shadow: var(--shadow-light);
@@ -210,9 +134,25 @@ border: 2px solid rgba(127, 179, 213, 0.1);
 transition: var(--transition);
 position: relative;
 overflow: hidden;
+grid-column: 1;
+position: sticky;
+top: 20px;
+height: fit-content;
 }
 
-.section-card::before {
+@media (max-width: 1024px) {
+.input-section {
+position: static;
+}
+}
+
+@media (max-width: 768px) {
+.input-section {
+padding: 20px;
+}
+}
+
+.input-section::before {
 content: '';
 position: absolute;
 top: 0;
@@ -222,17 +162,9 @@ height: 4px;
 background: var(--gradient-primary);
 }
 
-.section-card:hover {
+.input-section:hover {
 box-shadow: var(--shadow-medium);
 transform: translateY(-2px);
-}
-
-@media (min-width: 1024px) {
-.input-section {
-position: sticky;
-top: 20px;
-height: fit-content;
-}
 }
 
 .section-title {
@@ -270,6 +202,14 @@ background: linear-gradient(to bottom, #fafafa, #ffffff);
 font-family: 'Noto Serif TC', serif;
 }
 
+@media (max-width: 768px) {
+textarea {
+min-height: 300px;
+font-size: 16px;
+padding: 15px;
+}
+}
+
 textarea:focus {
 outline: none;
 border-color: var(--primary-color);
@@ -277,7 +217,14 @@ background: var(--light-color);
 box-shadow: 0 0 0 4px rgba(127, 179, 213, 0.1);
 }
 
-.btn-primary {
+.button-group {
+display: flex;
+gap: 15px;
+margin-top: 25px;
+flex-wrap: wrap;
+}
+
+button {
 padding: 14px 28px;
 background: var(--gradient-primary);
 color: var(--light-color);
@@ -294,7 +241,15 @@ position: relative;
 overflow: hidden;
 }
 
-.btn-primary::before {
+@media (max-width: 768px) {
+button {
+padding: 12px 20px;
+font-size: 14px;
+min-width: 100px;
+}
+}
+
+button::before {
 content: '';
 position: absolute;
 top: 0;
@@ -305,32 +260,87 @@ background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transpare
 transition: left 0.5s;
 }
 
-.btn-primary:hover::before {
+button:hover::before {
 left: 100%;
 }
 
-.btn-primary:hover {
+button:hover {
 transform: translateY(-3px);
 box-shadow: var(--shadow-medium);
 }
 
-.btn-primary:active {
+button:active {
 transform: translateY(-1px);
 }
 
-.btn-primary:disabled {
+button:disabled {
 background: #bdc3c7;
 cursor: not-allowed;
 transform: none;
 box-shadow: none;
 }
 
-.btn-danger {
+.clear-btn {
 background: linear-gradient(135deg, #e74c3c, #c0392b);
 }
 
-.btn-warning {
+.reveal-all-btn {
 background: linear-gradient(135deg, #f39c12, #e67e22);
+margin-top: 20px;
+width: 100%;
+}
+
+.output-section {
+background: var(--light-color);
+border-radius: var(--border-radius);
+box-shadow: var(--shadow-light);
+padding: 30px;
+border: 2px solid rgba(127, 179, 213, 0.1);
+transition: var(--transition);
+position: relative;
+overflow: hidden;
+grid-column: 2;
+}
+
+@media (max-width: 1024px) {
+.output-section {
+grid-column: 1;
+}
+}
+
+@media (max-width: 768px) {
+.output-section {
+padding: 20px;
+}
+}
+
+.output-section::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+height: 4px;
+background: var(--gradient-primary);
+}
+
+.output-section:hover {
+box-shadow: var(--shadow-medium);
+transform: translateY(-2px);
+}
+
+.output-content {
+min-height: 200px;
+padding: 25px;
+border: 2px solid var(--light-accent);
+border-radius: var(--border-radius-small);
+background: linear-gradient(to bottom, #fafafa, #ffffff);
+}
+
+@media (max-width: 768px) {
+.output-content {
+padding: 15px;
+}
 }
 
 .loading {
@@ -392,13 +402,13 @@ background: linear-gradient(135deg, var(--light-accent), rgba(173, 214, 241, 0.3
 border-left: 5px solid var(--primary-color);
 border-radius: var(--border-radius-small);
 font-family: 'Noto Serif TC', serif;
-cursor: pointer;
-transition: var(--transition);
 }
 
-.original-text:hover {
-background: linear-gradient(135deg, rgba(173, 214, 241, 0.4), rgba(173, 214, 241, 0.2));
-transform: translateX(5px);
+@media (max-width: 768px) {
+.original-text {
+font-size: 16px;
+padding: 15px;
+}
 }
 
 .translation-text {
@@ -410,6 +420,13 @@ font-size: 16px;
 border-left: 5px solid var(--secondary-color);
 }
 
+@media (max-width: 768px) {
+.translation-text {
+padding: 15px;
+font-size: 14px;
+}
+}
+
 .character-breakdown {
 margin-top: 20px;
 padding: 20px;
@@ -417,6 +434,13 @@ background: linear-gradient(135deg, rgba(169, 204, 227, 0.2), rgba(125, 206, 160
 border-radius: var(--border-radius-small);
 font-size: 15px;
 border-left: 5px solid var(--highlight-color);
+}
+
+@media (max-width: 768px) {
+.character-breakdown {
+padding: 15px;
+font-size: 14px;
+}
 }
 
 .character-item {
@@ -429,6 +453,154 @@ border-bottom: 1px solid rgba(127, 179, 213, 0.1);
 
 .character-item:last-child {
 border-bottom: none;
+}
+
+/* 懸浮式原文顯示 */
+.floating-original {
+display: none;
+position: fixed;
+background: var(--light-color);
+border: 2px solid var(--primary-color);
+border-radius: var(--border-radius);
+box-shadow: var(--shadow-heavy);
+z-index: 1000;
+max-width: 400px;
+}
+
+/* 電腦版懸浮窗 */
+@media (min-width: 1025px) {
+.floating-original {
+top: 50%;
+right: 20px;
+transform: translateY(-50%);
+width: 350px;
+max-height: 70vh;
+overflow-y: auto;
+}
+}
+
+/* 平板版懸浮窗 */
+@media (min-width: 769px) and (max-width: 1024px) {
+.floating-original {
+top: 50%;
+right: 20px;
+transform: translateY(-50%);
+width: 300px;
+max-height: 60vh;
+overflow-y: auto;
+}
+}
+
+/* 手機版懸浮窗 */
+@media (max-width: 768px) {
+.floating-original {
+top: 0;
+left: 0;
+right: 0;
+height: 33.33vh;
+width: 100%;
+max-width: none;
+border-radius: 0 0 var(--border-radius) var(--border-radius);
+border-top: none;
+overflow-y: auto;
+}
+}
+
+.floating-original.show {
+display: block;
+animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+from {
+opacity: 0;
+transform: translateY(-50%) scale(0.9);
+}
+to {
+opacity: 1;
+transform: translateY(-50%) scale(1);
+}
+}
+
+@media (max-width: 768px) {
+@keyframes fadeIn {
+from {
+opacity: 0;
+transform: translateY(-20px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+}
+
+.floating-header {
+background: var(--gradient-primary);
+color: var(--light-color);
+padding: 15px 20px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+@media (max-width: 768px) {
+.floating-header {
+border-radius: 0;
+}
+}
+
+.floating-title {
+font-weight: 600;
+font-size: 1.1rem;
+}
+
+.floating-toggle {
+background: none;
+border: none;
+color: var(--light-color);
+font-size: 1.2rem;
+cursor: pointer;
+padding: 5px;
+border-radius: 50%;
+transition: var(--transition);
+width: 30px;
+height: 30px;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.floating-toggle:hover {
+background: rgba(255, 255, 255, 0.2);
+transform: scale(1.1);
+}
+
+.floating-content {
+padding: 20px;
+overflow-y: auto;
+max-height: calc(100% - 60px);
+}
+
+@media (max-width: 768px) {
+.floating-content {
+padding: 15px;
+max-height: calc(100% - 55px);
+}
+}
+
+.floating-original-text {
+font-size: 16px;
+line-height: 1.8;
+color: var(--text-color);
+font-family: 'Noto Serif TC', serif;
+}
+
+@media (max-width: 768px) {
+.floating-original-text {
+font-size: 14px;
+}
 }
 
 .word-with-explanation {
@@ -446,6 +618,23 @@ transition: var(--transition);
 
 .word-with-explanation:hover {
 background: rgba(127, 179, 213, 0.1);
+}
+
+.explanation-icon {
+color: var(--secondary-color);
+font-size: 0.9em;
+margin-left: 4px;
+cursor: pointer;
+opacity: 0.8;
+transition: var(--transition);
+padding: 2px;
+border-radius: 50%;
+}
+
+.explanation-icon:hover {
+opacity: 1;
+background: rgba(162, 217, 206, 0.3);
+transform: scale(1.1);
 }
 
 .word-explanation {
@@ -492,6 +681,14 @@ transform: translateX(-50%) translateY(0);
 }
 }
 
+.click-to-reveal {
+position: relative;
+cursor: pointer;
+margin: 0 2px;
+display: inline-block;
+transition: var(--transition);
+}
+
 .hidden-text {
 background: var(--hidden-bg);
 color: transparent;
@@ -500,7 +697,6 @@ padding: 4px 8px;
 transition: var(--transition);
 user-select: none;
 position: relative;
-cursor: pointer;
 }
 
 .hidden-text::before {
@@ -526,6 +722,10 @@ color: inherit;
 
 .hidden-text.revealed::before {
 display: none;
+}
+
+.sentence-container {
+margin-bottom: 15px;
 }
 
 .character {
@@ -575,38 +775,6 @@ border-radius: 4px;
 font-weight: 600;
 }
 
-/* 懸浮開關按鈕 */
-.floating-control {
-position: fixed;
-bottom: 20px;
-right: 20px;
-background: var(--primary-color);
-color: white;
-border: none;
-border-radius: 50%;
-width: 56px;
-height: 56px;
-cursor: pointer;
-font-size: 20px;
-box-shadow: var(--shadow-medium);
-transition: var(--transition);
-z-index: 999;
-display: none;
-align-items: center;
-justify-content: center;
-}
-
-@media (max-width: 1023px) {
-.floating-control {
-display: flex;
-}
-}
-
-.floating-control:hover {
-background: var(--secondary-color);
-transform: scale(1.1);
-}
-
 ::-webkit-scrollbar {
 width: 10px;
 }
@@ -627,67 +795,56 @@ background: var(--secondary-color);
 </style>
 </head>
 <body>
-<div class="responsive-container">
-<header class="text-center mb-10 p-10 bg-gradient-to-r from-blue-400 to-teal-400 text-white rounded-xl shadow-lg relative overflow-hidden">
-<div class="absolute inset-0 opacity-10">
-<svg viewBox="0 0 100 100" class="w-full h-full">
-<circle cx="20" cy="20" r="2" fill="currentColor"/>
-<circle cx="80" cy="80" r="2" fill="currentColor"/>
-<circle cx="60" cy="30" r="1" fill="currentColor"/>
-</svg>
-</div>
-<h1 class="text-4xl md:text-5xl font-light tracking-widest font-serif relative z-10">文樞</h1>
-<p class="text-lg opacity-90 relative z-10">古文智慧，現代解讀</p>
+<div class="container">
+<header>
+<h1>文樞</h1>
 </header>
 
-<div class="main-grid">
-<div class="input-section section-card">
+<div class="input-section">
 <h2 class="section-title">輸入文言文</h2>
-<textarea id="classical-text" placeholder="請在此輸入文言文篇章內容..." class="w-full"></textarea>
-<div class="flex gap-4 mt-6 flex-wrap">
-<button id="translate-btn" class="btn-primary">
-<i class="fas fa-language mr-2"></i>翻譯
+<textarea id="classical-text" placeholder="請在此輸入文言文篇章內容..."></textarea>
+<div class="button-group">
+<button id="translate-btn">
+<i class="fas fa-language"></i> 翻譯
 </button>
-<button id="clear-btn" class="btn-primary btn-danger">
-<i class="fas fa-eraser mr-2"></i>清除
+<button id="clear-btn" class="clear-btn">
+<i class="fas fa-eraser"></i> 清除
 </button>
 </div>
 <div class="error-message" id="error-message"></div>
 </div>
 
-<div class="output-section section-card">
+<div class="output-section">
 <h2 class="section-title">翻譯結果</h2>
 <div class="loading" id="loading">
 <div class="spinner"></div>
 <p>正在翻譯中，請稍候...</p>
 </div>
-<div class="min-h-48 p-6 border-2 border-blue-200 rounded-lg bg-gradient-to-b from-gray-50 to-white" id="translation-result"></div>
-<button id="reveal-all-btn" class="btn-primary btn-warning w-full mt-5">
-<i class="fas fa-eye mr-2"></i>顯示全部解釋
+<div class="output-content" id="translation-result"></div>
+<button id="reveal-all-btn" class="reveal-all-btn">
+<i class="fas fa-eye"></i> 顯示全部解釋
 </button>
 </div>
-</div>
 
-<footer class="text-center mt-10 p-4 text-gray-600">
+<footer>
+<div class="copyright-footer">
 <p>Copyright © 2025 黃子謙、陳冠健. All rights reserved</p>
+</div>
 </footer>
 </div>
 
 <!-- 懸浮式原文顯示 -->
 <div id="floating-original" class="floating-original">
-<button id="floating-toggle" class="floating-toggle">
+<div class="floating-header">
+<div class="floating-title">原文</div>
+<button id="floating-toggle" class="floating-toggle" title="關閉懸浮窗">
 <i class="fas fa-times"></i>
 </button>
-<div class="floating-original-content">
-<h3><i class="fas fa-scroll mr-2"></i>原文</h3>
-<div id="floating-original-text"></div>
+</div>
+<div class="floating-content">
+<div id="floating-original-text" class="floating-original-text"></div>
 </div>
 </div>
-
-<!-- 懸浮控制按鈕 -->
-<button id="floating-control" class="floating-control">
-<i class="fas fa-scroll"></i>
-</button>
 
 <script>
 // API 配置信息
@@ -698,9 +855,9 @@ let currentApiKeyIndex = 0;
 const API_URL = "https://chatapi.akash.network/api/v1/chat/completions";
 const MODEL = "DeepSeek-R1-0528";
 
-// 懸浮窗狀態
-let floatingEnabled = true;
-let currentOriginalText = '';
+// 懸浮窗狀態管理
+let isFloatingEnabled = true;
+let currentOriginalTexts = [];
 
 document.addEventListener('DOMContentLoaded', function() {
 const translateBtn = document.getElementById('translate-btn');
@@ -712,42 +869,83 @@ const loading = document.getElementById('loading');
 const errorMessage = document.getElementById('error-message');
 const floatingOriginal = document.getElementById('floating-original');
 const floatingToggle = document.getElementById('floating-toggle');
-const floatingControl = document.getElementById('floating-control');
 const floatingOriginalText = document.getElementById('floating-original-text');
 
-// 檢查是否為移動設備
-function isMobile() {
-return window.innerWidth <= 767;
+// 檢測設備類型
+function getDeviceType() {
+const width = window.innerWidth;
+if (width <= 768) return 'mobile';
+if (width <= 1024) return 'tablet';
+return 'desktop';
 }
 
-function isTablet() {
-return window.innerWidth >= 768 && window.innerWidth <= 1023;
+// 初始化懸浮窗狀態
+function initFloatingWindow() {
+const deviceType = getDeviceType();
+if (deviceType === 'mobile' || deviceType === 'tablet') {
+// 手機和平板顯示懸浮窗控制
+isFloatingEnabled = localStorage.getItem('floatingEnabled') !== 'false';
+updateFloatingToggleIcon();
+}
 }
 
-function isDesktop() {
-return window.innerWidth >= 1024;
+// 更新懸浮窗切換按鈕圖示
+function updateFloatingToggleIcon() {
+const icon = floatingToggle.querySelector('i');
+if (isFloatingEnabled) {
+icon.className = 'fas fa-times';
+floatingToggle.title = '關閉懸浮窗';
+} else {
+icon.className = 'fas fa-expand';
+floatingToggle.title = '開啟懸浮窗';
+}
 }
 
-// 懸浮控制按鈕點擊事件
-floatingControl.addEventListener('click', function() {
-if (currentOriginalText) {
+// 顯示懸浮式原文
+function showFloatingOriginal() {
+const deviceType = getDeviceType();
+
+if ((deviceType === 'mobile' || deviceType === 'tablet') && !isFloatingEnabled) {
+return;
+}
+
+if (currentOriginalTexts.length > 0) {
+const combinedText = currentOriginalTexts.join('<br><br>');
+floatingOriginalText.innerHTML = combinedText;
 floatingOriginal.classList.add('show');
-floatingOriginalText.innerHTML = currentOriginalText;
+}
+}
+
+// 隱藏懸浮式原文
+function hideFloatingOriginal() {
+floatingOriginal.classList.remove('show');
+}
+
+// 懸浮窗切換功能
+floatingToggle.addEventListener('click', function() {
+const deviceType = getDeviceType();
+
+if (deviceType === 'mobile' || deviceType === 'tablet') {
+isFloatingEnabled = !isFloatingEnabled;
+localStorage.setItem('floatingEnabled', isFloatingEnabled);
+updateFloatingToggleIcon();
+
+if (isFloatingEnabled && currentOriginalTexts.length > 0) {
+showFloatingOriginal();
+} else {
+hideFloatingOriginal();
+}
+} else {
+// 電腦版直接關閉
+hideFloatingOriginal();
 }
 });
 
-// 懸浮窗關閉按鈕
-floatingToggle.addEventListener('click', function() {
-floatingOriginal.classList.remove('show');
-});
-
-// 點擊懸浮窗外區域關閉（僅限桌面版）
-document.addEventListener('click', function(e) {
-if (isDesktop() && 
-    !floatingOriginal.contains(e.target) && 
-    !floatingControl.contains(e.target) && 
-    !e.target.closest('.original-text')) {
-floatingOriginal.classList.remove('show');
+// 視窗大小改變時重新檢查設備類型
+window.addEventListener('resize', function() {
+initFloatingWindow();
+if (currentOriginalTexts.length > 0) {
+showFloatingOriginal();
 }
 });
 
@@ -767,9 +965,9 @@ translateText(text);
 clearBtn.addEventListener('click', function() {
 classicalText.value = '';
 translationResult.innerHTML = '';
+currentOriginalTexts = [];
+hideFloatingOriginal();
 hideError();
-currentOriginalText = '';
-floatingOriginal.classList.remove('show');
 });
 
 // 顯示全部解釋按鈕
@@ -787,7 +985,7 @@ el.classList.add('revealed');
 
 // 顯示錯誤訊息
 function showError(message) {
-errorMessage.innerHTML = `<i class="fas fa-exclamation-triangle mr-2"></i>${message}`;
+errorMessage.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
 errorMessage.style.display = 'block';
 }
 
@@ -904,24 +1102,24 @@ text = cleanTextFormatting(text);
 // 分割不同的翻譯塊
 const blocks = splitTranslationBlocks(text);
 let htmlOutput = '';
+currentOriginalTexts = []; // 重置原文陣列
 
 for (let i = 0; i < blocks.length; i++) {
 const block = blocks[i];
 
 if (block.type === 'original') {
-const originalContent = formatOriginalText(block.content);
-currentOriginalText = originalContent; // 保存原文內容
-
+const formattedOriginal = formatOriginalText(block.content);
+currentOriginalTexts.push(formattedOriginal); // 收集原文
 htmlOutput += `<div class="translation-block">
-<div class="original-title"><i class="fas fa-scroll mr-2"></i>原文</div>
-<div class="original-text" onclick="showFloatingOriginal(this)">${originalContent}</div>`;
+<div class="original-title"><i class="fas fa-scroll"></i> 原文</div>
+<div class="original-text">${formattedOriginal}</div>`;
 } 
 else if (block.type === 'translation') {
-htmlOutput += `<div class="translation-title"><i class="fas fa-language mr-2"></i>語譯</div>
+htmlOutput += `<div class="translation-title"><i class="fas fa-language"></i> 語譯</div>
 <div class="translation-text">${formatTranslationText(block.content)}</div>`;
 }
 else if (block.type === 'breakdown') {
-htmlOutput += `<div class="character-breakdown"><strong><i class="fas fa-search mr-2"></i>逐字解釋</strong>${formatCharacterBreakdown(block.content)}</div>
+htmlOutput += `<div class="character-breakdown"><strong><i class="fas fa-search"></i> 逐字解釋</strong>${formatCharacterBreakdown(block.content)}</div>
 </div>`;
 }
 }
@@ -929,16 +1127,12 @@ htmlOutput += `<div class="character-breakdown"><strong><i class="fas fa-search 
 translationResult.innerHTML = htmlOutput;
 setupClickToReveal();
 setupWordExplanations();
-}
 
-// 顯示懸浮原文
-window.showFloatingOriginal = function(element) {
-if (!isDesktop()) {
-const content = element.innerHTML;
-floatingOriginalText.innerHTML = content;
-floatingOriginal.classList.add('show');
+// 顯示懸浮式原文（如果有翻譯結果且功能已啟用）
+if (currentOriginalTexts.length > 0) {
+showFloatingOriginal();
 }
-};
+}
 
 // 設置詞解功能
 function setupWordExplanations() {
@@ -952,12 +1146,11 @@ word.classList.add('word-with-explanation');
 // 添加詞解顯示
 const explanation = document.createElement('span');
 explanation.className = 'word-explanation';
-explanation.textContent = `常見字詞`;
+explanation.textContent = `常見`;
 word.appendChild(explanation);
 
 // 設置點擊顯示詞解
-word.addEventListener('click', function(e) {
-e.stopPropagation();
+word.addEventListener('click', function() {
 const explanationSpan = this.querySelector('.word-explanation');
 if (explanationSpan) {
 explanationSpan.classList.toggle('show');
@@ -1008,7 +1201,7 @@ let newContent = '';
 sentences.forEach(sentence => {
 if (sentence.trim()) {
 newContent += `
-<div class="mb-3">
+<div class="sentence-container">
 <span class="hidden-text click-to-reveal">${sentence.trim()}</span>
 </div>
 `;
@@ -1124,7 +1317,7 @@ html += `
 `;
 }
 } else if (line.trim()) {
-html += `<div class="p-2">${line}</div>`;
+html += `<div>${line}</div>`;
 }
 });
 
@@ -1145,17 +1338,51 @@ text = text.replace(/^\*+/, '').replace(/\*+$/, '');
 return text;
 }
 
-// 響應式處理
-window.addEventListener('resize', function() {
-// 當視窗大小改變時，重新定位懸浮窗
-if (floatingOriginal.classList.contains('show')) {
-// 小延遲以確保CSS已更新
-setTimeout(() => {
-// 必要時可以添加重新定位邏輯
-}, 100);
+// 初始化
+initFloatingWindow();
+});
+
+// 變數用於文件處理（保持原有功能）
+var gk_isXlsx = false;
+var gk_xlsxFileLookup = {};
+var gk_fileData = {};
+
+function filledCell(cell) {
+return cell !== '' && cell != null;
 }
-});
-});
+
+function loadFileData(filename) {
+if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+try {
+var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+var firstSheetName = workbook.SheetNames[0];
+var worksheet = workbook.Sheets[firstSheetName];
+
+// Convert sheet to JSON to filter blank rows
+var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+// Filter out blank rows (rows where all cells are empty, null, or undefined)
+var filteredData = jsonData.filter(row => row.some(filledCell));
+
+// Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+var headerRowIndex = filteredData.findIndex((row, index) =>
+row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+);
+// Fallback
+if (headerRowIndex === -1 || headerRowIndex > 25) {
+headerRowIndex = 0;
+}
+
+// Convert filtered JSON back to CSV
+var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+return csv;
+} catch (e) {
+console.error(e);
+return "";
+}
+}
+return gk_fileData[filename] || "";
+}
 </script>
 </body>
 </html>
