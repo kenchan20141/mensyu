@@ -1,0 +1,20 @@
+{
+  "name": "文樞",
+  "short_name": "文樞",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4a90e2",
+  "icons": [
+    {
+      "src": "https://hugo_wong.pyscriptapps.com/mensyu-v5/latest/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://hugo_wong.pyscriptapps.com/mensyu-v5/latest/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
