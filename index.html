@@ -936,21 +936,17 @@ return 'desktop';
 
 // 初始化懸浮窗狀態
 function initFloatingWindow() {
-const deviceType = getDeviceType();
-if (deviceType === 'mobile') {
-// 手機版從localStorage讀取懸浮窗狀態
-isFloatingEnabled = localStorage.getItem('floatingEnabled') !== 'false';
-updateFloatingToggleIcon();
-updateReopenButton();
-} else if (deviceType === 'tablet') {
-// 平板版不使用懸浮窗
-isFloatingEnabled = false;
-reopenFloating.style.display = 'none';
-} else {
-// 電腦版默認啟用
-isFloatingEnabled = true;
-reopenFloating.style.display = 'none';
-}
+    const deviceType = getDeviceType();
+    if (deviceType === 'mobile') {
+        // 手機：根據 localStorage 初始化懸浮窗狀態
+        isFloatingEnabled = localStorage.getItem('floatingEnabled') !== 'false';
+        updateFloatingToggleIcon();
+        updateReopenButton();
+    } else {
+        // 平板和電腦：禁用懸浮窗
+        isFloatingEnabled = false;
+        reopenFloating.style.display = 'none';
+    }
 }
 
 // 更新懸浮窗切換按鈕圖示
@@ -979,24 +975,16 @@ reopenFloating.classList.remove('show');
 
 // 顯示懸浮式原文
 function showFloatingOriginal() {
-const deviceType = getDeviceType();
-
-// 平板版不顯示懸浮窗
-if (deviceType === 'tablet') {
-return;
-}
-
-// 手機版檢查是否啟用
-if (deviceType === 'mobile' && !isFloatingEnabled) {
-return;
-}
-
-if (currentOriginalTexts.length > 0) {
-const combinedText = currentOriginalTexts.join('<br><br>');
-floatingOriginalText.innerHTML = combinedText;
-floatingOriginal.classList.add('show');
-updateReopenButton();
-}
+    const deviceType = getDeviceType();
+    if (deviceType !== 'mobile' || !isFloatingEnabled) {
+        return;
+    }
+    if (currentOriginalTexts.length > 0) {
+        const combinedText = currentOriginalTexts.join('<br><br>');
+        floatingOriginalText.innerHTML = combinedText;
+        floatingOriginal.classList.add('show');
+        updateReopenButton();
+    }
 }
 
 // 隱藏懸浮式原文
