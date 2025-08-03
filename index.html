@@ -1711,6 +1711,18 @@ ${text}
             
                         introductionArea.innerHTML = item.introHtml || '';
                         translationArea.innerHTML = item.translationHtml || '';
+                        
+                        // ===== MODIFICATION START =====
+                        // Repopulate currentOriginalTexts from the loaded HTML
+                        // before calling setupDynamicContent.
+                        currentOriginalTexts = [];
+                        const originalTextElements = translationArea.querySelectorAll('.original-text');
+                        originalTextElements.forEach(el => {
+                            // el.innerHTML contains the text with <br> tags, which is what we need
+                            // for the floating window's innerHTML.
+                            currentOriginalTexts.push(el.innerHTML);
+                        });
+                        // ===== MODIFICATION END =====
             
                         setupDynamicContent();
                         loading.style.display = 'none';
