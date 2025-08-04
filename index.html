@@ -1,1483 +1,1670 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文樞</title>
-    <link rel="manifest" href="manifest.json">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #7fb3d5;
-            --secondary-color: #a2d9ce;
-            --accent-color: #a9cce3;
-            --highlight-color: #7dcea0;
-            --soft-color: #76d7c4;
-            --light-accent: #aed6f1;
-            --background-color: #f8fafa;
-            --text-color: #2c3e50;
-            --light-color: #ffffff;
-            --dark-color: #34495e;
-            --error-color: #e74c3c;
-            --hidden-bg: #ecf0f1;
-            --shadow-light: 0 2px 12px rgba(127, 179, 213, 0.15);
-            --shadow-medium: 0 4px 24px rgba(127, 179, 213, 0.2);
-            --shadow-heavy: 0 8px 36px rgba(127, 179, 213, 0.25);
-            --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            --gradient-accent: linear-gradient(135deg, var(--highlight-color), var(--soft-color));
-            --border-radius: 12px;
-            --border-radius-small: 6px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --overlay-bg: rgba(44, 62, 80, 0.7);
-        }
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        body {
-            font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
-            background: linear-gradient(to bottom right, #f8fafa 0%, #f0f8ff 100%);
-            color: var(--text-color);
-            line-height: 1.6;
-            padding: 20px;
-            min-height: 100vh;
-        }
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 30px;
-        }
-        .copyright-footer {
-            position: fixed;
-            bottom: 0;
-            right: 0;
-            padding: 5px 10px;
-            background-color: #f1f1f1;
-        }
-        .copyright-footer p {
-            margin: 0;
-            font-size: 14px;
-        }
-        /* 響應式設計 */
-        @media (max-width: 1024px) {
-            .container {
-                grid-template-columns: 1fr;
-                width: 95%;
-                margin: 0 auto;
-            }
-        }
-        @media (max-width: 768px) {
-            .container {
-                width: 95%;
-                padding: 10px;
-            }
-            body {
-                padding: 10px;
-            }
-            .copyright-footer p {
-                font-size: 12px;
-            }
-        }
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding: 40px 20px;
-            background: var(--gradient-primary);
-            color: var(--light-color);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-medium);
-            position: relative;
-            overflow: hidden;
-            grid-column: 1 / -1;
-        }
-        header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="80" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="60" cy="30" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
-            pointer-events: none;
-        }
-        h1 {
-            margin-bottom: 15px;
-            font-size: clamp(2rem, 4vw, 3rem);
-            font-weight: 300;
-            letter-spacing: 3px;
-            font-family: 'Noto Serif TC', serif;
-            position: relative;
-            z-index: 1;
-        }
-        .input-section {
-            background: var(--light-color);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-light);
-            padding: 30px;
-            border: 2px solid rgba(127, 179, 213, 0.1);
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-            grid-column: 1;
-        }
-        @media (max-width: 1024px) {
-            .input-section {
-                position: static;
-            }
-        }
-        @media (max-width: 768px) {
-            .input-section {
-                padding: 20px;
-            }
-        }
-        .input-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--gradient-primary);
-        }
-        .input-section:hover {
-            box-shadow: var(--shadow-medium);
-            transform: translateY(-2px);
-        }
-        .section-title {
-            color: var(--primary-color);
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--light-accent);
-            font-size: 1.4rem;
-            font-weight: 500;
-            font-family: 'Noto Serif TC', serif;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .section-title::before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            background: var(--secondary-color);
-            border-radius: 50%;
-        }
-        textarea {
-            width: 100%;
-            padding: 20px;
-            border: 2px solid var(--light-accent);
-            border-radius: var(--border-radius-small);
-            font-size: 18px;
-            line-height: 1.8;
-            transition: var(--transition);
-            background: linear-gradient(to bottom, #fafafa, #ffffff);
-            font-family: 'Noto Serif TC', serif;
-            resize: none;
-            /* Disable manual resize */
-            overflow-y: hidden;
-            /* Hide scrollbar, JS will handle height */
-        }
-        @media (max-width: 768px) {
-            textarea {
-                font-size: 16px;
-                padding: 15px;
-            }
-        }
-        textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            background: var(--light-color);
-            box-shadow: 0 0 0 4px rgba(127, 179, 213, 0.1);
-        }
-        #classical-text {
-            min-height: 250px;
-            /* Specific initial height for the main textarea */
-        }
-        #ai-prompt {
-            min-height: 80px;
-            /* Smaller initial height for the prompt textarea */
-            font-size: 16px;
-            /* Slightly smaller font for prompt */
-        }
-        .button-group {
-            display: flex;
-            gap: 15px;
-            margin-top: 25px;
-            flex-wrap: wrap;
-        }
-        button {
-            padding: 14px 28px;
-            background: var(--gradient-primary);
-            color: var(--light-color);
-            border: none;
-            border-radius: var(--border-radius-small);
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
-            transition: var(--transition);
-            flex: 1;
-            min-width: 130px;
-            box-shadow: var(--shadow-light);
-            position: relative;
-            overflow: hidden;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        @media (max-width: 768px) {
-            button {
-                padding: 12px 20px;
-                font-size: 14px;
-                min-width: 100px;
-            }
-        }
-        button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
-        }
-        button:hover::before {
-            left: 100%;
-        }
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-medium);
-        }
-        button:active {
-            transform: translateY(-1px);
-        }
-        button:disabled {
-            background: #bdc3c7;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        .clear-btn {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-        }
-        .history-btn {
-            background: linear-gradient(135deg, #015F78, #3886A8);
-        }
-        .ai-search-btn {
-            width: 100%;
-            margin-bottom: 20px;
-            background: var(--gradient-accent);
-        }
-        .toggle-translations-btn {
-            background: linear-gradient(135deg, #1F7A55, #0B4F4A);
-            margin-top: -15px; /* Adjust position */
-            width: auto;
-            min-width: 50px;
-            flex: 0;
-            padding: 10px 12px;
-            align-self: flex-start;
-        }
-        .section-divider {
-            border: 0;
-            height: 1px;
-            background-color: var(--light-accent);
-            margin: 30px 0;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 500;
-            color: var(--dark-color);
-        }
-        .rating-dots {
-            display: flex;
-            gap: 12px;
-            cursor: pointer;
-        }
-        .rating-dot {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            border: 2px solid #ccc;
-            transition: all 0.2s ease-in-out;
-        }
-        .rating-dots:hover .rating-dot,
-        .rating-dots .rating-dot.selected {
-            border-color: var(--primary-color);
-            background-color: var(--primary-color);
-            transform: scale(1.1);
-        }
-        .rating-dots:hover .rating-dot:hover~.rating-dot {
-            background-color: transparent;
-            border-color: #ccc;
-        }
-        .loader {
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-            margin-right: 8px;
-            /* Add margin to separate from text */
-        }
-        .btn-text {
-            transition: opacity 0.2s;
-        }
-        .output-section {
-            background: var(--light-color);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-light);
-            padding: 30px;
-            border: 2px solid rgba(127, 179, 213, 0.1);
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-            grid-column: 2;
-            display: flex;
-            flex-direction: column;
-        }
-        @media (max-width: 1024px) {
-            .output-section {
-                grid-column: 1;
-            }
-        }
-        @media (max-width: 768px) {
-            .output-section {
-                padding: 20px;
-            }
-        }
-        .output-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--gradient-primary);
-        }
-        .output-section:hover {
-            box-shadow: var(--shadow-medium);
-            transform: translateY(-2px);
-        }
-        .output-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-        .output-header .section-title {
-            flex-grow: 1;
-        }
-        .output-content {
-            min-height: 200px;
-            flex-grow: 1;
-        }
-        .content-group-container {
-            padding: 20px;
-            border-radius: var(--border-radius-small);
-            border: 1px solid transparent;
-        }
-        .content-group-container:not(:empty) {
-            border-color: var(--light-accent);
-            background: linear-gradient(to bottom, #fafafa, #ffffff);
-        }
-        .content-group-container+.content-group-container:not(:empty) {
-            margin-top: 30px;
-        }
-        @media (max-width: 768px) {
-            .output-content {
-                padding: 0;
-            }
-            .content-group-container {
-                padding: 15px;
-            }
-        }
-        @media (min-width: 1025px) {
-            .container {
-                height: calc(100vh - 10px);
-                grid-template-rows: auto 1fr;
-            }
-            .input-section,
-            .output-section {
-                min-height: 0;
-                overflow-y: auto;
-            }
-            .output-content {
-                overflow-y: visible;
-            }
-        }
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 50px;
-            color: var(--primary-color);
-        }
-        .spinner {
-            border: 4px solid rgba(127, 179, 213, 0.2);
-            border-radius: 50%;
-            border-top: 4px solid var(--primary-color);
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-        .error-message {
-            color: var(--error-color);
-            margin-top: 20px;
-            display: none;
-            padding: 15px;
-            background: #fadbd8;
-            border: 2px solid #f1948a;
-            border-radius: var(--border-radius-small);
-        }
-        .introduction-section {
-            margin-bottom: 25px;
-            padding: 20px;
-            background: linear-gradient(135deg, #f8f9f9, #eef5f9);
-            border-left: 5px solid var(--highlight-color);
-            border-radius: var(--border-radius-small);
-        }
-        .introduction-wrapper .introduction-section:last-child {
-            margin-bottom: 0;
-        }
-        .introduction-title {
-            font-weight: 600;
-            color: var(--primary-color);
-            margin-bottom: 10px;
-            font-size: 1.2rem;
-            font-family: 'Noto Serif TC', serif;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .introduction-content {
-            font-size: 16px;
-            line-height: 1.7;
-            color: var(--dark-color);
-        }
-        .translation-block {
-            margin-bottom: 35px;
-            border-bottom: 2px dashed var(--light-accent);
-            padding-bottom: 25px;
-        }
-        .translation-block:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-        .original-title,
-        .translation-title {
-            font-weight: 600;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-            font-size: 1.3rem;
-            font-family: 'Noto Serif TC', serif;
-        }
-        .original-text {
-            font-size: 18px;
-            line-height: 2;
-            margin-bottom: 25px;
-            padding: 20px;
-            background: linear-gradient(135deg, var(--light-accent), rgba(173, 214, 241, 0.3));
-            border-left: 5px solid var(--primary-color);
-            border-radius: var(--border-radius-small);
-            font-family: 'Noto Serif TC', serif;
-        }
-        @media (max-width: 768px) {
-            .original-text {
-                font-size: 16px;
-                padding: 15px;
-            }
-        }
-        .translation-text {
-            padding: 20px;
-            border-radius: var(--border-radius-small);
-            line-height: 1.8;
-            font-size: 16px;
-            border-left: 5px solid var(--secondary-color);
-            background: linear-gradient(135deg, rgba(255,255,255,0.5), rgba(245,245,245,0.5));
-        }
-        @media (max-width: 768px) {
-            .translation-text {
-                padding: 15px;
-                font-size: 14px;
-            }
-        }
-        .character-breakdown {
-            margin-top: 20px;
-            padding: 20px;
-            background: linear-gradient(135deg, rgba(169, 204, 227, 0.2), rgba(125, 206, 160, 0.1));
-            border-radius: var(--border-radius-small);
-            font-size: 15px;
-            border-left: 5px solid var(--highlight-color);
-        }
-        @media (max-width: 768px) {
-            .character-breakdown {
-                padding: 15px;
-                font-size: 14px;
-            }
-        }
-        .character-item {
-            margin-bottom: 12px;
-            display: flex;
-            align-items: flex-start;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(127, 179, 213, 0.1);
-        }
-        .character-item:last-child {
-            border-bottom: none;
-        }
-        .floating-original {
-            display: none;
-            position: fixed;
-            background: var(--light-color);
-            border: 2px solid var(--primary-color);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-heavy);
-            z-index: 1000;
-        }
-        @media (min-width: 1025px) {
-            .floating-original {
-                top: 50%;
-                right: 20px;
-                transform: translateY(-50%);
-                width: 350px;
-                max-height: 70vh;
-                overflow-y: auto;
-            }
-        }
-        @media (max-width: 768px) {
-            .floating-original {
-                top: 0;
-                left: 0;
-                right: 0;
-                width: 100%;
-                max-width: none;
-                border-radius: 0 0 var(--border-radius) var(--border-radius);
-                border-top: none;
-                overflow: hidden;
-                min-height: 150px;
-                resize: vertical;
-            }
-            .floating-original.resizable {
-                height: 33.33vh;
-            }
-        }
-        .floating-original.show {
-            display: block;
-            animation: fadeIn 0.3s ease-out;
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-50%) scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(-50%) scale(1);
-            }
-        }
-        @media (max-width: 768px) {
-            @keyframes fadeIn {
-                from {
-                    opacity: 0;
-                    transform: translateY(-20px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-        }
-        .floating-header {
-            background: var(--gradient-primary);
-            color: var(--light-color);
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-radius: var(--border-radius) var(--border-radius) 0 0;
-        }
-        @media (max-width: 768px) {
-            .floating-header {
-                border-radius: 0;
-            }
-        }
-        .floating-title {
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-        .floating-controls {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        .floating-toggle {
-            background: none;
-            border: none;
-            color: var(--light-color);
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 50%;
-            transition: var(--transition);
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .floating-toggle:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.1);
-        }
-        .floating-content {
-            padding: 20px;
-            overflow-y: auto;
-        }
-        @media (max-width: 768px) {
-            .floating-content {
-                padding: 15px;
-                font-size: 16px;
-                height: calc(100% - 55px);
-            }
-        }
-        .floating-original-text {
-            font-size: 16px;
-            line-height: 1.8;
-            color: var(--text-color);
-            font-family: 'Noto Serif TC', serif;
-        }
-        @media (max-width: 768px) {
-            .floating-original-text {
-                font-size: 17px;
-                line-height: 1.9;
-            }
-        }
-        .reopen-floating {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--gradient-primary);
-            color: var(--light-color);
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            box-shadow: var(--shadow-medium);
-            z-index: 999;
-            display: none;
-            transition: var(--transition);
-        }
-        .reopen-floating:hover {
-            transform: scale(1.1);
-            box-shadow: var(--shadow-heavy);
-        }
-        @media (max-width: 768px) {
-            .reopen-floating.show {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-        }
-        .word-with-explanation {
-            position: relative;
-            display: inline;
-            color: var(--primary-color);
-            font-weight: 600;
-            cursor: pointer;
-            border-bottom: 2px dotted var(--primary-color);
-            margin: 0 2px;
-            padding: 2px 4px;
-            border-radius: 3px;
-            transition: var(--transition);
-        }
-        .word-with-explanation:hover {
-            background: rgba(127, 179, 213, 0.1);
-        }
-        .explanation-icon {
-            color: var(--secondary-color);
-            font-size: 0.9em;
-            margin-left: 4px;
-            cursor: pointer;
-            opacity: 0.8;
-            transition: var(--transition);
-            padding: 2px;
-            border-radius: 50%;
-        }
-        .explanation-icon:hover {
-            opacity: 1;
-            background: rgba(162, 217, 206, 0.3);
-            transform: scale(1.1);
-        }
-        .word-explanation {
-            display: none;
-            position: absolute;
-            bottom: 120%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--dark-color);
-            color: var(--light-color);
-            padding: 12px 16px;
-            border-radius: var(--border-radius-small);
-            font-size: 14px;
-            white-space: nowrap;
-            z-index: 1001;
-            box-shadow: var(--shadow-medium);
-            max-width: 300px;
-            white-space: normal;
-        }
-        .word-explanation::after {
-            content: '';
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            border: 6px solid transparent;
-            border-top-color: var(--dark-color);
-        }
-        .word-explanation.show {
-            display: block;
-            animation: fadeInUp 0.3s ease-out;
-        }
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateX(-50%) translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-        }
-        .hidden-text {
-            background: var(--hidden-bg);
-            color: transparent;
-            border-radius: 4px;
-            padding: 4px 8px;
-            transition: var(--transition);
-            user-select: none;
-            cursor: pointer;
-        }
-        .hidden-text:hover {
-             background: rgba(127, 179, 213, 0.2);
-        }
-        .hidden-text.revealed {
-            background: transparent;
-            color: inherit;
-            cursor: default;
-        }
-        .sentence-container {
-            margin-bottom: 15px;
-        }
-        .character {
-            color: var(--primary-color);
-            font-weight: 600;
-            cursor: pointer;
-            border-bottom: 2px dotted var(--primary-color);
-            padding: 2px 4px;
-            border-radius: 3px;
-            transition: var(--transition);
-        }
-        .character:hover {
-            background: rgba(127, 179, 213, 0.1);
-        }
-        .explanation {
-            display: none;
-            padding-left: 20px;
-            color: var(--dark-color);
-            font-style: italic;
-            margin-top: 8px;
-            border-left: 3px solid var(--secondary-color);
-            padding: 8px 0 8px 15px;
-        }
-        .explanation.revealed {
-            display: block;
-            animation: slideDown 0.3s ease-out;
-        }
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                max-height: 0;
-            }
-            to {
-                opacity: 1;
-                max-height: 100px;
-            }
-        }
-        .common-word {
-            background: linear-gradient(135deg, rgba(127, 179, 213, 0.2), rgba(162, 217, 206, 0.2));
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: 600;
-        }
-        .history-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--overlay-bg);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s, visibility 0s 0.3s;
-        }
-        .history-modal.is-visible {
-            opacity: 1;
-            visibility: visible;
-            transition-delay: 0s;
-        }
-        .history-container {
-            width: 90%;
-            max-width: 700px;
-            max-height: 80vh;
-            border-radius: var(--border-radius);
-            padding: 1.5rem 2rem;
-            display: flex;
-            flex-direction: column;
-            box-shadow: var(--shadow-heavy);
-            transform: scale(0.95);
-            transition: transform 0.3s, background-color 0.4s;
-            background-color: var(--light-color);
-            border: 2px solid var(--primary-color);
-        }
-        .history-modal.is-visible .history-container {
-            transform: scale(1);
-        }
-        .history-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 1rem;
-            margin-bottom: 1rem;
-            border-bottom: 1px solid var(--light-accent);
-        }
-        .history-header h2 {
-            font-size: 1.5rem;
-            font-weight: 500;
-            color: var(--primary-color);
-        }
-        .history-controls {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-        #history-search,
-        #history-sort {
-            flex-grow: 1;
-            padding: 0.5rem 0.75rem;
-            border-radius: var(--border-radius-small);
-            font-size: 1rem;
-            font-family: 'Noto Sans TC', sans-serif;
-            background-color: #f8fafa;
-            border: 1px solid var(--light-accent);
-            color: var(--text-color);
-        }
-        #history-search:focus,
-        #history-sort:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
-        .history-list {
-            list-style: none;
-            overflow-y: auto;
-            flex-grow: 1;
-        }
-        .history-list li {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            border-radius: 5px;
-            transition: background-color 0.2s;
-            border-bottom: 1px solid var(--light-accent);
-        }
-        .history-list li:hover {
-            background-color: #f0f8ff;
-        }
-        .history-list li:last-child {
-            border-bottom: none;
-        }
-        .history-item-content {
-            flex-grow: 1;
-            cursor: pointer;
-            min-width: 0; /* Fix for flexbox overflow */
-        }
-        .history-list-item-title {
-            font-family: 'Noto Serif TC', serif;
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--dark-color);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .history-title-edit {
-            width: 100%;
-            font-family: 'Noto Serif TC', serif;
-            font-size: 1.2rem;
-            padding: 4px 6px;
-            border: 1px solid var(--primary-color);
-            border-radius: 4px;
-            outline: none;
-        }
-        .history-list-item-meta {
-            font-family: 'Noto Sans TC', sans-serif;
-            font-size: 0.9rem;
-            margin-top: 0.25rem;
-            color: #7f8c8d;
-        }
-        .no-history-msg {
-            padding: 2rem;
-            text-align: center;
-            justify-content: center;
-            color: #7f8c8d;
-            cursor: default;
-        }
-        .no-history-msg:hover {
-            background-color: transparent;
-        }
-        .history-item-actions {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            flex-shrink: 0;
-        }
-        #history-close-btn,
-        .regenerate-history-btn,
-        .edit-history-btn,
-        .delete-history-btn {
-            min-width: unset;
-            flex: none;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            padding: 6px;
-            border-radius: 50%;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            transition: background-color 0.2s;
-            opacity: 0.8;
-            line-height: 1;
-        }
-        #history-close-btn:hover,
-        .regenerate-history-btn:hover,
-        .edit-history-btn:hover,
-        .delete-history-btn:hover {
-            background-color: var(--hidden-bg);
-            opacity: 1;
-        }
-        #history-close-btn:active,
-        .regenerate-history-btn:active,
-        .edit-history-btn:active,
-        .delete-history-btn:active {
-            transform: scale(0.95);
-        }
-        #history-close-btn .fas {
-            color: var(--dark-color);
-        }
-        .regenerate-history-btn .fas {
-            color: var(--highlight-color);
-        }
-        .edit-history-btn .fas {
-             color: var(--primary-color);
-        }
-        .delete-history-btn .fas {
-            color: var(--error-color);
-        }
-        #delete-all-history-btn {
-            min-width: unset;
-            flex: none;
-            width: auto;
-            padding: 6px 12px;
-            border-radius: var(--border-radius-small);
-            gap: 0.5rem;
-            color: var(--error-color);
-            opacity: 0.8;
-            background: transparent;
-            border: 1px solid transparent;
-            transition: all 0.2s ease;
-        }
-        #delete-all-history-btn:hover {
-            opacity: 1;
-            background-color: rgba(231, 76, 60, 0.1);
-            color: var(--error-color);
-            transform: none;
-        }
-        #delete-all-history-btn .fas {
-            color: var(--error-color);
-        }
-        @media (max-width: 768px) {
-            .floating-original::after {
-                content: '';
-                position: absolute;
-                bottom: 0;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 50px;
-                height: 5px;
-                background: var(--primary-color);
-                border-radius: 3px 3px 0 0;
-                cursor: ns-resize;
-            }
-            .history-controls {
-                flex-direction: column;
-            }
-        }
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgba(127, 179, 213, 0.1);
-            border-radius: 5px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary-color);
-            border-radius: 5px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--secondary-color);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文樞</title>
+<link rel="manifest" href="manifest.json">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+--primary-color: #7fb3d5;
+--secondary-color: #a2d9ce;
+--accent-color: #a9cce3;
+--highlight-color: #7dcea0;
+--soft-color: #76d7c4;
+--light-accent: #aed6f1;
+--background-color: #f8fafa;
+--text-color: #2c3e50;
+--light-color: #ffffff;
+--dark-color: #34495e;
+--error-color: #e74c3c;
+--success-color: #2ecc71;
+--warning-color: #f1c40f;
+--hidden-bg: #ecf0f1;
+--shadow-light: 0 2px 12px rgba(127, 179, 213, 0.15);
+--shadow-medium: 0 4px 24px rgba(127, 179, 213, 0.2);
+--shadow-heavy: 0 8px 36px rgba(127, 179, 213, 0.25);
+--gradient-primary: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+--gradient-accent: linear-gradient(135deg, var(--highlight-color), var(--soft-color));
+--border-radius: 12px;
+--border-radius-small: 6px;
+--transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+--overlay-bg: rgba(44, 62, 80, 0.7);
+}
+* {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+}
+body {
+font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+background: linear-gradient(to bottom right, #f8fafa 0%, #f0f8ff 100%);
+color: var(--text-color);
+line-height: 1.6;
+padding: 20px;
+min-height: 100vh;
+}
+.container {
+max-width: 1400px;
+margin: 0 auto;
+padding: 20px;
+display: grid;
+grid-template-columns: 1fr 2fr;
+gap: 30px;
+}
+.copyright-footer {
+position: fixed;
+bottom: 0;
+right: 0;
+padding: 5px 10px;
+background-color: #f1f1f1;
+}
+.copyright-footer p {
+margin: 0;
+font-size: 14px;
+}
+/* 響應式設計 */
+@media (max-width: 1024px) {
+.container {
+grid-template-columns: 1fr;
+width: 95%;
+margin: 0 auto;
+}
+}
+@media (max-width: 768px) {
+.container {
+width: 95%;
+padding: 10px;
+}
+body {
+padding: 10px;
+}
+.copyright-footer p {
+font-size: 12px;
+}
+}
+header {
+text-align: center;
+margin-bottom: 40px;
+padding: 40px 20px;
+background: var(--gradient-primary);
+color: var(--light-color);
+border-radius: var(--border-radius);
+box-shadow: var(--shadow-medium);
+position: relative;
+overflow: hidden;
+grid-column: 1 / -1;
+}
+header::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="80" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="60" cy="30" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
+pointer-events: none;
+}
+h1 {
+margin-bottom: 15px;
+font-size: clamp(2rem, 4vw, 3rem);
+font-weight: 300;
+letter-spacing: 3px;
+font-family: 'Noto Serif TC', serif;
+position: relative;
+z-index: 1;
+}
+.input-section {
+background: var(--light-color);
+border-radius: var(--border-radius);
+box-shadow: var(--shadow-light);
+padding: 30px;
+border: 2px solid rgba(127, 179, 213, 0.1);
+transition: var(--transition);
+position: relative;
+overflow: hidden;
+grid-column: 1;
+}
+@media (max-width: 1024px) {
+.input-section {
+position: static;
+}
+}
+@media (max-width: 768px) {
+.input-section {
+padding: 20px;
+}
+}
+.input-section::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+height: 4px;
+background: var(--gradient-primary);
+}
+.input-section:hover {
+box-shadow: var(--shadow-medium);
+transform: translateY(-2px);
+}
+.section-title {
+color: var(--primary-color);
+margin-bottom: 25px;
+padding-bottom: 15px;
+border-bottom: 2px solid var(--light-accent);
+font-size: 1.4rem;
+font-weight: 500;
+font-family: 'Noto Serif TC', serif;
+display: flex;
+align-items: center;
+gap: 10px;
+}
+.section-title::before {
+content: '';
+width: 8px;
+height: 8px;
+background: var(--secondary-color);
+border-radius: 50%;
+}
+textarea {
+width: 100%;
+padding: 20px;
+border: 2px solid var(--light-accent);
+border-radius: var(--border-radius-small);
+font-size: 18px;
+line-height: 1.8;
+transition: var(--transition);
+background: linear-gradient(to bottom, #fafafa, #ffffff);
+font-family: 'Noto Serif TC', serif;
+resize: none;
+/* Disable manual resize */
+overflow-y: hidden;
+/* Hide scrollbar, JS will handle height */
+}
+@media (max-width: 768px) {
+textarea {
+font-size: 16px;
+padding: 15px;
+}
+}
+textarea:focus {
+outline: none;
+border-color: var(--primary-color);
+background: var(--light-color);
+box-shadow: 0 0 0 4px rgba(127, 179, 213, 0.1);
+}
+#classical-text {
+min-height: 250px;
+/* Specific initial height for the main textarea */
+}
+#ai-prompt {
+min-height: 80px;
+/* Smaller initial height for the prompt textarea */
+font-size: 16px;
+/* Slightly smaller font for prompt */
+}
+.button-group {
+display: flex;
+gap: 15px;
+margin-top: 25px;
+flex-wrap: wrap;
+}
+button {
+padding: 14px 28px;
+background: var(--gradient-primary);
+color: var(--light-color);
+border: none;
+border-radius: var(--border-radius-small);
+cursor: pointer;
+font-size: 16px;
+font-weight: 500;
+transition: var(--transition);
+flex: 1;
+min-width: 130px;
+box-shadow: var(--shadow-light);
+position: relative;
+overflow: hidden;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+gap: 8px;
+}
+@media (max-width: 768px) {
+button {
+padding: 12px 20px;
+font-size: 14px;
+min-width: 100px;
+}
+}
+button::before {
+content: '';
+position: absolute;
+top: 0;
+left: -100%;
+width: 100%;
+height: 100%;
+background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+transition: left 0.5s;
+}
+button:hover::before {
+left: 100%;
+}
+button:hover {
+transform: translateY(-3px);
+box-shadow: var(--shadow-medium);
+}
+button:active {
+transform: translateY(-1px);
+}
+button:disabled {
+background: #bdc3c7;
+cursor: not-allowed;
+transform: none;
+box-shadow: none;
+}
+.clear-btn {
+background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+.history-btn {
+background: linear-gradient(135deg, #015F78, #3886A8);
+}
+.ai-search-btn {
+width: 100%;
+margin-bottom: 20px;
+background: var(--gradient-accent);
+}
+.toggle-translations-btn {
+background: linear-gradient(135deg, #1F7A55, #0B4F4A);
+margin-top: -15px; /* Adjust position */
+width: auto;
+min-width: 50px;
+flex: 0;
+padding: 10px 12px;
+align-self: flex-start;
+}
+.section-divider {
+border: 0;
+height: 1px;
+background-color: var(--light-accent);
+margin: 30px 0;
+}
+.form-group {
+margin-bottom: 20px;
+}
+.form-group label {
+display: block;
+margin-bottom: 10px;
+font-weight: 500;
+color: var(--dark-color);
+}
+.rating-dots {
+display: flex;
+gap: 12px;
+cursor: pointer;
+}
+.rating-dot {
+width: 28px;
+height: 28px;
+border-radius: 50%;
+border: 2px solid #ccc;
+transition: all 0.2s ease-in-out;
+}
+.rating-dots:hover .rating-dot,
+.rating-dots .rating-dot.selected {
+border-color: var(--primary-color);
+background-color: var(--primary-color);
+transform: scale(1.1);
+}
+.rating-dots:hover .rating-dot:hover~.rating-dot {
+background-color: transparent;
+border-color: #ccc;
+}
+.loader {
+width: 20px;
+height: 20px;
+border: 3px solid rgba(255, 255, 255, 0.3);
+border-radius: 50%;
+border-top-color: #fff;
+animation: spin 1s ease-in-out infinite;
+margin-right: 8px;
+/* Add margin to separate from text */
+}
+.btn-text {
+transition: opacity 0.2s;
+}
+.output-section {
+background: var(--light-color);
+border-radius: var(--border-radius);
+box-shadow: var(--shadow-light);
+padding: 30px;
+border: 2px solid rgba(127, 179, 213, 0.1);
+transition: var(--transition);
+position: relative;
+overflow: hidden;
+grid-column: 2;
+display: flex;
+flex-direction: column;
+}
+@media (max-width: 1024px) {
+.output-section {
+grid-column: 1;
+}
+}
+@media (max-width: 768px) {
+.output-section {
+padding: 20px;
+}
+}
+.output-section::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+height: 4px;
+background: var(--gradient-primary);
+}
+.output-section:hover {
+box-shadow: var(--shadow-medium);
+transform: translateY(-2px);
+}
+.output-header {
+display: flex;
+justify-content: space-between;
+align-items: flex-start;
+}
+.output-header .section-title {
+flex-grow: 1;
+}
+.output-content {
+min-height: 200px;
+flex-grow: 1;
+}
+.content-group-container {
+padding: 20px;
+border-radius: var(--border-radius-small);
+border: 1px solid transparent;
+}
+.content-group-container:not(:empty) {
+border-color: var(--light-accent);
+background: linear-gradient(to bottom, #fafafa, #ffffff);
+}
+.content-group-container+.content-group-container:not(:empty) {
+margin-top: 30px;
+}
+@media (max-width: 768px) {
+.output-content {
+padding: 0;
+}
+.content-group-container {
+padding: 15px;
+}
+}
+@media (min-width: 1025px) {
+.container {
+height: calc(100vh - 10px);
+grid-template-rows: auto 1fr;
+}
+.input-section,
+.output-section {
+min-height: 0;
+overflow-y: auto;
+}
+.output-content {
+overflow-y: visible;
+}
+}
+.loading {
+display: none;
+text-align: center;
+padding: 50px;
+color: var(--primary-color);
+}
+.spinner {
+border: 4px solid rgba(127, 179, 213, 0.2);
+border-radius: 50%;
+border-top: 4px solid var(--primary-color);
+width: 50px;
+height: 50px;
+animation: spin 1s linear infinite;
+margin: 0 auto 20px;
+}
+@keyframes spin {
+0% {
+transform: rotate(0deg);
+}
+100% {
+transform: rotate(360deg);
+}
+}
+.error-message {
+color: var(--error-color);
+margin-top: 20px;
+display: none;
+padding: 15px;
+background: #fadbd8;
+border: 2px solid #f1948a;
+border-radius: var(--border-radius-small);
+}
+.introduction-section {
+margin-bottom: 25px;
+padding: 20px;
+background: linear-gradient(135deg, #f8f9f9, #eef5f9);
+border-left: 5px solid var(--highlight-color);
+border-radius: var(--border-radius-small);
+}
+.introduction-wrapper .introduction-section:last-child {
+margin-bottom: 0;
+}
+.introduction-title {
+font-weight: 600;
+color: var(--primary-color);
+margin-bottom: 10px;
+font-size: 1.2rem;
+font-family: 'Noto Serif TC', serif;
+display: flex;
+align-items: center;
+gap: 8px;
+}
+.introduction-content {
+font-size: 16px;
+line-height: 1.7;
+color: var(--dark-color);
+}
+.translation-block {
+margin-bottom: 35px;
+border-bottom: 2px dashed var(--light-accent);
+padding-bottom: 25px;
+}
+.translation-block:last-child {
+border-bottom: none;
+margin-bottom: 0;
+padding-bottom: 0;
+}
+.original-title,
+.translation-title {
+font-weight: 600;
+color: var(--primary-color);
+margin-bottom: 15px;
+font-size: 1.3rem;
+font-family: 'Noto Serif TC', serif;
+}
+.original-text {
+font-size: 18px;
+line-height: 2;
+margin-bottom: 25px;
+padding: 20px;
+background: linear-gradient(135deg, var(--light-accent), rgba(173, 214, 241, 0.3));
+border-left: 5px solid var(--primary-color);
+border-radius: var(--border-radius-small);
+font-family: 'Noto Serif TC', serif;
+}
+@media (max-width: 768px) {
+.original-text {
+font-size: 16px;
+padding: 15px;
+}
+}
+.translation-text {
+padding: 20px;
+border-radius: var(--border-radius-small);
+line-height: 1.8;
+font-size: 16px;
+border-left: 5px solid var(--secondary-color);
+background: linear-gradient(135deg, rgba(255,255,255,0.5), rgba(245,245,245,0.5));
+}
+@media (max-width: 768px) {
+.translation-text {
+padding: 15px;
+font-size: 14px;
+}
+}
+.character-breakdown {
+margin-top: 20px;
+padding: 20px;
+background: linear-gradient(135deg, rgba(169, 204, 227, 0.2), rgba(125, 206, 160, 0.1));
+border-radius: var(--border-radius-small);
+font-size: 15px;
+border-left: 5px solid var(--highlight-color);
+}
+@media (max-width: 768px) {
+.character-breakdown {
+padding: 15px;
+font-size: 14px;
+}
+}
+.character-item {
+margin-bottom: 12px;
+display: flex;
+align-items: flex-start;
+padding: 8px 0;
+border-bottom: 1px solid rgba(127, 179, 213, 0.1);
+}
+.character-item:last-child {
+border-bottom: none;
+}
+.floating-original {
+display: none;
+position: fixed;
+background: var(--light-color);
+border: 2px solid var(--primary-color);
+border-radius: var(--border-radius);
+box-shadow: var(--shadow-heavy);
+z-index: 1000;
+}
+@media (min-width: 1025px) {
+.floating-original {
+top: 50%;
+right: 20px;
+transform: translateY(-50%);
+width: 350px;
+max-height: 70vh;
+overflow-y: auto;
+}
+}
+@media (max-width: 768px) {
+.floating-original {
+top: 0;
+left: 0;
+right: 0;
+width: 100%;
+max-width: none;
+border-radius: 0 0 var(--border-radius) var(--border-radius);
+border-top: none;
+overflow: hidden;
+min-height: 150px;
+resize: vertical;
+}
+.floating-original.resizable {
+height: 33.33vh;
+}
+}
+.floating-original.show {
+display: block;
+animation: fadeIn 0.3s ease-out;
+}
+@keyframes fadeIn {
+from {
+opacity: 0;
+transform: translateY(-50%) scale(0.9);
+}
+to {
+opacity: 1;
+transform: translateY(-50%) scale(1);
+}
+}
+@media (max-width: 768px) {
+@keyframes fadeIn {
+from {
+opacity: 0;
+transform: translateY(-20px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+}
+.floating-header {
+background: var(--gradient-primary);
+color: var(--light-color);
+padding: 15px 20px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+@media (max-width: 768px) {
+.floating-header {
+border-radius: 0;
+}
+}
+.floating-title {
+font-weight: 600;
+font-size: 1.1rem;
+}
+.floating-controls {
+display: flex;
+gap: 10px;
+align-items: center;
+}
+.floating-toggle {
+background: none;
+border: none;
+color: var(--light-color);
+font-size: 1.2rem;
+cursor: pointer;
+padding: 5px;
+border-radius: 50%;
+transition: var(--transition);
+width: 30px;
+height: 30px;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+.floating-toggle:hover {
+background: rgba(255, 255, 255, 0.2);
+transform: scale(1.1);
+}
+.floating-content {
+padding: 20px;
+overflow-y: auto;
+}
+@media (max-width: 768px) {
+.floating-content {
+padding: 15px;
+font-size: 16px;
+height: calc(100% - 55px);
+}
+}
+.floating-original-text {
+font-size: 16px;
+line-height: 1.8;
+color: var(--text-color);
+font-family: 'Noto Serif TC', serif;
+}
+@media (max-width: 768px) {
+.floating-original-text {
+font-size: 17px;
+line-height: 1.9;
+}
+}
+.reopen-floating {
+position: fixed;
+top: 20px;
+right: 20px;
+background: var(--gradient-primary);
+color: var(--light-color);
+border: none;
+border-radius: 50%;
+width: 50px;
+height: 50px;
+font-size: 1.2rem;
+cursor: pointer;
+box-shadow: var(--shadow-medium);
+z-index: 999;
+display: none;
+transition: var(--transition);
+}
+.reopen-floating:hover {
+transform: scale(1.1);
+box-shadow: var(--shadow-heavy);
+}
+@media (max-width: 768px) {
+.reopen-floating.show {
+display: flex;
+align-items: center;
+justify-content: center;
+}
+}
+.word-with-explanation {
+position: relative;
+display: inline;
+color: var(--primary-color);
+font-weight: 600;
+cursor: pointer;
+border-bottom: 2px dotted var(--primary-color);
+margin: 0 2px;
+padding: 2px 4px;
+border-radius: 3px;
+transition: var(--transition);
+}
+.word-with-explanation:hover {
+background: rgba(127, 179, 213, 0.1);
+}
+.explanation-icon {
+color: var(--secondary-color);
+font-size: 0.9em;
+margin-left: 4px;
+cursor: pointer;
+opacity: 0.8;
+transition: var(--transition);
+padding: 2px;
+border-radius: 50%;
+}
+.explanation-icon:hover {
+opacity: 1;
+background: rgba(162, 217, 206, 0.3);
+transform: scale(1.1);
+}
+.word-explanation {
+display: none;
+position: absolute;
+bottom: 120%;
+left: 50%;
+transform: translateX(-50%);
+background: var(--dark-color);
+color: var(--light-color);
+padding: 12px 16px;
+border-radius: var(--border-radius-small);
+font-size: 14px;
+white-space: nowrap;
+z-index: 1001;
+box-shadow: var(--shadow-medium);
+max-width: 300px;
+white-space: normal;
+}
+.word-explanation::after {
+content: '';
+position: absolute;
+top: 100%;
+left: 50%;
+transform: translateX(-50%);
+border: 6px solid transparent;
+border-top-color: var(--dark-color);
+}
+.word-explanation.show {
+display: block;
+animation: fadeInUp 0.3s ease-out;
+}
+@keyframes fadeInUp {
+from {
+opacity: 0;
+transform: translateX(-50%) translateY(10px);
+}
+to {
+opacity: 1;
+transform: translateX(-50%) translateY(0);
+}
+}
+.hidden-text {
+background: var(--hidden-bg);
+color: transparent;
+border-radius: 4px;
+padding: 4px 8px;
+transition: var(--transition);
+user-select: none;
+cursor: pointer;
+}
+.hidden-text:hover {
+background: rgba(127, 179, 213, 0.2);
+}
+.hidden-text.revealed {
+background: transparent;
+color: inherit;
+cursor: default;
+}
+.sentence-container {
+margin-bottom: 15px;
+}
+.character {
+color: var(--primary-color);
+font-weight: 600;
+cursor: pointer;
+border-bottom: 2px dotted var(--primary-color);
+padding: 2px 4px;
+border-radius: 3px;
+transition: var(--transition);
+}
+.character:hover {
+background: rgba(127, 179, 213, 0.1);
+}
+.explanation {
+display: none;
+padding-left: 20px;
+color: var(--dark-color);
+font-style: italic;
+margin-top: 8px;
+border-left: 3px solid var(--secondary-color);
+padding: 8px 0 8px 15px;
+}
+.explanation.revealed {
+display: block;
+animation: slideDown 0.3s ease-out;
+}
+@keyframes slideDown {
+from {
+opacity: 0;
+max-height: 0;
+}
+to {
+opacity: 1;
+max-height: 100px;
+}
+}
+.common-word {
+background: linear-gradient(135deg, rgba(127, 179, 213, 0.2), rgba(162, 217, 206, 0.2));
+padding: 2px 6px;
+border-radius: 4px;
+font-weight: 600;
+}
+.history-modal {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: var(--overlay-bg);
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 2000;
+opacity: 0;
+visibility: hidden;
+transition: opacity 0.3s, visibility 0s 0.3s;
+}
+.history-modal.is-visible {
+opacity: 1;
+visibility: visible;
+transition-delay: 0s;
+}
+.history-container {
+width: 90%;
+max-width: 700px;
+max-height: 80vh;
+border-radius: var(--border-radius);
+padding: 1.5rem 2rem;
+display: flex;
+flex-direction: column;
+box-shadow: var(--shadow-heavy);
+transform: scale(0.95);
+transition: transform 0.3s, background-color 0.4s;
+background-color: var(--light-color);
+border: 2px solid var(--primary-color);
+}
+.history-modal.is-visible .history-container {
+transform: scale(1);
+}
+.history-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding-bottom: 1rem;
+margin-bottom: 1rem;
+border-bottom: 1px solid var(--light-accent);
+}
+.history-header h2 {
+font-size: 1.5rem;
+font-weight: 500;
+color: var(--primary-color);
+}
+.history-controls {
+display: flex;
+gap: 1rem;
+margin-bottom: 1rem;
+}
+#history-search,
+#history-sort {
+flex-grow: 1;
+padding: 0.5rem 0.75rem;
+border-radius: var(--border-radius-small);
+font-size: 1rem;
+font-family: 'Noto Sans TC', sans-serif;
+background-color: #f8fafa;
+border: 1px solid var(--light-accent);
+color: var(--text-color);
+}
+#history-search:focus,
+#history-sort:focus {
+outline: none;
+border-color: var(--primary-color);
+}
+.history-list {
+list-style: none;
+overflow-y: auto;
+flex-grow: 1;
+}
+.history-list li {
+display: flex;
+justify-content: space-between;
+align-items: center;
+gap: 1rem;
+padding: 1rem;
+border-radius: 5px;
+transition: background-color 0.2s;
+border-bottom: 1px solid var(--light-accent);
+}
+.history-list li:hover {
+background-color: #f0f8ff;
+}
+.history-list li:last-child {
+border-bottom: none;
+}
+.history-item-content {
+flex-grow: 1;
+cursor: pointer;
+min-width: 0; /* Fix for flexbox overflow */
+}
+.history-list-item-title {
+font-family: 'Noto Serif TC', serif;
+font-size: 1.2rem;
+font-weight: 600;
+color: var(--dark-color);
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+display: flex;
+align-items: center;
+}
+.history-title-edit {
+width: 100%;
+font-family: 'Noto Serif TC', serif;
+font-size: 1.2rem;
+padding: 4px 6px;
+border: 1px solid var(--primary-color);
+border-radius: 4px;
+outline: none;
+}
+.history-list-item-meta {
+font-family: 'Noto Sans TC', sans-serif;
+font-size: 0.9rem;
+margin-top: 0.25rem;
+color: #7f8c8d;
+}
+.no-history-msg {
+padding: 2rem;
+text-align: center;
+justify-content: center;
+color: #7f8c8d;
+cursor: default;
+}
+.no-history-msg:hover {
+background-color: transparent;
+}
+.history-item-actions {
+display: flex;
+align-items: center;
+gap: 0.5rem;
+flex-shrink: 0;
+}
+/* ----- MODIFIED: Icon Button Base Style ----- */
+.icon-btn {
+    min-width: unset;
+    flex: none;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.2s, transform 0.2s;
+    opacity: 0.8;
+    line-height: 1;
+    color: var(--dark-color);
+}
+.icon-btn:hover {
+    background-color: var(--hidden-bg);
+    opacity: 1;
+}
+.icon-btn:active {
+    transform: scale(0.95);
+}
+
+/* Applying base style to specific buttons */
+#history-close-btn, .regenerate-history-btn, .edit-history-btn, .delete-history-btn,
+#mode-selection-close-btn {
+    /* Inherits from .icon-btn, no need for separate hover/active */
+}
+
+/* Setting specific icon colors */
+.regenerate-history-btn .fas { color: var(--highlight-color); }
+.edit-history-btn .fas { color: var(--primary-color); }
+.delete-history-btn .fas { color: var(--error-color); }
+
+#delete-all-history-btn {
+min-width: unset;
+flex: none;
+width: auto;
+padding: 6px 12px;
+border-radius: var(--border-radius-small);
+gap: 0.5rem;
+color: var(--error-color);
+opacity: 0.8;
+background: transparent;
+border: 1px solid transparent;
+transition: all 0.2s ease;
+}
+#delete-all-history-btn:hover {
+opacity: 1;
+background-color: rgba(231, 76, 60, 0.1);
+color: var(--error-color);
+transform: none;
+}
+#delete-all-history-btn .fas {
+color: var(--error-color);
+}
+@media (max-width: 768px) {
+.floating-original::after {
+content: '';
+position: absolute;
+bottom: 0;
+left: 50%;
+transform: translateX(-50%);
+width: 50px;
+height: 5px;
+background: var(--primary-color);
+border-radius: 3px 3px 0 0;
+cursor: ns-resize;
+}
+.history-controls {
+flex-direction: column;
+}
+}
+::-webkit-scrollbar {
+width: 10px;
+}
+::-webkit-scrollbar-track {
+background: rgba(127, 179, 213, 0.1);
+border-radius: 5px;
+}
+::-webkit-scrollbar-thumb {
+background: var(--primary-color);
+border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+background: var(--secondary-color);
+}
+
+/* ----- 新增：測試模式樣式 ----- */
+.test-mode .character-breakdown {
+    border-left-color: var(--warning-color);
+    padding-bottom: 10px;
+}
+.test-mode .character-item {
+    cursor: pointer;
+    transition: background-color 0.2s, border-left-color 0.3s;
+    border-radius: var(--border-radius-small);
+    padding: 10px;
+    border-left: 3px solid transparent;
+    margin-bottom: 8px;
+}
+.test-mode .character-item:hover {
+    background-color: rgba(241, 196, 15, 0.1);
+    border-left-color: var(--warning-color);
+}
+/* 用家答對（找到錯誤）的樣式 */
+.test-mode .character-item.found-correctly {
+    background-color: rgba(46, 204, 113, 0.1);
+    border-left-color: var(--success-color);
+    cursor: not-allowed;
+}
+/* 用家答錯（點到對的答案）的樣式 */
+.test-mode .character-item.answered-incorrectly {
+    background-color: rgba(231, 76, 60, 0.1);
+    border-left-color: var(--error-color);
+    cursor: not-allowed;
+}
+/* 挑戰失敗後，顯示正確答案的樣式 */
+.test-mode .character-item.reveal-correct {
+    background-color: rgba(46, 204, 113, 0.1);
+    border-left-color: var(--success-color);
+    cursor: default;
+}
+/* 挑戰失敗後，顯示用戶曾點錯的樣式 */
+.test-mode .character-item.reveal-user-error {
+    background-color: rgba(231, 76, 60, 0.1);
+    border-left-color: var(--error-color);
+    cursor: default;
+}
+.test-chances-counter {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-top: -15px;
+    margin-bottom: 25px;
+    padding: 10px;
+    background: rgba(169, 204, 227, 0.1);
+    border-radius: var(--border-radius-small);
+    color: var(--dark-color);
+}
+.test-chances-counter span {
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 0 5px;
+    font-size: 1.5rem;
+}
+#test-result-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--overlay-bg);
+    z-index: 3000;
+    display: none; /* 預設隱藏 */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    cursor: pointer; /* 新增鼠標樣式，提示可點擊 */
+}
+#test-result-overlay.is-visible {
+    display: flex;
+    opacity: 1;
+}
+#test-result-content {
+    background: var(--light-color);
+    color: var(--text-color);
+    padding: 40px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-heavy);
+    width: 90%;
+    max-width: 500px;
+    cursor: default; /* 內容區域維持預設鼠標 */
+}
+#test-result-content h2 {
+    font-size: 2.2rem;
+    margin-bottom: 15px;
+    font-family: 'Noto Serif TC', serif;
+}
+#test-result-content p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-bottom: 1.5rem; /* 增加與底部的間距 */
+}
+#test-result-content .success-icon { color: var(--success-color); }
+#test-result-content .failure-icon { color: var(--error-color); }
+#test-result-content .success-icon,
+#test-result-content .failure-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+}
+/* 挑戰失敗後顯示答案的樣式 */
+.failure-answer-key {
+    margin-top: 25px;
+    text-align: left;
+    font-size: 1rem;
+}
+.failure-answer-key .original-mistake {
+    color: var(--error-color);
+    text-decoration: line-through;
+}
+.failure-answer-key .correct-answer {
+    color: var(--success-color);
+    font-weight: bold;
+}
+</style>
 </head>
 
 <body>
-    <div class="container">
-        <div class="input-section">
-            <!-- AI Search Feature -->
-            <h2 class="section-title">尋找篇章</h2>
-            <div class="form-group">
-                <label>難度</label>
-                <div class="rating-dots" id="difficulty-rating" data-rating="3">
-                    <div class="rating-dot" data-value="1"></div>
-                    <div class="rating-dot" data-value="2"></div>
-                    <div class="rating-dot" data-value="3"></div>
-                    <div class="rating-dot" data-value="4"></div>
-                    <div class="rating-dot" data-value="5"></div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="ai-prompt">主題</label>
-                <textarea id="ai-prompt" placeholder="可輸入主題，留空則隨機推薦..."></textarea>
-            </div>
-            <button id="ai-search-btn" class="ai-search-btn">
-                <span class="btn-text">尋找篇章</span>
+<div class="container">
+<div class="input-section">
+<!-- AI Search Feature -->
+<h2 class="section-title">尋找篇章</h2>
+<div class="form-group">
+<label>難度</label>
+<div class="rating-dots" id="difficulty-rating" data-rating="3">
+<div class="rating-dot" data-value="1"></div>
+<div class="rating-dot" data-value="2"></div>
+<div class="rating-dot" data-value="3"></div>
+<div class="rating-dot" data-value="4"></div>
+<div class="rating-dot" data-value="5"></div>
+</div>
+</div>
+<div class="form-group">
+<label for="ai-prompt">主題</label>
+<textarea id="ai-prompt" placeholder="可輸入主題，留空則隨機推薦..."></textarea>
+</div>
+<button id="ai-search-btn" class="ai-search-btn">
+<span class="btn-text">尋找篇章</span>
+</button>
+<hr class="section-divider">
+<h2 class="section-title">或 手動輸入文言文</h2>
+<textarea id="classical-text" placeholder="請在此輸入文言文篇章內容..."></textarea>
+<div class="button-group">
+<button id="translate-btn">
+<i class="fas fa-language"></i> 翻譯
+</button>
+<button id="clear-btn" class="clear-btn">
+<i class="fas fa-eraser"></i> 清除
+</button>
+<button id="history-btn" class="history-btn">
+<i class="fas fa-history"></i> 閱讀紀錄
+</button>
+</div>
+<div class="error-message" id="error-message"></div>
+</div>
+<div class="output-section">
+<div class="output-header">
+<h2 class="section-title">翻譯結果</h2>
+<button id="toggle-translations-btn" class="toggle-translations-btn" style="display: none;" title="顯示所有翻譯及解釋">
+<i class="fas fa-eye"></i>
+</button>
+</div>
+<div class="loading" id="loading">
+<div class="spinner"></div>
+<p>正在生成中，請稍候...</p>
+</div>
+<div id="output-content">
+<div id="introduction-area" class="content-group-container"></div>
+<div id="translation-area" class="content-group-container"></div>
+</div>
+</div>
+<footer>
+<div class="copyright-footer">
+<p>Copyright © 2025 黃子謙、陳冠健. All rights reserved</p>
+</div>
+</footer>
+</div>
+<!-- 懸浮式原文顯示 -->
+<div id="floating-original" class="floating-original resizable">
+<div class="floating-header">
+<div class="floating-title">原文</div>
+<div class="floating-controls">
+<button id="floating-toggle" class="floating-toggle" title="關閉懸浮窗">
+<i class="fas fa-times"></i>
+</button>
+</div>
+</div>
+<div class="floating-content">
+<div id="floating-original-text" class="floating-original-text"></div>
+</div>
+</div>
+<!-- 重新開啟懸浮窗按鈕 -->
+<button id="reopen-floating" class="reopen-floating" title="開啟原文懸浮窗">
+<i class="fas fa-scroll"></i>
+</button>
+<!-- 歷史紀錄彈出層 (Modal) -->
+<div class="history-modal" id="history-modal">
+<div class="history-container">
+<div class="history-header">
+<h2>閱讀紀錄</h2>
+<button class="icon-btn" id="history-close-btn" title="關閉">
+<i class="fas fa-times"></i>
+</button>
+</div>
+<div class="history-controls">
+<input type="search" id="history-search" placeholder="搜尋標題或作者...">
+<select id="history-sort">
+<option value="date_desc">按生成日期 (新到舊)</option>
+<option value="date_asc">按生成日期 (舊到新)</option>
+</select>
+</div>
+<ul class="history-list" id="history-list"></ul>
+<button class="icon-btn" id="delete-all-history-btn" title="刪除全部紀錄" style="margin-top: 1rem; align-self: flex-end;">
+<i class="fas fa-trash-alt"></i> 刪除全部
+</button>
+</div>
+</div>
+
+<!-- ===== 新增：模式選擇彈出層 (Modal) ===== -->
+<div id="mode-selection-modal" class="history-modal">
+    <div class="history-container" style="max-width: 400px; text-align: center;">
+        <div class="history-header">
+            <h2 id="mode-selection-title">選擇模式</h2>
+             <button class="icon-btn" id="mode-selection-close-btn" title="關閉">
+                <i class="fas fa-times"></i>
             </button>
-            <hr class="section-divider">
-            <h2 class="section-title">或 手動輸入文言文</h2>
-            <textarea id="classical-text" placeholder="請在此輸入文言文篇章內容..."></textarea>
-            <div class="button-group">
-                <button id="translate-btn">
-                    <i class="fas fa-language"></i> 翻譯
-                </button>
-                <button id="clear-btn" class="clear-btn">
-                    <i class="fas fa-eraser"></i> 清除
-                </button>
-                <button id="history-btn" class="history-btn">
-                    <i class="fas fa-history"></i> 閱讀紀錄
-                </button>
-            </div>
-            <div class="error-message" id="error-message"></div>
         </div>
-        <div class="output-section">
-            <div class="output-header">
-                <h2 class="section-title">翻譯結果</h2>
-                <button id="toggle-translations-btn" class="toggle-translations-btn" style="display: none;" title="顯示所有翻譯及解釋">
-                    <i class="fas fa-eye"></i>
-                </button>
-            </div>
-            <div class="loading" id="loading">
-                <div class="spinner"></div>
-                <p>正在生成中，請稍候...</p>
-            </div>
-            <div id="output-content">
-                <div id="introduction-area" class="content-group-container"></div>
-                <div id="translation-area" class="content-group-container"></div>
-            </div>
-        </div>
-        <footer>
-            <div class="copyright-footer">
-                <p>Copyright © 2025 黃子謙、陳冠健. All rights reserved</p>
-            </div>
-        </footer>
-    </div>
-    <!-- 懸浮式原文顯示 -->
-    <div id="floating-original" class="floating-original resizable">
-        <div class="floating-header">
-            <div class="floating-title">原文</div>
-            <div class="floating-controls">
-                <button id="floating-toggle" class="floating-toggle" title="關閉懸浮窗">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        </div>
-        <div class="floating-content">
-            <div id="floating-original-text" class="floating-original-text"></div>
+        <p style="margin: 20px 0 30px;">請選擇您想如何進行此篇章：</p>
+        <div class="button-group" style="flex-direction: column; gap: 20px;">
+            <button id="read-mode-btn" style="width: 100%;"><i class="fas fa-book-open"></i> 閱讀模式</button>
+            <button id="test-mode-btn" style="width: 100%; background: var(--gradient-accent);"><i class="fas fa-vial"></i> 測驗模式</button>
         </div>
     </div>
-    <!-- 重新開啟懸浮窗按鈕 -->
-    <button id="reopen-floating" class="reopen-floating" title="開啟原文懸浮窗">
-        <i class="fas fa-scroll"></i>
-    </button>
-    <!-- 歷史紀錄彈出層 (Modal) -->
-    <div class="history-modal" id="history-modal">
-        <div class="history-container">
-            <div class="history-header">
-                <h2>閱讀紀錄</h2>
-                <button class="icon-btn" id="history-close-btn" title="關閉">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="history-controls">
-                <input type="search" id="history-search" placeholder="搜尋標題或作者...">
-                <select id="history-sort">
-                    <option value="date_desc">按生成日期 (新到舊)</option>
-                    <option value="date_asc">按生成日期 (舊到新)</option>
-                </select>
-            </div>
-            <ul class="history-list" id="history-list"></ul>
-            <button class="icon-btn" id="delete-all-history-btn" title="刪除全部紀錄" style="margin-top: 1rem; align-self: flex-end;">
-                <i class="fas fa-trash-alt"></i> 刪除全部
-            </button>
-        </div>
+</div>
+
+<!-- ===== 修改：測試結果覆蓋層 (移除按鈕) ===== -->
+<div id="test-result-overlay">
+    <div id="test-result-content">
+        <!-- 內容由 JS 動態生成 -->
     </div>
-    <script>
-        // API 配置信息
-        const API_KEYS = [
-            "sk-H-xNneBeBJENQXfffeaj9A"
-        ];
-        let currentApiKeyIndex = 0;
-        const API_URL = "https://chatapi.akash.network/api/v1/chat/completions";
-        const MODEL = "DeepSeek-R1-0528";
+    <!-- 關閉按鈕已被移除，現在點擊覆蓋層任意位置即可關閉 -->
+</div>
 
-        // 懸浮窗狀態管理
-        let isFloatingEnabled = true;
-        let currentOriginalTexts = [];
+<script>
+// API 配置信息
+const API_KEYS = [
+"sk-H-xNneBeBJENQXfffeaj9A"
+];
+let currentApiKeyIndex = 0;
+const API_URL = "https://chatapi.akash.network/api/v1/chat/completions";
+const MODEL = "DeepSeek-R1-0528";
 
-        // App 狀態管理
-        const HISTORY_KEY = 'wenshu_history_v3'; // ** 更新版本以避免與舊格式衝突 **
-        let state = {
-            difficulty: 3,
-            history: [],
-        };
+// 懸浮窗狀態管理
+let isFloatingEnabled = true;
+let currentOriginalTexts = [];
 
-        document.addEventListener('DOMContentLoaded', function() {
-            // --- DOM Elements ---
-            const translateBtn = document.getElementById('translate-btn');
-            const clearBtn = document.getElementById('clear-btn');
-            const toggleTranslationsBtn = document.getElementById('toggle-translations-btn');
-            const classicalText = document.getElementById('classical-text');
-            const loading = document.getElementById('loading');
-            const errorMessage = document.getElementById('error-message');
-            const introductionArea = document.getElementById('introduction-area');
-            const translationArea = document.getElementById('translation-area');
-            const floatingOriginal = document.getElementById('floating-original');
-            const floatingToggle = document.getElementById('floating-toggle');
-            const floatingOriginalText = document.getElementById('floating-original-text');
-            const reopenFloating = document.getElementById('reopen-floating');
-            const aiSearchBtn = document.getElementById('ai-search-btn');
-            const difficultyRating = document.getElementById('difficulty-rating');
-            const ratingDots = difficultyRating.querySelectorAll('.rating-dot');
-            const aiPromptTextarea = document.getElementById('ai-prompt');
-            const historyBtn = document.getElementById('history-btn');
-            const historyModal = document.getElementById('history-modal');
-            const historyCloseBtn = document.getElementById('history-close-btn');
-            const historyList = document.getElementById('history-list');
-            const historySearch = document.getElementById('history-search');
-            const historySort = document.getElementById('history-sort');
-            const deleteAllHistoryBtn = document.getElementById('delete-all-history-btn');
+// App 狀態管理
+const HISTORY_KEY = 'wenshu_history_v3';
+let state = {
+difficulty: 3,
+history: [],
+};
 
-            // --- Initialization ---
-            initializeApp();
-
-            // --- Main App Initializer ---
-            function initializeApp() {
-                loadHistory();
-                initFloatingWindow();
-                updateRatingDots();
-                setupEventListeners();
-                autoResizeTextarea.call(classicalText);
-                autoResizeTextarea.call(aiPromptTextarea);
-            }
-
-            function setupEventListeners() {
-                translateBtn.addEventListener('click', handleManualTranslateClick);
-                clearBtn.addEventListener('click', handleClearClick);
-                toggleTranslationsBtn.addEventListener('click', handleToggleTranslations);
-                window.addEventListener('resize', handleWindowResize);
-                classicalText.addEventListener('input', autoResizeTextarea);
-                aiPromptTextarea.addEventListener('input', autoResizeTextarea);
-                floatingToggle.addEventListener('click', handleFloatingToggle);
-                reopenFloating.addEventListener('click', handleReopenFloating);
-                if (getDeviceType() === 'mobile') {
-                    floatingOriginal.addEventListener('mousedown', startResize);
-                    floatingOriginal.addEventListener('touchstart', startResize);
-                }
-                aiSearchBtn.addEventListener('click', handleAiSearch);
-                ratingDots.forEach(dot => {
-                    dot.addEventListener('click', () => {
-                        state.difficulty = parseInt(dot.dataset.value);
-                        difficultyRating.dataset.rating = state.difficulty;
-                        updateRatingDots();
-                    });
-                    dot.addEventListener('mouseover', () => {
-                        const hoverValue = parseInt(dot.dataset.value);
-                        ratingDots.forEach(d => d.classList.toggle('selected', d.dataset.value <= hoverValue));
-                    });
-                });
-                difficultyRating.addEventListener('mouseout', updateRatingDots);
-                historyBtn.addEventListener('click', showHistory);
-                historyCloseBtn.addEventListener('click', hideHistory);
-                deleteAllHistoryBtn.addEventListener('click', handleDeleteAllHistory);
-                historyModal.addEventListener('click', (e) => {
-                    if (e.target === historyModal) hideHistory();
-                });
-                historyList.addEventListener('click', handleHistoryListClick);
-                historySearch.addEventListener('input', renderHistory);
-                historySort.addEventListener('change', renderHistory);
-            }
-
-            // --- Event Handlers & Core Logic ---
-            function autoResizeTextarea() {
-                this.style.height = 'auto';
-                this.style.height = (this.scrollHeight) + 'px';
-            }
-
-            function handleManualTranslateClick() {
-                const text = classicalText.value.trim();
-                if (!text) {
-                    showError('請輸入文言文內容');
-                    return;
-                }
-                const articleInfo = {
-                    title: `手動輸入: ${text.substring(0, 15)}...`,
-                    author: 'N/A',
-                    content: text,
-                    isManual: true,
-                    id: new Date().toISOString()
-                };
-                processAndDisplay(articleInfo);
-            }
-
-            async function handleAiSearch() {
-                setAiSearchLoading(true);
-                hideError();
-                try {
-                    const article = await generateProse();
-                    if (article && article.title && article.content) {
-                        await processAndDisplay(article);
-                    } else {
-                        showError("AI 未能返回有效的篇章，請稍後再試。");
-                    }
-                } catch (error) {
-                    console.error('AI 尋找篇章時發生錯誤:', error);
-                    showError(`AI 尋找篇章時發生錯誤: ${error.message}`);
-                } finally {
-                    setAiSearchLoading(false);
-                }
-            }
-
-            function handleClearClick() {
-                classicalText.value = '';
-                aiPromptTextarea.value = '';
-                introductionArea.innerHTML = '';
-                translationArea.innerHTML = '';
-                currentOriginalTexts = [];
-                hideFloatingOriginal();
-                hideError();
-                toggleTranslationsBtn.style.display = 'none';
-                autoResizeTextarea.call(classicalText);
-                autoResizeTextarea.call(aiPromptTextarea);
-            }
-
-            function handleToggleTranslations() {
-                const sentences = document.querySelectorAll('.hidden-text');
-                const explanations = document.querySelectorAll('.explanation');
-                if (sentences.length === 0 && explanations.length === 0) return;
-
-                // 檢查第一個元素是否已經顯示，以此判斷整體狀態
-                const areRevealed = sentences.length > 0 ? sentences[0].classList.contains('revealed') : explanations[0].classList.contains('revealed');
-                
-                // 切換所有句子的顯示狀態
-                sentences.forEach(s => s.classList.toggle('revealed', !areRevealed));
-                // 切換所有解釋的顯示狀態
-                explanations.forEach(e => e.classList.toggle('revealed', !areRevealed));
-
-                // 更新按鈕圖示和標題
-                const icon = toggleTranslationsBtn.querySelector('i');
-                if (!areRevealed) {
-                    icon.className = 'fas fa-eye-slash';
-                    toggleTranslationsBtn.title = '隱藏所有翻譯及解釋';
-                } else {
-                    icon.className = 'fas fa-eye';
-                    toggleTranslationsBtn.title = '顯示所有翻譯及解釋';
-                }
-            }
+// 測試模式狀態變數
+let testState = {
+isActive: false,
+chances: 7,
+mistakesFound: 0,
+totalMistakes: 5,
+currentItemId: null,
+wronglyClickedItems: [], // 儲存使用者點錯的 DOM 元素
+mistakeItems: [], // 儲存被設定為錯誤的 DOM 元素
+};
 
 
-            function handleWindowResize() {
-                initFloatingWindow();
-                if (currentOriginalTexts.length > 0) {
-                    showFloatingOriginal();
-                }
-            }
+document.addEventListener('DOMContentLoaded', function() {
+// --- DOM Elements ---
+const translateBtn = document.getElementById('translate-btn');
+const clearBtn = document.getElementById('clear-btn');
+const toggleTranslationsBtn = document.getElementById('toggle-translations-btn');
+const classicalText = document.getElementById('classical-text');
+const loading = document.getElementById('loading');
+const errorMessage = document.getElementById('error-message');
+const introductionArea = document.getElementById('introduction-area');
+const translationArea = document.getElementById('translation-area');
+const floatingOriginal = document.getElementById('floating-original');
+const floatingToggle = document.getElementById('floating-toggle');
+const floatingOriginalText = document.getElementById('floating-original-text');
+const reopenFloating = document.getElementById('reopen-floating');
+const aiSearchBtn = document.getElementById('ai-search-btn');
+const difficultyRating = document.getElementById('difficulty-rating');
+const ratingDots = difficultyRating.querySelectorAll('.rating-dot');
+const aiPromptTextarea = document.getElementById('ai-prompt');
+const historyBtn = document.getElementById('history-btn');
+const historyModal = document.getElementById('history-modal');
+const historyCloseBtn = document.getElementById('history-close-btn');
+const historyList = document.getElementById('history-list');
+const historySearch = document.getElementById('history-search');
+const historySort = document.getElementById('history-sort');
+const deleteAllHistoryBtn = document.getElementById('delete-all-history-btn');
 
-            async function processAndDisplay(articleInfo) {
-                loading.style.display = 'block';
-                introductionArea.innerHTML = '';
-                translationArea.innerHTML = '';
-                hideError();
-                translateBtn.disabled = true;
-                aiSearchBtn.disabled = true;
-                
-                classicalText.value = articleInfo.content;
-                autoResizeTextarea.call(classicalText);
+// ----- 新增的 DOM 元素 -----
+const modeSelectionModal = document.getElementById('mode-selection-modal');
+const modeSelectionCloseBtn = document.getElementById('mode-selection-close-btn');
+const modeSelectionTitle = document.getElementById('mode-selection-title');
+const readModeBtn = document.getElementById('read-mode-btn');
+const testModeBtn = document.getElementById('test-mode-btn');
+const testResultOverlay = document.getElementById('test-result-overlay');
+// const closeTestResultBtn = document.getElementById('close-test-result-btn'); // 按鈕已移除
 
-                let introContent = '';
-                let translationContent = '';
 
-                if (!articleInfo.isManual) {
-                    try {
-                        const intros = await generateIntroductions(articleInfo.title, articleInfo.author);
-                        introContent = formatIntroHtml(intros);
-                    } catch (introError) {
-                        console.error('生成簡介時發生錯誤:', introError);
-                        introContent = formatIntroHtml({
-                            authorIntro: '（作者簡介生成失敗，請稍後再試。）',
-                            articleIntro: '（文章簡介生成失敗，請稍後再試。）'
-                        });
-                    }
-                }
-                introductionArea.innerHTML = introContent;
+// --- Initialization ---
+initializeApp();
 
-                try {
-                    const translationData = await fetchTranslationData(articleInfo.content);
-                    translationContent = formatTranslationResult(translationData);
-                } catch (translationError) {
-                    console.error('生成翻譯時發生錯誤:', translationError);
-                    showError(`翻譯過程中發生錯誤: ${translationError.message}`);
-                    translationContent = `<div class="error-message" style="display: block; margin-top: 0;"><i class="fas fa-exclamation-triangle"></i> 翻譯失敗，請稍後重試或重新生成。</div>`;
-                }
-                translationArea.innerHTML = translationContent;
-                
-                setupDynamicContent();
-                addToHistory({
-                    ...articleInfo,
-                    id: articleInfo.id || new Date().toISOString(),
-                    introHtml: introContent,
-                    translationHtml: translationContent
-                });
+// --- Main App Initializer ---
+function initializeApp() {
+loadHistory();
+initFloatingWindow();
+updateRatingDots();
+setupEventListeners();
+autoResizeTextarea.call(classicalText);
+autoResizeTextarea.call(aiPromptTextarea);
+}
 
-                loading.style.display = 'none';
-                translateBtn.disabled = false;
-                aiSearchBtn.disabled = false;
-            }
+function setupEventListeners() {
+translateBtn.addEventListener('click', handleManualTranslateClick);
+clearBtn.addEventListener('click', handleClearClick);
+toggleTranslationsBtn.addEventListener('click', handleToggleTranslations);
+window.addEventListener('resize', handleWindowResize);
+classicalText.addEventListener('input', autoResizeTextarea);
+aiPromptTextarea.addEventListener('input', autoResizeTextarea);
+floatingToggle.addEventListener('click', handleFloatingToggle);
+reopenFloating.addEventListener('click', handleReopenFloating);
+if (getDeviceType() === 'mobile') {
+floatingOriginal.addEventListener('mousedown', startResize);
+floatingOriginal.addEventListener('touchstart', startResize);
+}
+aiSearchBtn.addEventListener('click', handleAiSearch);
+ratingDots.forEach(dot => {
+dot.addEventListener('click', () => {
+state.difficulty = parseInt(dot.dataset.value);
+difficultyRating.dataset.rating = state.difficulty;
+updateRatingDots();
+});
+dot.addEventListener('mouseover', () => {
+const hoverValue = parseInt(dot.dataset.value);
+ratingDots.forEach(d => d.classList.toggle('selected', d.dataset.value <= hoverValue));
+});
+});
+difficultyRating.addEventListener('mouseout', updateRatingDots);
+historyBtn.addEventListener('click', showHistory);
+historyCloseBtn.addEventListener('click', hideHistory);
+deleteAllHistoryBtn.addEventListener('click', handleDeleteAllHistory);
+historyModal.addEventListener('click', (e) => {
+if (e.target === historyModal) hideHistory();
+});
+historyList.addEventListener('click', handleHistoryListClick);
+historySearch.addEventListener('input', renderHistory);
+historySort.addEventListener('change', renderHistory);
 
-            // --- API Calling ---
-            async function callApi(prompt) {
-                const apiKey = API_KEYS[currentApiKeyIndex];
-                try {
-                    const response = await fetch(API_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${apiKey}`
-                        },
-                        body: JSON.stringify({
-                            model: MODEL,
-                            messages: [{
-                                role: "user",
-                                content: prompt
-                            }],
-                            temperature: 0.5,
-                            max_tokens: 64000
-                        })
-                    });
-                    if (!response.ok) throw new Error(`API 請求失敗: ${response.status}`);
-                    const data = await response.json();
-                    if (data.error) throw new Error(`API 返回錯誤: ${data.error.message}`);
-                    return data;
-                } catch (error) {
-                    console.error('API 調用錯誤:', error);
-                    currentApiKeyIndex = (currentApiKeyIndex + 1) % API_KEYS.length;
-                    if (currentApiKeyIndex === 0) throw new Error('所有API密鑰嘗試失敗');
-                    console.warn('正在嘗試下一個 API Key...');
-                    return callApi(prompt);
-                }
-            }
-            
-            function extractJson(text) {
-                const startIndex = text.indexOf('{');
-                const endIndex = text.lastIndexOf('}');
-                if (startIndex > -1 && endIndex > -1 && endIndex > startIndex) {
-                    const jsonString = text.substring(startIndex, endIndex + 1);
-                    try {
-                        return JSON.parse(jsonString);
-                    } catch (e) {
-                        console.error("無法解析提取的 JSON 字串:", jsonString, e);
-                        throw new Error("API 返回了格式錯誤的 JSON。");
-                    }
-                }
-                console.error("在API回應中找不到有效的JSON對象:", text);
-                throw new Error("API 回應中不包含有效的 JSON 對象。");
-            }
+// ----- 修改的事件監聽器 -----
+modeSelectionCloseBtn.addEventListener('click', hideModeSelection);
+modeSelectionModal.addEventListener('click', (e) => {
+if (e.target === modeSelectionModal) hideModeSelection();
+});
+readModeBtn.addEventListener('click', handleReadMode);
+testModeBtn.addEventListener('click', handleTestMode);
 
-            async function callApiWithRetry(prompt, retries = 3) {
-                let lastError = null;
-                for (let i = 0; i < retries; i++) {
-                    try {
-                        console.log(`JSON API 呼叫嘗試 ${i + 1}/${retries}...`);
-                        const response = await callApi(prompt);
-                        if (response && response.choices && response.choices[0].message.content) {
-                            const content = response.choices[0].message.content;
-                            const jsonData = extractJson(content);
-                            return jsonData;
-                        } else {
-                            throw new Error("API 回應為空或格式不正確。");
-                        }
-                    } catch (error) {
-                        lastError = error;
-                        console.error(`嘗試 ${i + 1} 失敗:`, error.message);
-                        if (i < retries - 1) {
-                            console.log("正在重試...");
-                            await new Promise(resolve => setTimeout(resolve, 500));
-                        }
-                    }
-                }
-                console.error("所有 JSON API 呼叫嘗試均失敗。");
-                throw lastError || new Error(`經過 ${retries} 次重試後，所有 JSON API 呼叫均失敗。`);
-            }
-            
-            async function generateProse() {
-                const userPromptText = aiPromptTextarea.value.trim();
-                const historyTitles = state.history.map(item => item.title).filter(t => !t.startsWith('手動輸入'));
-                const promptInstruction = userPromptText ? `用戶的個性化主題要求： "${userPromptText}"。` : '請隨機推薦一篇符合上述難度的文章。';
-                const systemPrompt = `你是一位精通中國古籍的學者。你的任務是根據用戶要求，從浩瀚的文言文典籍中，找出一篇真實存在的短篇章。
+// 當點擊結果覆蓋層時，將其關閉
+testResultOverlay.addEventListener('click', () => {
+    testResultOverlay.classList.remove('is-visible');
+});
+translationArea.addEventListener('click', handleTestAnswer);
+}
+
+// --- Event Handlers & Core Logic ---
+function autoResizeTextarea() {
+this.style.height = 'auto';
+this.style.height = (this.scrollHeight) + 'px';
+}
+
+function handleManualTranslateClick() {
+const text = classicalText.value.trim();
+if (!text) {
+showError('請輸入文言文內容');
+return;
+}
+const articleInfo = {
+title: `手動輸入: ${text.substring(0, 15)}...`,
+author: 'N/A',
+content: text,
+isManual: true,
+id: new Date().toISOString()
+};
+processAndDisplay(articleInfo);
+}
+
+async function handleAiSearch() {
+setAiSearchLoading(true);
+hideError();
+try {
+const article = await generateProse();
+if (article && article.title && article.content) {
+await processAndDisplay(article);
+} else {
+showError("AI 未能返回有效的篇章，請稍後再試。");
+}
+} catch (error) {
+console.error('AI 尋找篇章時發生錯誤:', error);
+showError(`AI 尋找篇章時發生錯誤: ${error.message}`);
+} finally {
+setAiSearchLoading(false);
+}
+}
+
+function handleClearClick() {
+classicalText.value = '';
+aiPromptTextarea.value = '';
+introductionArea.innerHTML = '';
+translationArea.innerHTML = '';
+currentOriginalTexts = [];
+hideFloatingOriginal();
+hideError();
+toggleTranslationsBtn.style.display = 'none';
+translationArea.classList.remove('test-mode');
+// 清除測試相關元素
+const counter = document.querySelector('.test-chances-counter');
+if (counter) counter.remove();
+autoResizeTextarea.call(classicalText);
+autoResizeTextarea.call(aiPromptTextarea);
+}
+
+function handleToggleTranslations() {
+if (testState.isActive) return; // 測試模式下禁用此按鈕
+
+const sentences = document.querySelectorAll('.hidden-text');
+const explanations = document.querySelectorAll('.explanation');
+if (sentences.length === 0 && explanations.length === 0) return;
+
+const areRevealed = sentences.length > 0 ? sentences[0].classList.contains('revealed') : explanations[0].classList.contains('revealed');
+
+sentences.forEach(s => s.classList.toggle('revealed', !areRevealed));
+explanations.forEach(e => e.classList.toggle('revealed', !areRevealed));
+
+const icon = toggleTranslationsBtn.querySelector('i');
+if (!areRevealed) {
+icon.className = 'fas fa-eye-slash';
+toggleTranslationsBtn.title = '隱藏所有翻譯及解釋';
+} else {
+icon.className = 'fas fa-eye';
+toggleTranslationsBtn.title = '顯示所有翻譯及解釋';
+}
+}
+
+
+function handleWindowResize() {
+initFloatingWindow();
+if (currentOriginalTexts.length > 0) {
+showFloatingOriginal();
+}
+}
+
+async function processAndDisplay(articleInfo) {
+loading.style.display = 'block';
+introductionArea.innerHTML = '';
+translationArea.innerHTML = '';
+hideError();
+translateBtn.disabled = true;
+aiSearchBtn.disabled = true;
+
+classicalText.value = articleInfo.content;
+autoResizeTextarea.call(classicalText);
+
+let introContent = '';
+let translationContent = '';
+
+if (!articleInfo.isManual) {
+try {
+const intros = await generateIntroductions(articleInfo.title, articleInfo.author);
+introContent = formatIntroHtml(intros);
+} catch (introError) {
+console.error('生成簡介時發生錯誤:', introError);
+introContent = formatIntroHtml({
+authorIntro: '（作者簡介生成失敗，請稍後再試。）',
+articleIntro: '（文章簡介生成失敗，請稍後再試。）'
+});
+}
+}
+introductionArea.innerHTML = introContent;
+
+try {
+const translationData = await fetchTranslationData(articleInfo.content);
+translationContent = formatTranslationResult(translationData);
+} catch (translationError) {
+console.error('生成翻譯時發生錯誤:', translationError);
+showError(`翻譯過程中發生錯誤: ${translationError.message}`);
+translationContent = `<div class="error-message" style="display: block; margin-top: 0;"><i class="fas fa-exclamation-triangle"></i> 翻譯失敗，請稍後重試或重新生成。</div>`;
+}
+translationArea.innerHTML = translationContent;
+
+setupDynamicContent();
+addToHistory({
+...articleInfo,
+id: articleInfo.id || new Date().toISOString(),
+introHtml: introContent,
+translationHtml: translationContent,
+testSuccess: articleInfo.testSuccess || false,
+});
+
+loading.style.display = 'none';
+translateBtn.disabled = false;
+aiSearchBtn.disabled = false;
+}
+
+// --- API Calling ---
+async function callApi(prompt) {
+const apiKey = API_KEYS[currentApiKeyIndex];
+try {
+const response = await fetch(API_URL, {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json',
+'Authorization': `Bearer ${apiKey}`
+},
+body: JSON.stringify({
+model: MODEL,
+messages: [{
+role: "user",
+content: prompt
+}],
+temperature: 0.5,
+max_tokens: 64000
+})
+});
+if (!response.ok) throw new Error(`API 請求失敗: ${response.status}`);
+const data = await response.json();
+if (data.error) throw new Error(`API 返回錯誤: ${data.error.message}`);
+return data;
+} catch (error) {
+console.error('API 調用錯誤:', error);
+currentApiKeyIndex = (currentApiKeyIndex + 1) % API_KEYS.length;
+if (currentApiKeyIndex === 0) throw new Error('所有API密鑰嘗試失敗');
+console.warn('正在嘗試下一個 API Key...');
+return callApi(prompt);
+}
+}
+
+function extractJson(text) {
+const startIndex = text.indexOf('{');
+const endIndex = text.lastIndexOf('}');
+if (startIndex > -1 && endIndex > -1 && endIndex > startIndex) {
+const jsonString = text.substring(startIndex, endIndex + 1);
+try {
+return JSON.parse(jsonString);
+} catch (e) {
+console.error("無法解析提取的 JSON 字串:", jsonString, e);
+throw new Error("API 返回了格式錯誤的 JSON。");
+}
+}
+console.error("在API回應中找不到有效的JSON對象:", text);
+throw new Error("API 回應中不包含有效的 JSON 對象。");
+}
+
+async function callApiWithRetry(prompt, retries = 3) {
+let lastError = null;
+for (let i = 0; i < retries; i++) {
+try {
+console.log(`JSON API 呼叫嘗試 ${i + 1}/${retries}...`);
+const response = await callApi(prompt);
+if (response && response.choices && response.choices[0].message.content) {
+const content = response.choices[0].message.content;
+const jsonData = extractJson(content);
+return jsonData;
+} else {
+throw new Error("API 回應為空或格式不正確。");
+}
+} catch (error) {
+lastError = error;
+console.error(`嘗試 ${i + 1} 失敗:`, error.message);
+if (i < retries - 1) {
+console.log("正在重試...");
+await new Promise(resolve => setTimeout(resolve, 500));
+}
+}
+}
+console.error("所有 JSON API 呼叫嘗試均失敗。");
+throw lastError || new Error(`經過 ${retries} 次重試後，所有 JSON API 呼叫均失敗。`);
+}
+
+async function generateProse() {
+const userPromptText = aiPromptTextarea.value.trim();
+const historyTitles = state.history.map(item => item.title).filter(t => !t.startsWith('手動輸入'));
+const promptInstruction = userPromptText ? `用戶的個性化主題要求： "${userPromptText}"。` : '請隨機推薦一篇符合上述難度的文章。';
+const systemPrompt = `你是一位精通中國古籍的學者。你的任務是根據用戶要求，從浩瀚的文言文典籍中，找出一篇真實存在的短篇章。
 用戶的文學鑑賞難度偏好（1星最淺白，5星最艱深）：${state.difficulty}顆星。
 ${promptInstruction}
 已閱覽過的文章標題（請勿重複推薦）：[${historyTitles.join(', ')}]
@@ -1488,19 +1675,19 @@ ${promptInstruction}
 4. 所有文字都必須是繁體中文。
 JSON 格式如下：
 {
-  "title": "作品標題",
-  "author": "作家姓名",
-  "content": "完整的文言文節錄段落"
+"title": "作品標題",
+"author": "作家姓名",
+"content": "完整的文言文節錄段落"
 }`;
-                const article = await callApiWithRetry(systemPrompt, 3);
-                if (article && typeof article.title === 'string' && typeof article.content === 'string' && typeof article.author === 'string') {
-                    return { ...article, isManual: false };
-                }
-                throw new Error("API 返回的 JSON 物件結構不正確。");
-            }
+const article = await callApiWithRetry(systemPrompt, 3);
+if (article && typeof article.title === 'string' && typeof article.content === 'string' && typeof article.author === 'string') {
+return { ...article, isManual: false };
+}
+throw new Error("API 返回的 JSON 物件結構不正確。");
+}
 
-            async function generateIntroductions(title, author) {
-                const prompt = `你是一個負責生成 JSON 資料的 AI。根據以下提供的作品標題和作者，生成一段作者簡介和文章簡介。
+async function generateIntroductions(title, author) {
+const prompt = `你是一個負責生成 JSON 資料的 AI。根據以下提供的作品標題和作者，生成一段作者簡介和文章簡介。
 作品標題: "${title}"
 作者: "${author}"
 嚴格遵循以下要求：
@@ -1510,31 +1697,31 @@ JSON 格式如下：
 - **絕對不要** 在 JSON 物件前後添加任何說明、註釋或 markdown 語法（例如 \`\`\`json）。
 範例輸出格式：
 {
-  "authorIntro": "（此處為關於作者的簡介）",
-  "articleIntro": "（此處為關於文章的簡介）"
+"authorIntro": "（此處為關於作者的簡介）",
+"articleIntro": "（此處為關於文章的簡介）"
 }`;
-                try {
-                    const intros = await callApiWithRetry(prompt, 3);
-                    if (intros && typeof intros.authorIntro === 'string' && typeof intros.articleIntro === 'string') {
-                        return intros;
-                    } else {
-                        throw new Error("返回的簡介 JSON 物件結構不正確。");
-                    }
-                } catch (error) {
-                    console.error("生成簡介失敗 (多次重試後):", error);
-                    throw error;
-                }
-            }
+try {
+const intros = await callApiWithRetry(prompt, 3);
+if (intros && typeof intros.authorIntro === 'string' && typeof intros.articleIntro === 'string') {
+return intros;
+} else {
+throw new Error("返回的簡介 JSON 物件結構不正確。");
+}
+} catch (error) {
+console.error("生成簡介失敗 (多次重試後):", error);
+throw error;
+}
+}
 
-            async function fetchTranslationData(text) {
-                const prompt = `你是一個專門生成 JSON 的 AI。請將以下文言文的每一句（以標點符號如 ，。？！；： 分隔）進行分析，並嚴格按照指定的 JSON 格式輸出。
+async function fetchTranslationData(text) {
+const prompt = `你是一個專門生成 JSON 的 AI。請將以下文言文的每一句（以標點符號如 ，。？！；： 分隔）進行分析，並嚴格按照指定的 JSON 格式輸出。
 
 你的回覆**必須**是一個單一的、完整的 JSON 物件，不要包含任何 JSON 區塊之外的說明或 markdown 語法，而且必須用繁體中文輸出。
 
 JSON 物件應包含一個名為 "translations" 的 key，其值為一個陣列 (array)。陣列中的每個元素都是一個物件，代表原文中的一個句子片段。每個句子物件都必須包含以下三個 key：
-1.  \`"original"\`：字串 (string)，包含原始的文言文句子片段。
-2.  \`"translation"\`：字串 (string)，包含該片段的完整白話文翻譯。
-3.  \`"breakdown"\`：一個字串陣列 (array of strings)，其中每個字串是對句子中一個詞的解釋，格式為「詞：解釋」。請將常見的文言實詞或虛詞用 markdown 粗體標示，例如「**之**：的」。
+1. \`"original"\`：字串 (string)，包含原始的文言文句子片段。
+2. \`"translation"\`：字串 (string)，包含該片段的完整白話文翻譯。
+3. \`"breakdown"\`：一個字串陣列 (array of strings)，其中每個字串是對句子中一個詞的解釋，格式為「詞：解釋」。請將常見的文言實詞或虛詞用 markdown 粗體標示，例如「**之**：的」。
 
 待處理的文言文如下：
 \`\`\`
@@ -1543,438 +1730,652 @@ ${text}
 
 範例輸出格式：
 {
-  "translations": [
-    {
-      "original": "國無常強，無常弱。",
-      "translation": "國家不會永遠強盛，也不會永遠衰弱。",
-      "breakdown": [
-        "國：國家。",
-        "**無**：沒有，不會。",
-        "常：永遠，恆常。",
-        "強：強盛。",
-        "弱：衰弱。"
-      ]
-    },
-    {
-      "original": "奉法者強，則國強；",
-      "translation": "遵循法令的人強大，國家就會強盛；",
-      "breakdown": [
-        "奉：遵守、遵循。",
-        "法：法令。",
-        "者：...的人。",
-        "強：強大。",
-        "**則**：那麼，就。",
-        "國：國家。",
-        "強：強盛。"
-      ]
-    }
-  ]
+"translations": [
+{
+"original": "國無常強，無常弱。",
+"translation": "國家不會永遠強盛，也不會永遠衰弱。",
+"breakdown": [
+"國：國家。",
+"**無**：沒有，不會。",
+"常：永遠，恆常。",
+"強：強盛。",
+"弱：衰弱。"
+]
+},
+{
+"original": "奉法者強，則國強；",
+"translation": "遵循法令的人強大，國家就會強盛；",
+"breakdown": [
+"奉：遵守、遵循。",
+"法：法令。",
+"者：...的人。",
+"強：強大。",
+"**則**：那麼，就。",
+"國：國家。",
+"強：強盛。"
+]
+}
+]
 }`;
-                const translationJson = await callApiWithRetry(prompt, 3);
-                if (!translationJson || !Array.isArray(translationJson.translations)) {
-                    throw new Error("API 返回的翻譯 JSON 結構不正確或為空。");
-                }
-                return translationJson;
-            }
+const translationJson = await callApiWithRetry(prompt, 3);
+if (!translationJson || !Array.isArray(translationJson.translations)) {
+throw new Error("API 返回的翻譯 JSON 結構不正確或為空。");
+}
+return translationJson;
+}
 
-            // --- History Feature ---
-            function loadHistory() {
-                state.history = JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
-            }
+// --- History Feature ---
+function loadHistory() {
+state.history = JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
+}
 
-            function saveHistory() {
-                localStorage.setItem(HISTORY_KEY, JSON.stringify(state.history));
-            }
+function saveHistory() {
+localStorage.setItem(HISTORY_KEY, JSON.stringify(state.history));
+}
 
-            function addToHistory(item) {
-                state.history = state.history.filter(h => h.id !== item.id);
-                state.history.unshift(item);
-                if (state.history.length > 50) state.history.pop();
-                saveHistory();
-            }
-
-            function showHistory() {
-                renderHistory();
-                historyModal.classList.add('is-visible');
-            }
-
-            function hideHistory() {
-                historyModal.classList.remove('is-visible');
-            }
-
-            function renderHistory() {
-                let items = [...state.history];
-                const term = historySearch.value.toLowerCase();
-                if (term) {
-                    items = items.filter(i => i.title.toLowerCase().includes(term) || (i.author && i.author.toLowerCase().includes(term)));
-                }
-                items.sort((a, b) => {
-                    const dateA = new Date(a.id);
-                    const dateB = new Date(b.id);
-                    return historySort.value === 'date_asc' ? dateA - dateB : dateB - dateA;
-                });
-                historyList.innerHTML = items.length === 0 ?
-                    `<li class="no-history-msg">${term ? '找不到符合條件的紀錄。' : '目前沒有閱讀紀錄。'}</li>` :
-                    items.map(item => `
-                        <li data-history-id="${item.id}">
-                            <div class="history-item-content">
-                                <div class="history-list-item-title">${item.title}</div>
-                                <div class="history-list-item-meta">
-                                    <span>${item.author === 'N/A' ? '手動輸入' : item.author}</span> | <span>${new Date(item.id).toLocaleDateString('zh-TW')}</span>
-                                </div>
-                            </div>
-                            <div class="history-item-actions">
-                                <button class="icon-btn regenerate-history-btn" title="重新生成">
-                                    <i class="fas fa-sync-alt"></i>
-                                </button>
-                                <button class="icon-btn edit-history-btn" title="修訂標題">
-                                    <i class="fas fa-pencil-alt"></i>
-                                </button>
-                                <button class="icon-btn delete-history-btn" title="刪除此紀錄">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                            </div>
-                        </li>`).join('');
-            }
-            
-            function handleHistoryListClick(e) {
-                const li = e.target.closest('li[data-history-id]');
-                if (!li) return;
-            
-                const id = li.dataset.historyId;
-                const item = state.history.find(h => h.id === id);
-                if (!item) return;
-            
-                const deleteBtn = e.target.closest('.delete-history-btn');
-                const regenerateBtn = e.target.closest('.regenerate-history-btn');
-                const editBtn = e.target.closest('.edit-history-btn');
-                const contentArea = e.target.closest('.history-item-content');
-            
-                if (deleteBtn) {
-                    if (confirm(`您確定要刪除「${item.title}」這篇紀錄嗎？`)) {
-                        state.history = state.history.filter(h => h.id !== id);
-                        saveHistory();
-                        renderHistory();
-                    }
-                    return;
-                }
-            
-                if (regenerateBtn) {
-                    if (confirm(`您確定要重新生成「${item.title}」的翻譯結果嗎？這將會發起新的請求。`)) {
-                        hideHistory();
-                        processAndDisplay(item);
-                    }
-                    return;
-                }
-            
-                if (editBtn) {
-                    const titleDiv = li.querySelector('.history-list-item-title');
-                    const currentTitle = titleDiv.textContent;
-                    const input = document.createElement('input');
-                    input.type = 'text';
-                    input.className = 'history-title-edit';
-                    input.value = currentTitle;
-            
-                    const saveChanges = () => {
-                        const newTitle = input.value.trim();
-                        if (newTitle && newTitle !== item.title) {
-                            item.title = newTitle;
-                            saveHistory();
-                        }
-                        renderHistory();
-                    };
-            
-                    input.addEventListener('blur', saveChanges);
-                    input.addEventListener('keydown', (e) => {
-                        if (e.key === 'Enter') {
-                            input.blur();
-                        } else if (e.key === 'Escape') {
-                            renderHistory();
-                        }
-                    });
-            
-                    titleDiv.replaceWith(input);
-                    input.focus();
-                    input.select();
-                    return;
-                }
-            
-                if (contentArea) {
-                    hideHistory();
-                    loading.style.display = 'block';
-                    introductionArea.innerHTML = '';
-                    translationArea.innerHTML = '';
-            
-                    setTimeout(() => {
-                        classicalText.value = item.content;
-                        autoResizeTextarea.call(classicalText);
-            
-                        introductionArea.innerHTML = item.introHtml || '';
-                        translationArea.innerHTML = item.translationHtml || '';
-                        
-                        // ===== MODIFICATION START =====
-                        // Repopulate currentOriginalTexts from the loaded HTML
-                        // before calling setupDynamicContent.
-                        currentOriginalTexts = [];
-                        const originalTextElements = translationArea.querySelectorAll('.original-text');
-                        originalTextElements.forEach(el => {
-                            // el.innerHTML contains the text with <br> tags, which is what we need
-                            // for the floating window's innerHTML.
-                            currentOriginalTexts.push(el.innerHTML);
-                        });
-                        // ===== MODIFICATION END =====
-            
-                        setupDynamicContent();
-                        loading.style.display = 'none';
-                    }, 200);
-                }
-            }
-
-            function handleDeleteAllHistory() {
-                if (state.history.length === 0) return;
-                if (confirm('您確定要刪除所有閱讀紀錄嗎？此操作無法復原。')) {
-                    state.history = [];
-                    saveHistory();
-                    renderHistory();
-                }
-            }
-
-            // --- UI & Display Formatting ---
-            function setAiSearchLoading(isLoading) {
-                aiSearchBtn.disabled = isLoading;
-                const btnText = aiSearchBtn.querySelector('.btn-text');
-                let loader = aiSearchBtn.querySelector('.loader');
-                if (isLoading) {
-                    if (!loader) {
-                        loader = document.createElement('div');
-                        loader.className = 'loader';
-                        aiSearchBtn.insertBefore(loader, btnText);
-                    }
-                    btnText.textContent = '尋找中...';
-                } else {
-                    if (loader) loader.remove();
-                    btnText.textContent = '尋找篇章';
-                }
-            }
-
-            function showError(message) {
-                errorMessage.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
-                errorMessage.style.display = 'block';
-            }
-
-            function hideError() {
-                errorMessage.style.display = 'none';
-            }
-
-            function updateRatingDots() {
-                ratingDots.forEach(dot => {
-                    dot.classList.toggle('selected', dot.dataset.value <= state.difficulty);
-                });
-            }
-
-            function setupDynamicContent() {
-                setupWordExplanationToggle();
-                setupSentenceReveal(); // **已加入**：綁定單句點擊事件
-                
-                // 檢查是否有翻譯內容，以決定是否顯示「全部顯示/隱藏」按鈕
-                const hasContentToToggle = document.querySelector('.hidden-text, .explanation');
-                if (hasContentToToggle) {
-                    toggleTranslationsBtn.style.display = 'inline-flex';
-                    // 每次生成新內容時，都將按鈕重設為「顯示」狀態
-                    toggleTranslationsBtn.querySelector('i').className = 'fas fa-eye';
-                    toggleTranslationsBtn.title = '顯示所有翻譯及解釋';
-                } else {
-                    toggleTranslationsBtn.style.display = 'none';
-                }
-                showFloatingOriginal();
-            }
-            
-            function setupWordExplanationToggle() {
-                document.querySelectorAll('.character').forEach(character => {
-                    character.addEventListener('click', function() {
-                        this.nextElementSibling?.classList.toggle('revealed');
-                    });
-                });
-            }
-
-            // **已加入**：處理單一語譯句子點擊的函數
-            function setupSentenceReveal() {
-                document.querySelectorAll('#translation-area .hidden-text').forEach(sentence => {
-                    sentence.addEventListener('click', function() {
-                        this.classList.toggle('revealed');
-                    });
-                });
-            }
+function addToHistory(item) {
+const existingIndex = state.history.findIndex(h => h.id === item.id);
+if (existingIndex > -1) {
+state.history[existingIndex] = item;
+} else {
+state.history.unshift(item);
+}
+if (state.history.length > 50) state.history.pop();
+saveHistory();
+}
 
 
-            function formatIntroHtml(intros) {
-                if (!intros || (!intros.authorIntro && !intros.articleIntro)) return '';
-                const authorHtml = intros.authorIntro ? `
-                <div class="introduction-section">
-                    <div class="introduction-title"><i class="fas fa-user-edit"></i> 作者簡介</div>
-                    <div class="introduction-content">${intros.authorIntro.replace(/\n/g, '<br>')}</div>
-                </div>` : '';
-                const articleHtml = intros.articleIntro ? `
-                <div class="introduction-section">
-                    <div class="introduction-title"><i class="fas fa-file-alt"></i> 文章簡介</div>
-                    <div class="introduction-content">${intros.articleIntro.replace(/\n/g, '<br>')}</div>
-                </div>` : '';
-                return `<div class="introduction-wrapper">${authorHtml}${articleHtml}</div>`;
-            }
+function showHistory() {
+renderHistory();
+historyModal.classList.add('is-visible');
+}
 
-            function formatTranslationResult(data) {
-                if (!data || !data.translations || !Array.isArray(data.translations) || data.translations.length === 0) {
-                    return `<div class="error-message" style="display: block; margin-top: 0;"><i class="fas fa-exclamation-triangle"></i> 翻譯結果為空或格式不正確。</div>`;
-                }
-                
-                currentOriginalTexts = [];
-                let htmlOutput = '';
-            
-                data.translations.forEach(block => {
-                    if (!block.original || !block.translation || !block.breakdown) {
-                        console.warn('Skipping malformed translation block:', block);
-                        return; 
-                    }
-            
-                    currentOriginalTexts.push(block.original);
-            
-                    const breakdownHtml = block.breakdown.map(line => {
-                        const parts = line.replace(/^\*+/, '').trim().split(/:|：/);
-                        if (parts.length >= 2) {
-                            const charPart = parts[0].trim().replace(/\*\*(.*?)\*\*/g, '$1');
-                            const explanationPart = parts.slice(1).join(':').trim();
-                            return `<div class="character-item">
-                                        <span class="character">${charPart}</span><span class="explanation">：${explanationPart}</span>
-                                    </div>`;
-                        }
-                        return `<div>${line}</div>`;
-                    }).join('');
+function hideHistory() {
+historyModal.classList.remove('is-visible');
+}
 
-                    // 每句翻譯都用 hidden-text 包裹，以便獨立和集體控制
-                    const translationSentences = block.translation.replace(/\n/g, '<br>').split('<br>').filter(s => s.trim());
-                    const translationHtml = translationSentences.map(sentence => 
-                        `<div class="sentence-container"><span class="hidden-text">${sentence.trim()}</span></div>`
-                    ).join('');
-            
-                    htmlOutput += `
-                    <div class="translation-block">
-                        <div class="original-title"><i class="fas fa-scroll"></i> 原文</div>
-                        <div class="original-text">${block.original.replace(/\n/g, '<br>')}</div>
-            
-                        <div class="translation-title"><i class="fas fa-language"></i> 語譯</div>
-                        <div class="translation-text">${translationHtml}</div>
-            
-                        <div class="character-breakdown">
-                            <strong><i class="fas fa-search"></i> 逐字解釋</strong>
-                            ${breakdownHtml}
-                        </div>
-                    </div>`;
-                });
-            
-                return htmlOutput;
-            }
+function renderHistory() {
+let items = [...state.history];
+const term = historySearch.value.toLowerCase();
+if (term) {
+items = items.filter(i => i.title.toLowerCase().includes(term) || (i.author && i.author.toLowerCase().includes(term)));
+}
+items.sort((a, b) => {
+const dateA = new Date(a.id);
+const dateB = new Date(b.id);
+return historySort.value === 'date_asc' ? dateA - dateB : dateB - a;
+});
+historyList.innerHTML = items.length === 0 ?
+`<li class="no-history-msg">${term ? '找不到符合條件的紀錄。' : '目前沒有閱讀紀錄。'}</li>` :
+items.map(item => `
+<li data-history-id="${item.id}">
+<div class="history-item-content">
+<div class="history-list-item-title">
+<span>${item.title}</span>
+${item.testSuccess ? '<i class="fas fa-medal" title="挑戰成功" style="color: #f1c40f; margin-left: 8px; font-size: 1.1rem;"></i>' : ''}
+</div>
+<div class="history-list-item-meta">
+<span>${item.author === 'N/A' ? '手動輸入' : item.author}</span> | <span>${new Date(item.id).toLocaleDateString('zh-TW')}</span>
+</div>
+</div>
+<div class="history-item-actions">
+<button class="icon-btn regenerate-history-btn" title="重新生成">
+<i class="fas fa-sync-alt"></i>
+</button>
+<button class="icon-btn edit-history-btn" title="修訂標題">
+<i class="fas fa-pencil-alt"></i>
+</button>
+<button class="icon-btn delete-history-btn" title="刪除此紀錄">
+<i class="fas fa-trash-alt"></i>
+</button>
+</div>
+</li>`).join('');
+}
 
-            // --- Floating Window ---
-            function getDeviceType() {
-                return window.innerWidth <= 768 ? 'mobile' : 'desktop';
-            }
+function handleHistoryListClick(e) {
+const li = e.target.closest('li[data-history-id]');
+if (!li) return;
 
-            function initFloatingWindow() {
-                if (getDeviceType() === 'mobile') {
-                    isFloatingEnabled = localStorage.getItem('floatingEnabled') !== 'false';
-                    updateFloatingToggleIcon();
-                    updateReopenButton();
-                } else {
-                    isFloatingEnabled = false;
-                    reopenFloating.style.display = 'none';
-                }
-            }
+const id = li.dataset.historyId;
+const item = state.history.find(h => h.id === id);
+if (!item) return;
 
-            function updateFloatingToggleIcon() {
-                const icon = floatingToggle.querySelector('i');
-                icon.className = isFloatingEnabled ? 'fas fa-times' : 'fas fa-expand';
-                floatingToggle.title = isFloatingEnabled ? '關閉懸浮窗' : '開啟懸浮窗';
-            }
+const deleteBtn = e.target.closest('.delete-history-btn');
+const regenerateBtn = e.target.closest('.regenerate-history-btn');
+const editBtn = e.target.closest('.edit-history-btn');
+const contentArea = e.target.closest('.history-item-content');
 
-            function updateReopenButton() {
-                if (getDeviceType() === 'mobile') {
-                    reopenFloating.classList.toggle('show', !isFloatingEnabled && currentOriginalTexts.length > 0);
-                }
-            }
+if (deleteBtn) {
+if (confirm(`您確定要刪除「${item.title}」這篇紀錄嗎？`)) {
+state.history = state.history.filter(h => h.id !== id);
+saveHistory();
+renderHistory();
+}
+return;
+}
 
-            function showFloatingOriginal() {
-                if (getDeviceType() !== 'mobile' || !isFloatingEnabled || currentOriginalTexts.length === 0) {
-                    hideFloatingOriginal();
-                    return;
-                }
-                floatingOriginalText.innerHTML = currentOriginalTexts.join('<br><br>');
-                floatingOriginal.classList.add('show');
-                updateReopenButton();
-            }
+if (regenerateBtn) {
+if (confirm(`您確定要重新生成「${item.title}」的翻譯結果嗎？這將會發起新的請求。`)) {
+hideHistory();
+processAndDisplay({...item, testSuccess: item.testSuccess || false});
+}
+return;
+}
 
-            function hideFloatingOriginal() {
-                floatingOriginal.classList.remove('show');
-                updateReopenButton();
-            }
+if (editBtn) {
+const titleSpan = li.querySelector('.history-list-item-title > span');
+const currentTitle = titleSpan.textContent;
+const input = document.createElement('input');
+input.type = 'text';
+input.className = 'history-title-edit';
+input.value = currentTitle;
 
-            function handleFloatingToggle() {
-                if (getDeviceType() === 'mobile') {
-                    isFloatingEnabled = !isFloatingEnabled;
-                    localStorage.setItem('floatingEnabled', isFloatingEnabled);
-                    updateFloatingToggleIcon();
-                    isFloatingEnabled && currentOriginalTexts.length > 0 ? showFloatingOriginal() : hideFloatingOriginal();
-                } else {
-                    hideFloatingOriginal();
-                }
-            }
+const saveChanges = () => {
+const newTitle = input.value.trim();
+if (newTitle && newTitle !== item.title) {
+item.title = newTitle;
+saveHistory();
+}
+renderHistory();
+};
 
-            function handleReopenFloating() {
-                isFloatingEnabled = true;
-                localStorage.setItem('floatingEnabled', true);
-                updateFloatingToggleIcon();
-                showFloatingOriginal();
-            }
+input.addEventListener('blur', saveChanges);
+input.addEventListener('keydown', (e) => {
+if (e.key === 'Enter') {
+input.blur();
+} else if (e.key === 'Escape') {
+renderHistory();
+}
+});
 
-            let isResizing = false,
-                startY = 0,
-                startHeight = 0;
+titleSpan.replaceWith(input);
+input.focus();
+input.select();
+return;
+}
 
-            function startResize(e) {
-                if (getDeviceType() !== 'mobile') return;
-                const rect = floatingOriginal.getBoundingClientRect();
-                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                if (clientY > rect.bottom - 20) {
-                    isResizing = true;
-                    startY = clientY;
-                    startHeight = floatingOriginal.offsetHeight;
-                    document.addEventListener('mousemove', resize);
-                    document.addEventListener('touchmove', resize, {
-                        passive: false
-                    });
-                    document.addEventListener('mouseup', stopResize);
-                    document.addEventListener('touchend', stopResize);
-                    e.preventDefault();
-                }
-            }
+if (contentArea) {
+showModeSelection(id, item.title);
+}
+}
 
-            function resize(e) {
-                if (!isResizing) return;
-                e.preventDefault();
-                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                const newHeight = startHeight + (clientY - startY);
-                if (newHeight >= 150 && newHeight <= window.innerHeight * 0.8) {
-                    floatingOriginal.style.height = newHeight + 'px';
-                }
-            }
 
-            function stopResize() {
-                isResizing = false;
-                document.removeEventListener('mousemove', resize);
-                document.removeEventListener('touchmove', resize);
-                document.removeEventListener('mouseup', stopResize);
-                document.removeEventListener('touchend', stopResize);
-            }
+function handleDeleteAllHistory() {
+if (state.history.length === 0) return;
+if (confirm('您確定要刪除所有閱讀紀錄嗎？此操作無法復原。')) {
+state.history = [];
+saveHistory();
+renderHistory();
+}
+}
+
+// ----- 模式選擇功能 -----
+function showModeSelection(itemId, title) {
+    modeSelectionModal.dataset.currentItemId = itemId;
+    modeSelectionTitle.textContent = title;
+    modeSelectionModal.classList.add('is-visible');
+}
+
+function hideModeSelection() {
+    modeSelectionModal.classList.remove('is-visible');
+}
+
+function handleReadMode() {
+    const itemId = modeSelectionModal.dataset.currentItemId;
+    const item = state.history.find(h => h.id === itemId);
+    if(item) {
+        hideModeSelection();
+        loadContent(item);
+    }
+}
+
+function handleTestMode() {
+    const itemId = modeSelectionModal.dataset.currentItemId;
+    const item = state.history.find(h => h.id === itemId);
+    if(item) {
+        hideModeSelection();
+        startTestMode(item);
+    }
+}
+
+function loadContent(item, callback) {
+    hideHistory();
+    loading.style.display = 'block';
+    introductionArea.innerHTML = '';
+    translationArea.innerHTML = '';
+    translationArea.classList.remove('test-mode');
+
+    const existingCounter = document.querySelector('.test-chances-counter');
+    if (existingCounter) existingCounter.remove();
+    testState.isActive = false; // 確保在加載內容時測試模式為非活動狀態
+
+    setTimeout(() => {
+        classicalText.value = item.content;
+        autoResizeTextarea.call(classicalText);
+
+        introductionArea.innerHTML = item.introHtml || '';
+        translationArea.innerHTML = item.translationHtml || '';
+
+        currentOriginalTexts = [];
+        const originalTextElements = translationArea.querySelectorAll('.original-text');
+        originalTextElements.forEach(el => {
+            currentOriginalTexts.push(el.innerHTML);
         });
-    </script>
+
+        setupDynamicContent();
+        loading.style.display = 'none';
+
+        if(typeof callback === 'function') {
+            callback();
+        }
+
+    }, 200);
+}
+
+// ----- 測試模式核心功能 -----
+
+function startTestMode(item) {
+    loadContent(item, () => {
+        prepareTestEnvironment(item.id);
+    });
+}
+
+function prepareTestEnvironment(itemId) {
+    translationArea.classList.add('test-mode');
+
+    testState = {
+        isActive: true,
+        chances: 7,
+        mistakesFound: 0,
+        totalMistakes: 5,
+        currentItemId: itemId,
+        wronglyClickedItems: [],
+        mistakeItems: [],
+    };
+
+    // 預設顯示全部隱藏內容
+    document.querySelectorAll('.hidden-text, .explanation').forEach(el => el.classList.add('revealed'));
+    const toggleIcon = toggleTranslationsBtn.querySelector('i');
+    toggleIcon.className = 'fas fa-eye-slash';
+    toggleTranslationsBtn.title = '在測驗模式中，此功能已停用';
+
+    const allItems = Array.from(document.querySelectorAll('.character-item'));
+    if (allItems.length < testState.totalMistakes) {
+        showError("此篇章解釋數量不足，無法開啟測驗模式。");
+        translationArea.classList.remove('test-mode');
+        return;
+    }
+
+    const counterDiv = document.createElement('div');
+    counterDiv.className = 'test-chances-counter';
+    const firstChild = translationArea.firstChild;
+    translationArea.insertBefore(counterDiv, firstChild);
+    updateChancesCounter();
+
+    const allExplanations = allItems.map(item => {
+        const explanationSpan = item.querySelector('.explanation');
+        return explanationSpan ? explanationSpan.textContent.trim() : '';
+    });
+
+    // 隨機選擇5個項目作為錯誤項
+    const shuffledIndices = [...Array(allItems.length).keys()].sort(() => 0.5 - Math.random());
+    const mistakeIndices = shuffledIndices.slice(0, testState.totalMistakes);
+
+    mistakeIndices.forEach(index => {
+        const itemToCorrupt = allItems[index];
+        const explanationSpan = itemToCorrupt.querySelector('.explanation');
+        const originalText = explanationSpan.textContent;
+
+        let newExplanation;
+        let randomIndex;
+        do {
+            randomIndex = Math.floor(Math.random() * allExplanations.length);
+            newExplanation = allExplanations[randomIndex];
+        } while (newExplanation === originalText || !newExplanation);
+
+        itemToCorrupt.dataset.isMistake = 'true';
+        itemToCorrupt.dataset.originalExplanation = originalText;
+        itemToCorrupt.dataset.corruptedExplanation = newExplanation;
+        explanationSpan.textContent = newExplanation; // 替換為錯誤解釋
+        testState.mistakeItems.push(itemToCorrupt);
+    });
+}
+
+function handleTestAnswer(event) {
+    if (!testState.isActive) return;
+    const clickedItem = event.target.closest('.character-item');
+    if (!clickedItem || clickedItem.dataset.answered) return;
+
+    clickedItem.dataset.answered = 'true';
+    const isMistake = clickedItem.dataset.isMistake === 'true';
+
+    if (isMistake) {
+        testState.mistakesFound++;
+        clickedItem.classList.add('found-correctly');
+        // 答對了，顯示回正確答案
+        const explanationSpan = clickedItem.querySelector('.explanation');
+        const correctText = clickedItem.dataset.originalExplanation;
+        explanationSpan.innerHTML = `<i class="fas fa-check-circle" style="color:var(--success-color);"></i> <strong>正確解釋：</strong> ${correctText}`;
+        if (testState.mistakesFound === testState.totalMistakes) {
+            handleTestSuccess();
+        }
+    } else {
+        testState.chances--;
+        clickedItem.classList.add('answered-incorrectly');
+        testState.wronglyClickedItems.push(clickedItem);
+        updateChancesCounter();
+        if (testState.chances < (testState.totalMistakes - testState.mistakesFound)) {
+            handleTestFailure();
+        } else if (testState.chances === 0) {
+            handleTestFailure();
+        } else {
+             const explanationSpan = clickedItem.querySelector('.explanation');
+             explanationSpan.innerHTML = `<i class="fas fa-times-circle" style="color:var(--error-color);"></i> ${explanationSpan.textContent}`;
+        }
+    }
+}
+
+function updateChancesCounter() {
+    const counterDiv = document.querySelector('.test-chances-counter');
+    if (counterDiv) {
+        counterDiv.innerHTML = `尚有 <strong>${testState.totalMistakes - testState.mistakesFound}</strong> 個錯誤待找出，剩餘機會: <span>${testState.chances}</span>`;
+    }
+}
+
+function endTest() {
+    testState.isActive = false;
+    document.querySelectorAll('.character-item').forEach(item => item.dataset.answered = 'true'); // 禁用所有點擊
+}
+
+function handleTestSuccess() {
+    endTest();
+    const item = state.history.find(h => h.id === testState.currentItemId);
+    if(item) {
+        item.testSuccess = true;
+        addToHistory(item);
+        renderHistory();
+    }
+
+    const resultDiv = document.getElementById('test-result-content');
+    resultDiv.innerHTML = `
+        <div class="success-icon"><i class="fas fa-trophy"></i></div>
+        <h2>挑戰成功！</h2>
+        <p>恭喜您找出所有錯誤解釋！<br><small style="color: #7f8c8d;">(點擊任意處關閉)</small></p>
+    `;
+    testResultOverlay.classList.add('is-visible');
+}
+
+function handleTestFailure() {
+    endTest();
+    
+    // 顯示答案
+    testState.mistakeItems.forEach(item => {
+        // 如果這個錯誤是使用者點擊過的 (即答對的)，維持原樣
+        if (item.classList.contains('found-correctly')) {
+             item.classList.add('reveal-correct');
+             return;
+        }
+        // 如果是使用者沒找到的錯誤
+        item.classList.add('reveal-correct'); // 用綠色標示
+        const explanationSpan = item.querySelector('.explanation');
+        const corrupted = item.dataset.corruptedExplanation;
+        const original = item.dataset.originalExplanation;
+        explanationSpan.innerHTML = `原顯示錯誤解釋：<span class="original-mistake">${corrupted}</span><br><strong>正確解釋應為：<span class="correct-answer">${original}</span></strong>`;
+    });
+
+    testState.wronglyClickedItems.forEach(item => {
+        item.classList.add('reveal-user-error'); // 用紅色標示
+    });
+
+    const resultDiv = document.getElementById('test-result-content');
+    resultDiv.innerHTML = `
+        <div class="failure-icon"><i class="fas fa-times-circle"></i></div>
+        <h2>挑戰失敗</h2>
+        <p>別氣餒，再接再厲！正確答案已在頁面中標示。<br><small style="color: #7f8c8d;">(點擊任意處關閉)</small></p>
+    `;
+    setTimeout(() => {
+        testResultOverlay.classList.add('is-visible');
+    }, 500);
+}
+
+
+// --- UI & Display Formatting ---
+function setAiSearchLoading(isLoading) {
+aiSearchBtn.disabled = isLoading;
+const btnText = aiSearchBtn.querySelector('.btn-text');
+let loader = aiSearchBtn.querySelector('.loader');
+if (isLoading) {
+if (!loader) {
+loader = document.createElement('div');
+loader.className = 'loader';
+aiSearchBtn.insertBefore(loader, btnText);
+}
+btnText.textContent = '尋找中...';
+} else {
+if (loader) loader.remove();
+btnText.textContent = '尋找篇章';
+}
+}
+
+function showError(message) {
+errorMessage.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
+errorMessage.style.display = 'block';
+}
+
+function hideError() {
+errorMessage.style.display = 'none';
+}
+
+function updateRatingDots() {
+ratingDots.forEach(dot => {
+dot.classList.toggle('selected', dot.dataset.value <= state.difficulty);
+});
+}
+
+function setupDynamicContent() {
+setupWordExplanationToggle();
+setupSentenceReveal();
+
+const hasContentToToggle = document.querySelector('.hidden-text, .explanation');
+if (hasContentToToggle) {
+toggleTranslationsBtn.style.display = 'inline-flex';
+toggleTranslationsBtn.querySelector('i').className = 'fas fa-eye';
+toggleTranslationsBtn.title = '顯示所有翻譯及解釋';
+} else {
+toggleTranslationsBtn.style.display = 'none';
+}
+showFloatingOriginal();
+}
+
+function setupWordExplanationToggle() {
+document.querySelectorAll('.character').forEach(character => {
+character.addEventListener('click', function(e) {
+    if (translationArea.classList.contains('test-mode')) {
+        e.stopPropagation();
+        return;
+    }
+this.nextElementSibling?.classList.toggle('revealed');
+});
+});
+}
+
+function setupSentenceReveal() {
+document.querySelectorAll('#translation-area .hidden-text').forEach(sentence => {
+sentence.addEventListener('click', function() {
+    if (testState.isActive) return;
+this.classList.toggle('revealed');
+});
+});
+}
+
+
+function formatIntroHtml(intros) {
+if (!intros || (!intros.authorIntro && !intros.articleIntro)) return '';
+const authorHtml = intros.authorIntro ? `
+<div class="introduction-section">
+<div class="introduction-title"><i class="fas fa-user-edit"></i> 作者簡介</div>
+<div class="introduction-content">${intros.authorIntro.replace(/\n/g, '<br>')}</div>
+</div>` : '';
+const articleHtml = intros.articleIntro ? `
+<div class="introduction-section">
+<div class="introduction-title"><i class="fas fa-file-alt"></i> 文章簡介</div>
+<div class="introduction-content">${intros.articleIntro.replace(/\n/g, '<br>')}</div>
+</div>` : '';
+return `<div class="introduction-wrapper">${authorHtml}${articleHtml}</div>`;
+}
+
+function formatTranslationResult(data) {
+if (!data || !data.translations || !Array.isArray(data.translations) || data.translations.length === 0) {
+return `<div class="error-message" style="display: block; margin-top: 0;"><i class="fas fa-exclamation-triangle"></i> 翻譯結果為空或格式不正確。</div>`;
+}
+
+currentOriginalTexts = [];
+let htmlOutput = '';
+
+data.translations.forEach(block => {
+if (!block.original || !block.translation || !block.breakdown) {
+console.warn('Skipping malformed translation block:', block);
+return;
+}
+
+currentOriginalTexts.push(block.original);
+
+const breakdownHtml = block.breakdown.map(line => {
+const parts = line.replace(/^\*+/, '').trim().split(/:|：/);
+if (parts.length >= 2) {
+const charPart = parts[0].trim().replace(/\*\*(.*?)\*\*/g, '$1');
+const explanationPart = parts.slice(1).join(':').trim();
+return `<div class="character-item">
+<span class="character">${charPart}</span><span class="explanation">：${explanationPart}</span>
+</div>`;
+}
+return `<div>${line}</div>`;
+}).join('');
+
+const translationSentences = block.translation.replace(/\n/g, '<br>').split('<br>').filter(s => s.trim());
+const translationHtml = translationSentences.map(sentence =>
+`<div class="sentence-container"><span class="hidden-text">${sentence.trim()}</span></div>`
+).join('');
+
+htmlOutput += `
+<div class="translation-block">
+<div class="original-title"><i class="fas fa-scroll"></i> 原文</div>
+<div class="original-text">${block.original.replace(/\n/g, '<br>')}</div>
+
+<div class="translation-title"><i class="fas fa-language"></i> 語譯</div>
+<div class="translation-text">${translationHtml}</div>
+
+<div class="character-breakdown">
+<strong><i class="fas fa-search"></i> 逐字解釋</strong>
+${breakdownHtml}
+</div>
+</div>`;
+});
+
+return htmlOutput;
+}
+
+// --- Floating Window ---
+function getDeviceType() {
+return window.innerWidth <= 768 ? 'mobile' : 'desktop';
+}
+
+function initFloatingWindow() {
+if (getDeviceType() === 'mobile') {
+isFloatingEnabled = localStorage.getItem('floatingEnabled') !== 'false';
+updateFloatingToggleIcon();
+updateReopenButton();
+} else {
+isFloatingEnabled = false;
+reopenFloating.style.display = 'none';
+}
+}
+
+function updateFloatingToggleIcon() {
+const icon = floatingToggle.querySelector('i');
+icon.className = isFloatingEnabled ? 'fas fa-times' : 'fas fa-expand';
+floatingToggle.title = isFloatingEnabled ? '關閉懸浮窗' : '開啟懸浮窗';
+}
+
+function updateReopenButton() {
+if (getDeviceType() === 'mobile') {
+reopenFloating.classList.toggle('show', !isFloatingEnabled && currentOriginalTexts.length > 0);
+}
+}
+
+function showFloatingOriginal() {
+if (getDeviceType() !== 'mobile' || !isFloatingEnabled || currentOriginalTexts.length === 0) {
+hideFloatingOriginal();
+return;
+}
+floatingOriginalText.innerHTML = currentOriginalTexts.join('<br><br>');
+floatingOriginal.classList.add('show');
+updateReopenButton();
+}
+
+function hideFloatingOriginal() {
+floatingOriginal.classList.remove('show');
+updateReopenButton();
+}
+
+function handleFloatingToggle() {
+if (getDeviceType() === 'mobile') {
+isFloatingEnabled = !isFloatingEnabled;
+localStorage.setItem('floatingEnabled', isFloatingEnabled);
+updateFloatingToggleIcon();
+isFloatingEnabled && currentOriginalTexts.length > 0 ? showFloatingOriginal() : hideFloatingOriginal();
+} else {
+hideFloatingOriginal();
+}
+}
+
+function handleReopenFloating() {
+isFloatingEnabled = true;
+localStorage.setItem('floatingEnabled', true);
+updateFloatingToggleIcon();
+showFloatingOriginal();
+}
+
+let isResizing = false,
+startY = 0,
+startHeight = 0;
+
+function startResize(e) {
+if (getDeviceType() !== 'mobile') return;
+const rect = floatingOriginal.getBoundingClientRect();
+const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+if (clientY > rect.bottom - 20) {
+isResizing = true;
+startY = clientY;
+startHeight = floatingOriginal.offsetHeight;
+document.addEventListener('mousemove', resize);
+document.addEventListener('touchmove', resize, {
+passive: false
+});
+document.addEventListener('mouseup', stopResize);
+document.addEventListener('touchend', stopResize);
+e.preventDefault();
+}
+}
+
+function resize(e) {
+if (!isResizing) return;
+e.preventDefault();
+const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+const newHeight = startHeight + (clientY - startY);
+if (newHeight >= 150 && newHeight <= window.innerHeight * 0.8) {
+floatingOriginal.style.height = newHeight + 'px';
+}
+}
+
+function stopResize() {
+isResizing = false;
+document.removeEventListener('mousemove', resize);
+document.removeEventListener('touchmove', resize);
+document.removeEventListener('mouseup', stopResize);
+document.removeEventListener('touchend', stopResize);
+}
+});
+</script>
 </body>
 </html>
