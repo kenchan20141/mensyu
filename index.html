@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>文樞 - 遊戲模式修訂版</title>
+<title>文樞</title>
 <link rel="manifest" href="manifest.json">
 
 <!-- 引入 Font Awesome 圖示庫 -->
@@ -1662,7 +1662,8 @@ function handleWindowResize() {
         const isMobile = window.innerWidth <= 768;
 
         game.camera.aspect = width / height;
-        game.camera.position.z = isMobile ? 55 : 35; // Adjust camera on resize
+        // 修改：將手機的攝影機拉得更遠，從 55 改為 68
+        game.camera.position.z = isMobile ? 68 : 35; // Adjust camera on resize
         game.camera.updateProjectionMatrix();
         
         game.renderer.setSize(width, height);
