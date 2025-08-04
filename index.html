@@ -2129,7 +2129,7 @@ function handleTestAnswer(event) {
 function updateChancesCounter() {
     const counterDiv = document.querySelector('.test-chances-counter');
     if (counterDiv) {
-        counterDiv.innerHTML = `尚有 <strong>${testState.totalMistakes - testState.mistakesFound}</strong> 個錯誤待找出，剩餘機會: <span>${testState.chances}</span>`;
+        counterDiv.innerHTML = `尚有 <strong>${testState.totalMistakes - testState.mistakesFound}</strong> 個錯誤，剩餘機會: <span>${testState.chances}</span>`;
     }
 }
 
