@@ -998,31 +998,6 @@ flex-shrink: 0;
     transform: scale(0.95);
 }
 
-/* ===== START: NEW styles for corner History Icon Button ===== */
-#history-icon-btn {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 10;
-    font-size: 1.3rem;
-    color: var(--primary-color);
-}
-
-#history-icon-btn:hover {
-    transform: scale(1.1);
-    background-color: var(--hidden-bg);
-}
-
-@media (max-width: 768px) {
-    #history-icon-btn {
-        top: 15px;
-        right: 15px;
-        font-size: 1.2rem;
-    }
-}
-/* ===== END: NEW styles for corner History Icon Button ===== */
-
-
 /* Applying base style to specific buttons */
 #history-close-btn, .regenerate-history-btn, .edit-history-btn, .delete-history-btn,
 #mode-selection-close-btn {
@@ -1216,11 +1191,6 @@ background: var(--secondary-color);
 <body>
 <div class="container">
 <div class="input-section">
-<!-- ===== NEW: Corner Icon Button ===== -->
-<button id="history-icon-btn" class="icon-btn" title="閱讀紀錄">
-    <i class="fas fa-history"></i>
-</button>
-
 <!-- AI Search Feature -->
 <h2 class="section-title">尋找篇章</h2>
 <div class="form-group">
@@ -1250,7 +1220,9 @@ background: var(--secondary-color);
 <button id="clear-btn" class="clear-btn">
 <i class="fas fa-eraser"></i> 清除
 </button>
-<!-- ===== REMOVED: Old text button for history ===== -->
+<button id="history-btn" class="history-btn">
+<i class="fas fa-history"></i> 閱讀紀錄
+</button>
 </div>
 <div class="error-message" id="error-message"></div>
 </div>
@@ -1329,7 +1301,7 @@ background: var(--secondary-color);
         <p style="margin: 20px 0 30px;">請選擇您想如何進行此篇章：</p>
         <div class="button-group" style="flex-direction: column; gap: 20px;">
             <button id="read-mode-btn" style="width: 100%;"><i class="fas fa-book-open"></i> 閱讀模式</button>
-            <button id="test-mode-btn" style="width: 100%; background: var(--gradient-accent);"><i class="fas fa-vial"></i> 測試模式</button>
+            <button id="test-mode-btn" style="width: 100%; background: var(--gradient-accent);"><i class="fas fa-vial"></i> 測驗模式</button>
         </div>
     </div>
 </div>
@@ -1392,7 +1364,7 @@ const aiSearchBtn = document.getElementById('ai-search-btn');
 const difficultyRating = document.getElementById('difficulty-rating');
 const ratingDots = difficultyRating.querySelectorAll('.rating-dot');
 const aiPromptTextarea = document.getElementById('ai-prompt');
-const historyIconBtn = document.getElementById('history-icon-btn'); // MODIFIED: Get new icon button
+const historyBtn = document.getElementById('history-btn');
 const historyModal = document.getElementById('history-modal');
 const historyCloseBtn = document.getElementById('history-close-btn');
 const historyList = document.getElementById('history-list');
@@ -1449,7 +1421,7 @@ ratingDots.forEach(d => d.classList.toggle('selected', d.dataset.value <= hoverV
 });
 });
 difficultyRating.addEventListener('mouseout', updateRatingDots);
-historyIconBtn.addEventListener('click', showHistory); // MODIFIED: Event listener on new button
+historyBtn.addEventListener('click', showHistory);
 historyCloseBtn.addEventListener('click', hideHistory);
 deleteAllHistoryBtn.addEventListener('click', handleDeleteAllHistory);
 historyModal.addEventListener('click', (e) => {
@@ -1883,7 +1855,7 @@ return;
 }
 
 if (regenerateBtn) {
-if (confirm(`您確定要重新生成「${item.title}」的翻譯結果嗎？這將會發起新的请求。`)) {
+if (confirm(`您確定要重新生成「${item.title}」的翻譯結果嗎？這將會發起新的請求。`)) {
 hideHistory();
 processAndDisplay({...item, testSuccess: item.testSuccess || false});
 }
@@ -2025,11 +1997,11 @@ function prepareTestEnvironment(itemId) {
     document.querySelectorAll('.hidden-text, .explanation').forEach(el => el.classList.add('revealed'));
     const toggleIcon = toggleTranslationsBtn.querySelector('i');
     toggleIcon.className = 'fas fa-eye-slash';
-    toggleTranslationsBtn.title = '在測試模式中，此功能已停用';
+    toggleTranslationsBtn.title = '在測驗模式中，此功能已停用';
 
     const allItems = Array.from(document.querySelectorAll('.character-item'));
     if (allItems.length < testState.totalMistakes) {
-        showError("此篇章解釋數量不足，無法開啟測試模式。");
+        showError("此篇章解釋數量不足，無法開啟測驗模式。");
         translationArea.classList.remove('test-mode');
         return;
     }
