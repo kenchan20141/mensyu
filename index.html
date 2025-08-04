@@ -280,12 +280,12 @@ background: var(--gradient-accent);
 }
 .toggle-translations-btn {
 background: linear-gradient(135deg, #1F7A55, #0B4F4A);
-margin-top: -15px; /* Adjust position */
+margin-top: 0; /* Adjusted from -15px */
 width: auto;
 min-width: 50px;
 flex: 0;
 padding: 10px 12px;
-align-self: flex-start;
+align-self: center; /* Changed from flex-start */
 }
 .section-divider {
 border: 0;
@@ -373,13 +373,16 @@ background: var(--gradient-primary);
 box-shadow: var(--shadow-medium);
 transform: translateY(-2px);
 }
+/* ----- MODIFIED: For Request 2 ----- */
 .output-header {
 display: flex;
-justify-content: space-between;
-align-items: flex-start;
+justify-content: flex-start; /* Changed from space-between */
+align-items: center; /* Changed from flex-start */
+gap: 15px; /* Added gap */
 }
+/* ----- MODIFIED: For Request 2 ----- */
 .output-header .section-title {
-flex-grow: 1;
+flex-grow: 0; /* Changed from 1 */
 }
 .output-content {
 min-height: 200px;
@@ -1064,6 +1067,13 @@ background: var(--secondary-color);
 }
 
 /* ----- 新增：測試模式樣式 ----- */
+/* ----- ADDED: For Request 1 ----- */
+.test-mode .hidden-text {
+    cursor: not-allowed;
+}
+.test-mode .hidden-text:hover {
+    background: var(--hidden-bg); /* Prevents hover from revealing color */
+}
 .test-mode .character-breakdown {
     border-left-color: var(--warning-color);
     padding-bottom: 10px;
@@ -1265,11 +1275,12 @@ background: var(--secondary-color);
 <div class="error-message" id="error-message"></div>
 </div>
 <div class="output-section">
+<!-- ===== MODIFIED: For Request 2 (HTML Structure) ===== -->
 <div class="output-header">
-<h2 class="section-title">翻譯結果</h2>
 <button id="toggle-translations-btn" class="toggle-translations-btn" style="display: none;" title="顯示所有翻譯及解釋">
 <i class="fas fa-eye"></i>
 </button>
+<h2 class="section-title">翻譯結果</h2>
 </div>
 <div class="loading" id="loading">
 <div class="spinner"></div>
@@ -1339,7 +1350,7 @@ background: var(--secondary-color);
         <p style="margin: 20px 0 30px;">請選擇您想如何進行此篇章：</p>
         <div class="button-group" style="flex-direction: column; gap: 20px;">
             <button id="read-mode-btn" style="width: 100%;"><i class="fas fa-book-open"></i> 閱讀模式</button>
-            <button id="test-mode-btn" style="width: 100%; background: var(--gradient-accent);"><i class="fas fa-vial"></i> 測試模式</button>
+            <button id="test-mode-btn" style="width: 100%; background: var(--gradient-accent);"><i class="fas fa-vial"></i> 測驗模式</button>
         </div>
     </div>
 </div>
@@ -2036,15 +2047,18 @@ function prepareTestEnvironment(itemId) {
         mistakeItems: [],
     };
 
-    // 預設顯示全部隱藏內容
-    document.querySelectorAll('.hidden-text, .explanation').forEach(el => el.classList.add('revealed'));
+    // ===== MODIFIED: For Request 1 (JS Logic) =====
+    // Reveal only explanations for the test, and ensure sentence translations are hidden.
+    document.querySelectorAll('.explanation').forEach(el => el.classList.add('revealed'));
+    document.querySelectorAll('.hidden-text').forEach(el => el.classList.remove('revealed'));
+
     const toggleIcon = toggleTranslationsBtn.querySelector('i');
     toggleIcon.className = 'fas fa-eye-slash';
-    toggleTranslationsBtn.title = '在測試模式中，此功能已停用';
+    toggleTranslationsBtn.title = '在測驗模式中，此功能已停用';
 
     const allItems = Array.from(document.querySelectorAll('.character-item'));
     if (allItems.length < testState.totalMistakes) {
-        showError("此篇章解釋數量不足，無法開啟測試模式。");
+        showError("此篇章解釋數量不足，無法開啟測驗模式。");
         translationArea.classList.remove('test-mode');
         return;
     }
