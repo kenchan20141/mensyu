@@ -1185,6 +1185,39 @@ background: var(--secondary-color);
     color: var(--success-color);
     font-weight: bold;
 }
+
+/* ===== 新增：標題與圖示按鍵的容器 ===== */
+.title-with-icon-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* 將原 section-title 的樣式移到這裡 */
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--light-accent);
+}
+
+/* ===== 修改：移除原標題的邊框和邊距 ===== */
+.title-with-icon-wrapper .section-title {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+/* ===== 新增：右上角閱讀紀錄圖示按鍵的獨立CSS ===== */
+#history-icon-btn {
+    color: #015F78; /* 來自舊版按鍵的漸層色 */
+    font-size: 1.3rem;
+    padding: 8px;
+    /* 繼承 .icon-btn 的基礎樣式，但覆寫 hover */
+}
+
+#history-icon-btn:hover {
+    background-color: transparent; /* 按要求，不要 hover 效果 */
+    transform: none; /* 按要求，不要 hover 效果 */
+    opacity: 0.8; /* 保持原有的透明度 */
+}
+
 </style>
 </head>
 
@@ -1192,7 +1225,14 @@ background: var(--secondary-color);
 <div class="container">
 <div class="input-section">
 <!-- AI Search Feature -->
-<h2 class="section-title">尋找篇章</h2>
+<!-- ===== 修改：將標題與新按鈕放入容器 ===== -->
+<div class="title-with-icon-wrapper">
+    <h2 class="section-title">尋找篇章</h2>
+    <button id="history-icon-btn" class="icon-btn" title="閱讀紀錄">
+        <i class="fas fa-history"></i>
+    </button>
+</div>
+
 <div class="form-group">
 <label>難度</label>
 <div class="rating-dots" id="difficulty-rating" data-rating="3">
@@ -1220,9 +1260,7 @@ background: var(--secondary-color);
 <button id="clear-btn" class="clear-btn">
 <i class="fas fa-eraser"></i> 清除
 </button>
-<button id="history-btn" class="history-btn">
-<i class="fas fa-history"></i> 閱讀紀錄
-</button>
+<!-- ===== 移除：舊的閱讀紀錄按鍵 ===== -->
 </div>
 <div class="error-message" id="error-message"></div>
 </div>
@@ -1301,7 +1339,7 @@ background: var(--secondary-color);
         <p style="margin: 20px 0 30px;">請選擇您想如何進行此篇章：</p>
         <div class="button-group" style="flex-direction: column; gap: 20px;">
             <button id="read-mode-btn" style="width: 100%;"><i class="fas fa-book-open"></i> 閱讀模式</button>
-            <button id="test-mode-btn" style="width: 100%; background: var(--gradient-accent);"><i class="fas fa-vial"></i> 測驗模式</button>
+            <button id="test-mode-btn" style="width: 100%; background: var(--gradient-accent);"><i class="fas fa-vial"></i> 測試模式</button>
         </div>
     </div>
 </div>
@@ -1364,13 +1402,16 @@ const aiSearchBtn = document.getElementById('ai-search-btn');
 const difficultyRating = document.getElementById('difficulty-rating');
 const ratingDots = difficultyRating.querySelectorAll('.rating-dot');
 const aiPromptTextarea = document.getElementById('ai-prompt');
-const historyBtn = document.getElementById('history-btn');
 const historyModal = document.getElementById('history-modal');
 const historyCloseBtn = document.getElementById('history-close-btn');
 const historyList = document.getElementById('history-list');
 const historySearch = document.getElementById('history-search');
 const historySort = document.getElementById('history-sort');
 const deleteAllHistoryBtn = document.getElementById('delete-all-history-btn');
+
+// ===== 新增：右上角閱讀紀錄圖示按鍵 =====
+const historyIconBtn = document.getElementById('history-icon-btn');
+
 
 // ----- 新增的 DOM 元素 -----
 const modeSelectionModal = document.getElementById('mode-selection-modal');
@@ -1379,7 +1420,6 @@ const modeSelectionTitle = document.getElementById('mode-selection-title');
 const readModeBtn = document.getElementById('read-mode-btn');
 const testModeBtn = document.getElementById('test-mode-btn');
 const testResultOverlay = document.getElementById('test-result-overlay');
-// const closeTestResultBtn = document.getElementById('close-test-result-btn'); // 按鈕已移除
 
 
 // --- Initialization ---
@@ -1421,8 +1461,11 @@ ratingDots.forEach(d => d.classList.toggle('selected', d.dataset.value <= hoverV
 });
 });
 difficultyRating.addEventListener('mouseout', updateRatingDots);
-historyBtn.addEventListener('click', showHistory);
+
+// ===== 修改：為新的圖示按鍵和舊的關閉按鍵添加事件 =====
+historyIconBtn.addEventListener('click', showHistory); 
 historyCloseBtn.addEventListener('click', hideHistory);
+
 deleteAllHistoryBtn.addEventListener('click', handleDeleteAllHistory);
 historyModal.addEventListener('click', (e) => {
 if (e.target === historyModal) hideHistory();
@@ -1997,11 +2040,11 @@ function prepareTestEnvironment(itemId) {
     document.querySelectorAll('.hidden-text, .explanation').forEach(el => el.classList.add('revealed'));
     const toggleIcon = toggleTranslationsBtn.querySelector('i');
     toggleIcon.className = 'fas fa-eye-slash';
-    toggleTranslationsBtn.title = '在測驗模式中，此功能已停用';
+    toggleTranslationsBtn.title = '在測試模式中，此功能已停用';
 
     const allItems = Array.from(document.querySelectorAll('.character-item'));
     if (allItems.length < testState.totalMistakes) {
-        showError("此篇章解釋數量不足，無法開啟測驗模式。");
+        showError("此篇章解釋數量不足，無法開啟測試模式。");
         translationArea.classList.remove('test-mode');
         return;
     }
