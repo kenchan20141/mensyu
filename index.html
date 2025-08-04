@@ -2552,8 +2552,8 @@ function prepareGameData(itemId) {
     const allBreakdowns = [];
     tempDiv.querySelectorAll('.character-item').forEach(b_item => {
         const character = b_item.querySelector('.character')?.textContent.trim();
-        const explanation = b_item.querySelector('.explanation')?.textContent.replace(/：|:/, '').trim().replace(/[*。？！；：.,?!;:]/g, '');
-        const originalSentence = b_item.closest('.translation-block')?.querySelector('.original-text')?.textContent.trim();
+        const explanation = b_item.querySelector('.explanation')?.textContent.replace(/：|:/, '').trim().replace(/[。？！；：.,?!;:]/g, '');
+         const originalSentence = b_item.closest('.translation-block')?.querySelector('.original-text')?.textContent.trim().replace(/\*/g, '');
         
         // 確保問題和答案不會太長
         if (character && explanation && originalSentence && explanation.length < 10) {
@@ -2599,7 +2599,7 @@ function initGame() {
     
     game.scene = new THREE.Scene();
     game.camera = new THREE.PerspectiveCamera(75, gameCanvasContainer.clientWidth / gameCanvasContainer.clientHeight, 0.1, 1000);
-    game.camera.position.z = isMobile ? 70 : 35;
+    game.camera.position.z = isMobile ? 72 : 35;
     
     game.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     game.renderer.setSize(gameCanvasContainer.clientWidth, gameCanvasContainer.clientHeight);
