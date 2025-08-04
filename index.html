@@ -677,8 +677,9 @@ line-height: 1.9;
 }
 .reopen-floating {
 position: fixed;
+/* ===== REVISION 2: Changed from right to left ===== */
 top: 20px;
-right: 20px;
+left: 20px;
 background: var(--gradient-primary);
 color: var(--light-color);
 border: none;
@@ -789,6 +790,13 @@ background: rgba(127, 179, 213, 0.2);
 background: transparent;
 color: inherit;
 cursor: default;
+}
+/* ===== REVISION 1: Added styles for test mode ===== */
+.test-mode .hidden-text {
+cursor: not-allowed;
+}
+.test-mode .hidden-text:hover {
+background: var(--hidden-bg);
 }
 .sentence-container {
 margin-bottom: 15px;
@@ -1339,7 +1347,7 @@ background: var(--secondary-color);
         <p style="margin: 20px 0 30px;">請選擇您想如何進行此篇章：</p>
         <div class="button-group" style="flex-direction: column; gap: 20px;">
             <button id="read-mode-btn" style="width: 100%;"><i class="fas fa-book-open"></i> 閱讀模式</button>
-            <button id="test-mode-btn" style="width: 100%; background: var(--gradient-accent);"><i class="fas fa-vial"></i> 測試模式</button>
+            <button id="test-mode-btn" style="width: 100%; background: var(--gradient-accent);"><i class="fas fa-vial"></i> 測驗模式</button>
         </div>
     </div>
 </div>
@@ -2036,15 +2044,15 @@ function prepareTestEnvironment(itemId) {
         mistakeItems: [],
     };
 
-    // 預設顯示全部隱藏內容
-    document.querySelectorAll('.hidden-text, .explanation').forEach(el => el.classList.add('revealed'));
+    // ===== REVISION 1: Only reveal explanations, keep sentence translations hidden =====
+    document.querySelectorAll('.explanation').forEach(el => el.classList.add('revealed'));
     const toggleIcon = toggleTranslationsBtn.querySelector('i');
     toggleIcon.className = 'fas fa-eye-slash';
-    toggleTranslationsBtn.title = '在測試模式中，此功能已停用';
+    toggleTranslationsBtn.title = '在測驗模式中，此功能已停用';
 
     const allItems = Array.from(document.querySelectorAll('.character-item'));
     if (allItems.length < testState.totalMistakes) {
-        showError("此篇章解釋數量不足，無法開啟測試模式。");
+        showError("此篇章解釋數量不足，無法開啟測驗模式。");
         translationArea.classList.remove('test-mode');
         return;
     }
