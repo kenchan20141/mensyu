@@ -3,11 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>文樞</title>
+<title>文樞 - 遊戲模式修訂版</title>
 <link rel="manifest" href="manifest.json">
 
+<!-- 引入 Font Awesome 圖示庫 -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
 
+<!-- 引入 Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -677,7 +679,6 @@ line-height: 1.9;
 }
 .reopen-floating {
 position: fixed;
-/* ===== REVISION 2: Changed from right to left ===== */
 top: 20px;
 left: 20px;
 background: var(--gradient-primary);
@@ -791,7 +792,6 @@ background: transparent;
 color: inherit;
 cursor: default;
 }
-/* ===== REVISION 1: Added styles for test mode ===== */
 .test-mode .hidden-text {
 cursor: not-allowed;
 }
@@ -981,42 +981,36 @@ align-items: center;
 gap: 0.5rem;
 flex-shrink: 0;
 }
-/* ----- MODIFIED: Icon Button Base Style ----- */
 .icon-btn {
-    min-width: unset;
-    flex: none;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 6px;
-    border-radius: 50%;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    transition: background-color 0.2s, transform 0.2s;
-    opacity: 0.8;
-    line-height: 1;
-    color: var(--dark-color);
+min-width: unset;
+flex: none;
+background: transparent;
+border: none;
+cursor: pointer;
+padding: 6px;
+border-radius: 50%;
+display: inline-flex;
+justify-content: center;
+align-items: center;
+transition: background-color 0.2s, transform 0.2s;
+opacity: 0.8;
+line-height: 1;
+color: var(--dark-color);
 }
 .icon-btn:hover {
-    background-color: var(--hidden-bg);
-    opacity: 1;
+background-color: var(--hidden-bg);
+opacity: 1;
 }
 .icon-btn:active {
-    transform: scale(0.95);
+transform: scale(0.95);
 }
-
-/* Applying base style to specific buttons */
 #history-close-btn, .regenerate-history-btn, .edit-history-btn, .delete-history-btn,
 #mode-selection-close-btn {
-    /* Inherits from .icon-btn, no need for separate hover/active */
+/* Inherits from .icon-btn */
 }
-
-/* Setting specific icon colors */
 .regenerate-history-btn .fas { color: var(--highlight-color); }
 .edit-history-btn .fas { color: var(--primary-color); }
 .delete-history-btn .fas { color: var(--error-color); }
-
 #delete-all-history-btn {
 min-width: unset;
 flex: none;
@@ -1070,177 +1064,200 @@ border-radius: 5px;
 ::-webkit-scrollbar-thumb:hover {
 background: var(--secondary-color);
 }
-
-/* ----- 新增：測試模式樣式 ----- */
 .test-mode .character-breakdown {
-    border-left-color: var(--warning-color);
-    padding-bottom: 10px;
+border-left-color: var(--warning-color);
+padding-bottom: 10px;
 }
 .test-mode .character-item {
-    cursor: pointer;
-    transition: background-color 0.2s, border-left-color 0.3s;
-    border-radius: var(--border-radius-small);
-    padding: 10px;
-    border-left: 3px solid transparent;
-    margin-bottom: 8px;
+cursor: pointer;
+transition: background-color 0.2s, border-left-color 0.3s;
+border-radius: var(--border-radius-small);
+padding: 10px;
+border-left: 3px solid transparent;
+margin-bottom: 8px;
 }
 .test-mode .character-item:hover {
-    background-color: rgba(241, 196, 15, 0.1);
-    border-left-color: var(--warning-color);
+background-color: rgba(241, 196, 15, 0.1);
+border-left-color: var(--warning-color);
 }
-/* 用家答對（找到錯誤）的樣式 */
 .test-mode .character-item.found-correctly {
-    background-color: rgba(46, 204, 113, 0.1);
-    border-left-color: var(--success-color);
-    cursor: not-allowed;
+background-color: rgba(46, 204, 113, 0.1);
+border-left-color: var(--success-color);
+cursor: not-allowed;
 }
-/* 用家答錯（點到對的答案）的樣式 */
 .test-mode .character-item.answered-incorrectly {
-    background-color: rgba(231, 76, 60, 0.1);
-    border-left-color: var(--error-color);
-    cursor: not-allowed;
+background-color: rgba(231, 76, 60, 0.1);
+border-left-color: var(--error-color);
+cursor: not-allowed;
 }
-/* 挑戰失敗後，顯示正確答案的樣式 */
 .test-mode .character-item.reveal-correct {
-    background-color: rgba(46, 204, 113, 0.1);
-    border-left-color: var(--success-color);
-    cursor: default;
+background-color: rgba(46, 204, 113, 0.1);
+border-left-color: var(--success-color);
+cursor: default;
 }
-/* 挑戰失敗後，顯示用戶曾點錯的樣式 */
 .test-mode .character-item.reveal-user-error {
-    background-color: rgba(231, 76, 60, 0.1);
-    border-left-color: var(--error-color);
-    cursor: default;
+background-color: rgba(231, 76, 60, 0.1);
+border-left-color: var(--error-color);
+cursor: default;
 }
 .test-chances-counter {
-    text-align: center;
-    font-size: 1.2rem;
-    font-weight: 500;
-    margin-top: -15px;
-    margin-bottom: 25px;
-    padding: 10px;
-    background: rgba(169, 204, 227, 0.1);
-    border-radius: var(--border-radius-small);
-    color: var(--dark-color);
+text-align: center;
+font-size: 1.2rem;
+font-weight: 500;
+margin-top: -15px;
+margin-bottom: 25px;
+padding: 10px;
+background: rgba(169, 204, 227, 0.1);
+border-radius: var(--border-radius-small);
+color: var(--dark-color);
 }
 .test-chances-counter span {
-    font-weight: 700;
-    color: var(--primary-color);
-    margin: 0 5px;
-    font-size: 1.5rem;
+font-weight: 700;
+color: var(--primary-color);
+margin: 0 5px;
+font-size: 1.5rem;
 }
 #test-result-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--overlay-bg);
-    z-index: 3000;
-    display: none; /* 預設隱藏 */
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    text-align: center;
-    padding: 20px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    cursor: pointer; /* 新增鼠標樣式，提示可點擊 */
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: var(--overlay-bg);
+z-index: 3000;
+display: none;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+color: white;
+text-align: center;
+padding: 20px;
+opacity: 0;
+transition: opacity 0.3s ease;
+cursor: pointer;
 }
 #test-result-overlay.is-visible {
-    display: flex;
-    opacity: 1;
+display: flex;
+opacity: 1;
 }
 #test-result-content {
-    background: var(--light-color);
-    color: var(--text-color);
-    padding: 40px;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-heavy);
-    width: 90%;
-    max-width: 500px;
-    cursor: default; /* 內容區域維持預設鼠標 */
+background: var(--light-color);
+color: var(--text-color);
+padding: 40px;
+border-radius: var(--border-radius);
+box-shadow: var(--shadow-heavy);
+width: 90%;
+max-width: 500px;
+cursor: default;
 }
 #test-result-content h2 {
-    font-size: 2.2rem;
-    margin-bottom: 15px;
-    font-family: 'Noto Serif TC', serif;
+font-size: 2.2rem;
+margin-bottom: 15px;
+font-family: 'Noto Serif TC', serif;
 }
 #test-result-content p {
-    font-size: 1.1rem;
-    line-height: 1.7;
-    margin-bottom: 1.5rem; /* 增加與底部的間距 */
+font-size: 1.1rem;
+line-height: 1.7;
+margin-bottom: 1.5rem;
 }
 #test-result-content .success-icon { color: var(--success-color); }
 #test-result-content .failure-icon { color: var(--error-color); }
 #test-result-content .success-icon,
 #test-result-content .failure-icon {
-    font-size: 4rem;
-    margin-bottom: 20px;
+font-size: 4rem;
+margin-bottom: 20px;
 }
-/* 挑戰失敗後顯示答案的樣式 */
 .failure-answer-key {
-    margin-top: 25px;
-    text-align: left;
-    font-size: 1rem;
+margin-top: 25px;
+text-align: left;
+font-size: 1rem;
 }
 .failure-answer-key .original-mistake {
-    color: var(--error-color);
-    text-decoration: line-through;
+color: var(--error-color);
+text-decoration: line-through;
 }
 .failure-answer-key .correct-answer {
-    color: var(--success-color);
-    font-weight: bold;
+color: var(--success-color);
+font-weight: bold;
 }
-
-/* ===== 新增：標題與圖示按鍵的容器 ===== */
 .title-with-icon-wrapper {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    /* 將原 section-title 的樣式移到這裡 */
-    margin-bottom: 25px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid var(--light-accent);
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 25px;
+padding-bottom: 15px;
+border-bottom: 2px solid var(--light-accent);
 }
-
-/* ===== 修改：移除原標題的邊框和邊距 ===== */
 .title-with-icon-wrapper .section-title {
-    margin-bottom: 0;
-    padding-bottom: 0;
-    border-bottom: none;
+margin-bottom: 0;
+padding-bottom: 0;
+border-bottom: none;
 }
-
-/* ===== 新增：右上角閱讀紀錄圖示按鍵的獨立CSS ===== */
 #history-icon-btn {
-    color: #015F78; /* 來自舊版按鍵的漸層色 */
-    font-size: 1.3rem;
-    padding: 8px;
-    /* 繼承 .icon-btn 的基礎樣式，但覆寫 hover */
+color: #015F78;
+font-size: 1.3rem;
+padding: 8px;
 }
-
 #history-icon-btn:hover {
-    background-color: transparent; /* 按要求，不要 hover 效果 */
-    transform: none; /* 按要求，不要 hover 效果 */
-    opacity: 0.8; /* 保持原有的透明度 */
+background-color: transparent;
+transform: none;
+opacity: 0.8;
+}
+/* ===== 新增及修訂：遊戲模式專用樣式 ===== */
+.game-answer-brick {
+    width: 180px; /* 寬度調整為適合容納文字 */
+    height: 45px; /* 高度調整 */
+    color: var(--text-color);
+    text-align: center;
+    line-height: 45px; /* 與高度一致以垂直居中 */
+    font-size: 18px; /* 字體大小調整 */
+    font-family: 'Noto Sans TC', sans-serif;
+    font-weight: 500;
+    border-radius: 8px;
+    padding: 0 10px; /* 增加內邊距防止文字貼邊 */
+    overflow: hidden; /* 超出部分隱藏 */
+    text-overflow: ellipsis; /* 超出部分顯示省略號 */
+    white-space: nowrap; /* 不換行 */
 }
 
+
+@media (max-width: 768px) {
+    .game-answer-brick {
+        font-size: 14px; /* 手機版的文字大小 */
+    }
+}
+
+#game-close-icon-btn {
+    pointer-events: auto;
+    background: transparent;
+    border: none;
+    font-size: clamp(20px, 2.5vw, 26px);
+    cursor: pointer;
+    color: var(--text-color);
+    padding: 0 15px;
+    opacity: 0.7;
+    transition: opacity 0.2s, transform 0.2s;
+}
+#game-close-icon-btn:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
 </style>
 </head>
-
 <body>
+<!-- 引入 Three.js 函式庫 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- 引入 Three.js CSS2DRenderer，用於在 3D 場景中顯示 HTML 標籤 -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/renderers/CSS2DRenderer.js"></script>
+
 <div class="container">
 <div class="input-section">
-<!-- AI Search Feature -->
-<!-- ===== 修改：將標題與新按鈕放入容器 ===== -->
 <div class="title-with-icon-wrapper">
-    <h2 class="section-title">尋找篇章</h2>
-    <button id="history-icon-btn" class="icon-btn" title="閱讀紀錄">
-        <i class="fas fa-history"></i>
-    </button>
+<h2 class="section-title">尋找篇章</h2>
+<button id="history-icon-btn" class="icon-btn" title="閱讀紀錄">
+<i class="fas fa-history"></i>
+</button>
 </div>
-
 <div class="form-group">
 <label>難度</label>
 <div class="rating-dots" id="difficulty-rating" data-rating="3">
@@ -1268,7 +1285,6 @@ background: var(--secondary-color);
 <button id="clear-btn" class="clear-btn">
 <i class="fas fa-eraser"></i> 清除
 </button>
-<!-- ===== 移除：舊的閱讀紀錄按鍵 ===== -->
 </div>
 <div class="error-message" id="error-message"></div>
 </div>
@@ -1335,29 +1351,61 @@ background: var(--secondary-color);
 </div>
 </div>
 
-<!-- ===== 新增：模式選擇彈出層 (Modal) ===== -->
+<!-- 模式選擇彈出層 (Modal) -->
 <div id="mode-selection-modal" class="history-modal">
-    <div class="history-container" style="max-width: 400px; text-align: center;">
-        <div class="history-header">
-            <h2 id="mode-selection-title">選擇模式</h2>
-             <button class="icon-btn" id="mode-selection-close-btn" title="關閉">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <p style="margin: 20px 0 30px;">請選擇您想如何進行此篇章：</p>
-        <div class="button-group" style="flex-direction: column; gap: 20px;">
-            <button id="read-mode-btn" style="width: 100%;"><i class="fas fa-book-open"></i> 閱讀模式</button>
-            <button id="test-mode-btn" style="width: 100%; background: var(--gradient-accent);"><i class="fas fa-vial"></i> 測驗模式</button>
-        </div>
-    </div>
+<div class="history-container" style="max-width: 400px; text-align: center;">
+<div class="history-header">
+<h2 id="mode-selection-title">選擇模式</h2>
+<button class="icon-btn" id="mode-selection-close-btn" title="關閉">
+<i class="fas fa-times"></i>
+</button>
+</div>
+<p style="margin: 20px 0 30px;">請選擇您想如何進行此篇章：</p>
+<div class="button-group" style="flex-direction: column; gap: 20px;">
+<button id="read-mode-btn" style="width: 100%;"><i class="fas fa-book-open"></i> 閱讀模式</button>
+<button id="test-mode-btn" style="width: 100%; background: var(--gradient-accent);"><i class="fas fa-vial"></i> 測驗模式</button>
+<button id="game-mode-btn" style="width: 100%; background: linear-gradient(135deg, #A3B3FF, #7C86FF);"><i class="fas fa-gamepad"></i> 遊戲模式</button>
+</div>
+</div>
 </div>
 
-<!-- ===== 修改：測試結果覆蓋層 (移除按鈕) ===== -->
+<!-- 測試結果覆蓋層 -->
 <div id="test-result-overlay">
-    <div id="test-result-content">
-        <!-- 內容由 JS 動態生成 -->
+<div id="test-result-content">
+<!-- 內容由 JS 動態生成 -->
+</div>
+</div>
+
+<!-- ===== 修訂：3D 打磚塊遊戲模式 Modal ===== -->
+<div id="game-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f0f8ff; z-index: 4000; color: var(--text-color); cursor: default;">
+    <div id="game-canvas-container" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0;"></div>
+    
+    <div style="position: absolute; top: 0; left: 0; right: 0; height: 100%; pointer-events: none; display: flex; flex-direction: column; justify-content: flex-start; align-items: center;">
+        <!-- 頁面頂部 (Top of Page) -->
+        <div id="game-top-area" style="width: 100%; text-align: center; padding: 20px;">
+             <div id="game-hud" style="display: flex; justify-content: space-between; align-items: center; font-size: clamp(16px, 2vw, 24px); font-weight: bold; max-width: 800px; margin: 0 auto 15px; color: var(--text-color);">
+                <div id="game-score" style="flex: 1; text-align: left;">分數: 0</div>
+                <button id="game-close-icon-btn" title="關閉遊戲">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div id="game-lives" style="flex: 1; text-align: right;">生命: ♥ ♥ ♥</div>
+            </div>
+           <div id="game-question" style="font-size: clamp(18px, 2.5vw, 32px); text-align: left; max-width: 650px; width: 90%; margin: 0 auto; font-family: 'Noto Serif TC', serif; line-height: 1.5; min-height: 80px; color: var(--text-color);"></div>
     </div>
-    <!-- 關閉按鈕已被移除，現在點擊覆蓋層任意位置即可關閉 -->
+
+    <div id="game-loader" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; pointer-events: auto;">
+        <div class="spinner" style="width: 80px; height: 80px; border-top-color: var(--primary-color); margin: 0 auto 20px;"></div>
+        <p style="font-size: 24px; color: var(--text-color);">正在準備遊戲，請稍候...</p>
+    </div>
+
+    <div id="game-over-screen" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: #2c3e50; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: default; pointer-events: auto; color: white;">
+        <h2 style="font-size: clamp(32px, 5vw, 48px); font-family: 'Noto Serif TC', serif;">遊戲結束</h2>
+        <p id="game-final-score" style="font-size: clamp(24px, 3.5vw, 32px); margin: 20px 0;">最終得分: 0</p>
+        <div class="button-group" style="flex-direction: row; justify-content: center; gap: 20px;">
+            <button id="game-restart-btn">重新開始</button>
+            <button id="game-close-btn" class="clear-btn">關閉遊戲</button>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -1387,8 +1435,19 @@ chances: 7,
 mistakesFound: 0,
 totalMistakes: 5,
 currentItemId: null,
-wronglyClickedItems: [], // 儲存使用者點錯的 DOM 元素
-mistakeItems: [], // 儲存被設定為錯誤的 DOM 元素
+wronglyClickedItems: [],
+mistakeItems: [],
+};
+
+// ===== 遊戲模式狀態變數 =====
+let gameState = {
+    isActive: false,
+    isBallLaunched: false,
+    lives: 3,
+    score: 0,
+    baseSpeed: 0.22, // MODIFIED: 預設速度稍為加快
+    speedMultiplier: 1.0, 
+    currentItemId: null,
 };
 
 
@@ -1416,18 +1475,29 @@ const historyList = document.getElementById('history-list');
 const historySearch = document.getElementById('history-search');
 const historySort = document.getElementById('history-sort');
 const deleteAllHistoryBtn = document.getElementById('delete-all-history-btn');
-
-// ===== 新增：右上角閱讀紀錄圖示按鍵 =====
 const historyIconBtn = document.getElementById('history-icon-btn');
 
-
-// ----- 新增的 DOM 元素 -----
+// --- 模式選擇 DOM Elements ---
 const modeSelectionModal = document.getElementById('mode-selection-modal');
 const modeSelectionCloseBtn = document.getElementById('mode-selection-close-btn');
 const modeSelectionTitle = document.getElementById('mode-selection-title');
 const readModeBtn = document.getElementById('read-mode-btn');
 const testModeBtn = document.getElementById('test-mode-btn');
 const testResultOverlay = document.getElementById('test-result-overlay');
+
+// --- 遊戲模式 DOM Elements ---
+const gameModeBtn = document.getElementById('game-mode-btn');
+const gameModal = document.getElementById('game-modal');
+const gameCanvasContainer = document.getElementById('game-canvas-container');
+const gameLoader = document.getElementById('game-loader');
+const gameOverScreen = document.getElementById('game-over-screen');
+const gameQuestion = document.getElementById('game-question');
+const gameLives = document.getElementById('game-lives');
+const gameScore = document.getElementById('game-score');
+const gameFinalScore = document.getElementById('game-final-score');
+const gameRestartBtn = document.getElementById('game-restart-btn');
+const gameCloseBtn = document.getElementById('game-close-btn');
+const gameCloseIconBtn = document.getElementById('game-close-icon-btn');
 
 
 // --- Initialization ---
@@ -1469,11 +1539,8 @@ ratingDots.forEach(d => d.classList.toggle('selected', d.dataset.value <= hoverV
 });
 });
 difficultyRating.addEventListener('mouseout', updateRatingDots);
-
-// ===== 修改：為新的圖示按鍵和舊的關閉按鍵添加事件 =====
 historyIconBtn.addEventListener('click', showHistory); 
 historyCloseBtn.addEventListener('click', hideHistory);
-
 deleteAllHistoryBtn.addEventListener('click', handleDeleteAllHistory);
 historyModal.addEventListener('click', (e) => {
 if (e.target === historyModal) hideHistory();
@@ -1482,19 +1549,26 @@ historyList.addEventListener('click', handleHistoryListClick);
 historySearch.addEventListener('input', renderHistory);
 historySort.addEventListener('change', renderHistory);
 
-// ----- 修改的事件監聽器 -----
+// --- 模式選擇事件監聽 ---
 modeSelectionCloseBtn.addEventListener('click', hideModeSelection);
 modeSelectionModal.addEventListener('click', (e) => {
 if (e.target === modeSelectionModal) hideModeSelection();
 });
 readModeBtn.addEventListener('click', handleReadMode);
 testModeBtn.addEventListener('click', handleTestMode);
-
-// 當點擊結果覆蓋層時，將其關閉
 testResultOverlay.addEventListener('click', () => {
-    testResultOverlay.classList.remove('is-visible');
+testResultOverlay.classList.remove('is-visible');
 });
 translationArea.addEventListener('click', handleTestAnswer);
+
+// --- 遊戲模式事件監聽 ---
+gameModeBtn.addEventListener('click', prepareGame);
+gameCloseBtn.addEventListener('click', closeGame);
+gameCloseIconBtn.addEventListener('click', closeGame);
+gameRestartBtn.addEventListener('click', () => {
+    gameOverScreen.style.display = 'none';
+    prepareGame();
+});
 }
 
 // --- Event Handlers & Core Logic ---
@@ -1547,7 +1621,6 @@ hideFloatingOriginal();
 hideError();
 toggleTranslationsBtn.style.display = 'none';
 translationArea.classList.remove('test-mode');
-// 清除測試相關元素
 const counter = document.querySelector('.test-chances-counter');
 if (counter) counter.remove();
 autoResizeTextarea.call(classicalText);
@@ -1555,7 +1628,7 @@ autoResizeTextarea.call(aiPromptTextarea);
 }
 
 function handleToggleTranslations() {
-if (testState.isActive) return; // 測試模式下禁用此按鈕
+if (testState.isActive) return;
 
 const sentences = document.querySelectorAll('.hidden-text');
 const explanations = document.querySelectorAll('.explanation');
@@ -1578,11 +1651,25 @@ toggleTranslationsBtn.title = '顯示所有翻譯及解釋';
 
 
 function handleWindowResize() {
-initFloatingWindow();
-if (currentOriginalTexts.length > 0) {
-showFloatingOriginal();
+    initFloatingWindow();
+    if (currentOriginalTexts.length > 0) {
+        showFloatingOriginal();
+    }
+    // Handle game resize if active
+    if (gameState.isActive && game.camera) {
+        const width = gameCanvasContainer.clientWidth;
+        const height = gameCanvasContainer.clientHeight;
+        const isMobile = window.innerWidth <= 768;
+
+        game.camera.aspect = width / height;
+        game.camera.position.z = isMobile ? 55 : 35; // Adjust camera on resize
+        game.camera.updateProjectionMatrix();
+        
+        game.renderer.setSize(width, height);
+        game.labelRenderer.setSize(width, height);
+    }
 }
-}
+
 
 async function processAndDisplay(articleInfo) {
 loading.style.display = 'block';
@@ -1946,7 +2033,7 @@ return;
 }
 
 if (contentArea) {
-showModeSelection(id, item.title);
+showModeSelection(id);
 }
 }
 
@@ -1960,233 +2047,217 @@ renderHistory();
 }
 }
 
-// ----- 模式選擇功能 -----
-function showModeSelection(itemId, title) {
+// --- 模式選擇功能 ---
+function showModeSelection(itemId) {
+    const item = state.history.find(h => h.id === itemId);
+    if (!item) return;
     modeSelectionModal.dataset.currentItemId = itemId;
-    modeSelectionTitle.textContent = title;
+    modeSelectionTitle.textContent = item.title;
     modeSelectionModal.classList.add('is-visible');
 }
 
 function hideModeSelection() {
-    modeSelectionModal.classList.remove('is-visible');
+modeSelectionModal.classList.remove('is-visible');
 }
 
 function handleReadMode() {
-    const itemId = modeSelectionModal.dataset.currentItemId;
-    const item = state.history.find(h => h.id === itemId);
-    if(item) {
-        hideModeSelection();
-        loadContent(item);
-    }
+const itemId = modeSelectionModal.dataset.currentItemId;
+const item = state.history.find(h => h.id === itemId);
+if(item) {
+hideModeSelection();
+loadContent(item);
+}
 }
 
 function handleTestMode() {
-    const itemId = modeSelectionModal.dataset.currentItemId;
-    const item = state.history.find(h => h.id === itemId);
-    if(item) {
-        hideModeSelection();
-        startTestMode(item);
-    }
+const itemId = modeSelectionModal.dataset.currentItemId;
+const item = state.history.find(h => h.id === itemId);
+if(item) {
+hideModeSelection();
+startTestMode(item);
+}
 }
 
 function loadContent(item, callback) {
-    hideHistory();
-    loading.style.display = 'block';
-    introductionArea.innerHTML = '';
-    translationArea.innerHTML = '';
-    translationArea.classList.remove('test-mode');
+hideHistory();
+loading.style.display = 'block';
+introductionArea.innerHTML = '';
+translationArea.innerHTML = '';
+translationArea.classList.remove('test-mode');
 
-    const existingCounter = document.querySelector('.test-chances-counter');
-    if (existingCounter) existingCounter.remove();
-    testState.isActive = false; // 確保在加載內容時測試模式為非活動狀態
+const existingCounter = document.querySelector('.test-chances-counter');
+if (existingCounter) existingCounter.remove();
+testState.isActive = false;
 
-    setTimeout(() => {
-        classicalText.value = item.content;
-        autoResizeTextarea.call(classicalText);
-
-        introductionArea.innerHTML = item.introHtml || '';
-        translationArea.innerHTML = item.translationHtml || '';
-
-        currentOriginalTexts = [];
-        const originalTextElements = translationArea.querySelectorAll('.original-text');
-        originalTextElements.forEach(el => {
-            currentOriginalTexts.push(el.innerHTML);
-        });
-
-        setupDynamicContent();
-        loading.style.display = 'none';
-
-        if(typeof callback === 'function') {
-            callback();
-        }
-
-    }, 200);
+setTimeout(() => {
+classicalText.value = item.content;
+autoResizeTextarea.call(classicalText);
+introductionArea.innerHTML = item.introHtml || '';
+translationArea.innerHTML = item.translationHtml || '';
+currentOriginalTexts = [];
+const originalTextElements = translationArea.querySelectorAll('.original-text');
+originalTextElements.forEach(el => {
+currentOriginalTexts.push(el.innerHTML);
+});
+setupDynamicContent();
+loading.style.display = 'none';
+if(typeof callback === 'function') {
+callback();
+}
+}, 200);
 }
 
-// ----- 測試模式核心功能 -----
-
+// --- 測試模式核心功能 ---
 function startTestMode(item) {
-    loadContent(item, () => {
-        prepareTestEnvironment(item.id);
-    });
+loadContent(item, () => {
+prepareTestEnvironment(item.id);
+});
 }
 
 function prepareTestEnvironment(itemId) {
-    translationArea.classList.add('test-mode');
+translationArea.classList.add('test-mode');
+testState = {
+isActive: true,
+chances: 7,
+mistakesFound: 0,
+totalMistakes: 5,
+currentItemId: itemId,
+wronglyClickedItems: [],
+mistakeItems: [],
+};
+document.querySelectorAll('.explanation').forEach(el => el.classList.add('revealed'));
+const toggleIcon = toggleTranslationsBtn.querySelector('i');
+toggleIcon.className = 'fas fa-eye-slash';
+toggleTranslationsBtn.title = '在測驗模式中，此功能已停用';
 
-    testState = {
-        isActive: true,
-        chances: 7,
-        mistakesFound: 0,
-        totalMistakes: 5,
-        currentItemId: itemId,
-        wronglyClickedItems: [],
-        mistakeItems: [],
-    };
+const allItems = Array.from(document.querySelectorAll('.character-item'));
+if (allItems.length < testState.totalMistakes) {
+showError("此篇章解釋數量不足，無法開啟測驗模式。");
+translationArea.classList.remove('test-mode');
+return;
+}
 
-    // ===== REVISION 1: Only reveal explanations, keep sentence translations hidden =====
-    document.querySelectorAll('.explanation').forEach(el => el.classList.add('revealed'));
-    const toggleIcon = toggleTranslationsBtn.querySelector('i');
-    toggleIcon.className = 'fas fa-eye-slash';
-    toggleTranslationsBtn.title = '在測驗模式中，此功能已停用';
+const counterDiv = document.createElement('div');
+counterDiv.className = 'test-chances-counter';
+const firstChild = translationArea.firstChild;
+translationArea.insertBefore(counterDiv, firstChild);
+updateChancesCounter();
 
-    const allItems = Array.from(document.querySelectorAll('.character-item'));
-    if (allItems.length < testState.totalMistakes) {
-        showError("此篇章解釋數量不足，無法開啟測驗模式。");
-        translationArea.classList.remove('test-mode');
-        return;
-    }
+const allExplanations = allItems.map(item => {
+const explanationSpan = item.querySelector('.explanation');
+return explanationSpan ? explanationSpan.textContent.trim() : '';
+});
 
-    const counterDiv = document.createElement('div');
-    counterDiv.className = 'test-chances-counter';
-    const firstChild = translationArea.firstChild;
-    translationArea.insertBefore(counterDiv, firstChild);
-    updateChancesCounter();
+const shuffledIndices = [...Array(allItems.length).keys()].sort(() => 0.5 - Math.random());
+const mistakeIndices = shuffledIndices.slice(0, testState.totalMistakes);
 
-    const allExplanations = allItems.map(item => {
-        const explanationSpan = item.querySelector('.explanation');
-        return explanationSpan ? explanationSpan.textContent.trim() : '';
-    });
+mistakeIndices.forEach(index => {
+const itemToCorrupt = allItems[index];
+const explanationSpan = itemToCorrupt.querySelector('.explanation');
+const originalText = explanationSpan.textContent;
 
-    // 隨機選擇5個項目作為錯誤項
-    const shuffledIndices = [...Array(allItems.length).keys()].sort(() => 0.5 - Math.random());
-    const mistakeIndices = shuffledIndices.slice(0, testState.totalMistakes);
+let newExplanation;
+let randomIndex;
+do {
+randomIndex = Math.floor(Math.random() * allExplanations.length);
+newExplanation = allExplanations[randomIndex];
+} while (newExplanation === originalText || !newExplanation);
 
-    mistakeIndices.forEach(index => {
-        const itemToCorrupt = allItems[index];
-        const explanationSpan = itemToCorrupt.querySelector('.explanation');
-        const originalText = explanationSpan.textContent;
-
-        let newExplanation;
-        let randomIndex;
-        do {
-            randomIndex = Math.floor(Math.random() * allExplanations.length);
-            newExplanation = allExplanations[randomIndex];
-        } while (newExplanation === originalText || !newExplanation);
-
-        itemToCorrupt.dataset.isMistake = 'true';
-        itemToCorrupt.dataset.originalExplanation = originalText;
-        itemToCorrupt.dataset.corruptedExplanation = newExplanation;
-        explanationSpan.textContent = newExplanation; // 替換為錯誤解釋
-        testState.mistakeItems.push(itemToCorrupt);
-    });
+itemToCorrupt.dataset.isMistake = 'true';
+itemToCorrupt.dataset.originalExplanation = originalText;
+itemToCorrupt.dataset.corruptedExplanation = newExplanation;
+explanationSpan.textContent = newExplanation;
+testState.mistakeItems.push(itemToCorrupt);
+});
 }
 
 function handleTestAnswer(event) {
-    if (!testState.isActive) return;
-    const clickedItem = event.target.closest('.character-item');
-    if (!clickedItem || clickedItem.dataset.answered) return;
+if (!testState.isActive) return;
+const clickedItem = event.target.closest('.character-item');
+if (!clickedItem || clickedItem.dataset.answered) return;
 
-    clickedItem.dataset.answered = 'true';
-    const isMistake = clickedItem.dataset.isMistake === 'true';
+clickedItem.dataset.answered = 'true';
+const isMistake = clickedItem.dataset.isMistake === 'true';
 
-    if (isMistake) {
-        testState.mistakesFound++;
-        clickedItem.classList.add('found-correctly');
-        // 答對了，顯示回正確答案
-        const explanationSpan = clickedItem.querySelector('.explanation');
-        const correctText = clickedItem.dataset.originalExplanation;
-        explanationSpan.innerHTML = `<i class="fas fa-check-circle" style="color:var(--success-color);"></i> <strong>正確解釋：</strong> ${correctText}`;
-        if (testState.mistakesFound === testState.totalMistakes) {
-            handleTestSuccess();
-        }
-    } else {
-        testState.chances--;
-        clickedItem.classList.add('answered-incorrectly');
-        testState.wronglyClickedItems.push(clickedItem);
-        updateChancesCounter();
-        if (testState.chances < (testState.totalMistakes - testState.mistakesFound)) {
-            handleTestFailure();
-        } else if (testState.chances === 0) {
-            handleTestFailure();
-        } else {
-             const explanationSpan = clickedItem.querySelector('.explanation');
-             explanationSpan.innerHTML = `<i class="fas fa-times-circle" style="color:var(--error-color);"></i> ${explanationSpan.textContent}`;
-        }
-    }
+if (isMistake) {
+testState.mistakesFound++;
+clickedItem.classList.add('found-correctly');
+const explanationSpan = clickedItem.querySelector('.explanation');
+const correctText = clickedItem.dataset.originalExplanation;
+explanationSpan.innerHTML = `<i class="fas fa-check-circle" style="color:var(--success-color);"></i> <strong>正確解釋：</strong> ${correctText}`;
+if (testState.mistakesFound === testState.totalMistakes) {
+handleTestSuccess();
+}
+} else {
+testState.chances--;
+clickedItem.classList.add('answered-incorrectly');
+testState.wronglyClickedItems.push(clickedItem);
+updateChancesCounter();
+if (testState.chances < (testState.totalMistakes - testState.mistakesFound)) {
+handleTestFailure();
+} else if (testState.chances === 0) {
+handleTestFailure();
+} else {
+const explanationSpan = clickedItem.querySelector('.explanation');
+explanationSpan.innerHTML = `<i class="fas fa-times-circle" style="color:var(--error-color);"></i> ${explanationSpan.textContent}`;
+}
+}
 }
 
 function updateChancesCounter() {
-    const counterDiv = document.querySelector('.test-chances-counter');
-    if (counterDiv) {
-        counterDiv.innerHTML = `尚有 <strong>${testState.totalMistakes - testState.mistakesFound}</strong> 個錯誤，剩餘機會: <span>${testState.chances}</span>`;
-    }
+const counterDiv = document.querySelector('.test-chances-counter');
+if (counterDiv) {
+counterDiv.innerHTML = `尚有 <strong>${testState.totalMistakes - testState.mistakesFound}</strong> 個錯誤，剩餘機會: <span>${testState.chances}</span>`;
+}
 }
 
 function endTest() {
-    testState.isActive = false;
-    document.querySelectorAll('.character-item').forEach(item => item.dataset.answered = 'true'); // 禁用所有點擊
+testState.isActive = false;
+document.querySelectorAll('.character-item').forEach(item => item.dataset.answered = 'true');
 }
 
 function handleTestSuccess() {
-    endTest();
-    const item = state.history.find(h => h.id === testState.currentItemId);
-    if(item) {
-        item.testSuccess = true;
-        addToHistory(item);
-        renderHistory();
-    }
-
-    const resultDiv = document.getElementById('test-result-content');
-    resultDiv.innerHTML = `
-        <div class="success-icon"><i class="fas fa-trophy"></i></div>
-        <h2>挑戰成功！</h2>
-        <p>恭喜您找出所有錯誤解釋！<br><small style="color: #7f8c8d;">(點擊任意處關閉)</small></p>
-    `;
-    testResultOverlay.classList.add('is-visible');
+endTest();
+const item = state.history.find(h => h.id === testState.currentItemId);
+if(item) {
+item.testSuccess = true;
+addToHistory(item);
+renderHistory();
+}
+const resultDiv = document.getElementById('test-result-content');
+resultDiv.innerHTML = `
+<div class="success-icon"><i class="fas fa-trophy"></i></div>
+<h2>挑戰成功！</h2>
+<p>恭喜您找出所有錯誤解釋！<br><small style="color: #7f8c8d;">(點擊任意處關閉)</small></p>
+`;
+testResultOverlay.classList.add('is-visible');
 }
 
 function handleTestFailure() {
-    endTest();
-    
-    // 顯示答案
-    testState.mistakeItems.forEach(item => {
-        // 如果這個錯誤是使用者點擊過的 (即答對的)，維持原樣
-        if (item.classList.contains('found-correctly')) {
-             item.classList.add('reveal-correct');
-             return;
-        }
-        // 如果是使用者沒找到的錯誤
-        item.classList.add('reveal-correct'); // 用綠色標示
-        const explanationSpan = item.querySelector('.explanation');
-        const corrupted = item.dataset.corruptedExplanation;
-        const original = item.dataset.originalExplanation;
-        explanationSpan.innerHTML = `原顯示錯誤解釋：<span class="original-mistake">${corrupted}</span><br><strong>正確解釋應為：<span class="correct-answer">${original}</span></strong>`;
-    });
-
-    testState.wronglyClickedItems.forEach(item => {
-        item.classList.add('reveal-user-error'); // 用紅色標示
-    });
-
-    const resultDiv = document.getElementById('test-result-content');
-    resultDiv.innerHTML = `
-        <div class="failure-icon"><i class="fas fa-times-circle"></i></div>
-        <h2>挑戰失敗</h2>
-        <p>別氣餒，再接再厲！<br><small style="color: #7f8c8d;">(點擊任意處關閉)</small></p>
-    `;
-    setTimeout(() => {
-        testResultOverlay.classList.add('is-visible');
-    }, 500);
+endTest();
+testState.mistakeItems.forEach(item => {
+if (item.classList.contains('found-correctly')) {
+item.classList.add('reveal-correct');
+return;
+}
+item.classList.add('reveal-correct');
+const explanationSpan = item.querySelector('.explanation');
+const corrupted = item.dataset.corruptedExplanation;
+const original = item.dataset.originalExplanation;
+explanationSpan.innerHTML = `原顯示錯誤解釋：<span class="original-mistake">${corrupted}</span><br><strong>正確解釋應為：<span class="correct-answer">${original}</span></strong>`;
+});
+testState.wronglyClickedItems.forEach(item => {
+item.classList.add('reveal-user-error');
+});
+const resultDiv = document.getElementById('test-result-content');
+resultDiv.innerHTML = `
+<div class="failure-icon"><i class="fas fa-times-circle"></i></div>
+<h2>挑戰失敗</h2>
+<p>別氣餒，再接再厲！<br><small style="color: #7f8c8d;">(點擊任意處關閉)</small></p>
+`;
+setTimeout(() => {
+testResultOverlay.classList.add('is-visible');
+}, 500);
 }
 
 
@@ -2241,10 +2312,10 @@ showFloatingOriginal();
 function setupWordExplanationToggle() {
 document.querySelectorAll('.character').forEach(character => {
 character.addEventListener('click', function(e) {
-    if (translationArea.classList.contains('test-mode')) {
-        e.stopPropagation();
-        return;
-    }
+if (translationArea.classList.contains('test-mode')) {
+e.stopPropagation();
+return;
+}
 this.nextElementSibling?.classList.toggle('revealed');
 });
 });
@@ -2253,7 +2324,7 @@ this.nextElementSibling?.classList.toggle('revealed');
 function setupSentenceReveal() {
 document.querySelectorAll('#translation-area .hidden-text').forEach(sentence => {
 sentence.addEventListener('click', function() {
-    if (testState.isActive) return;
+if (testState.isActive) return;
 this.classList.toggle('revealed');
 });
 });
@@ -2423,9 +2494,549 @@ function stopResize() {
 isResizing = false;
 document.removeEventListener('mousemove', resize);
 document.removeEventListener('touchmove', resize);
-document.removeEventListener('mouseup', stopResize);
+document.addEventListener('mouseup', stopResize);
 document.removeEventListener('touchend', stopResize);
 }
+
+// =================================================================
+// ===== 3D GAME MODE LOGIC (REVISED) ==============================
+// =================================================================
+
+let game = {}; // 全局遊戲物件
+let animationFrameId; // 動畫循環ID
+
+function prepareGame() {
+    const itemId = modeSelectionModal.dataset.currentItemId;
+    if (!itemId) {
+        alert("找不到篇章內容，無法開始遊戲。");
+        return;
+    }
+
+    gameState.currentItemId = itemId;
+    hideModeSelection();
+    hideHistory();
+
+    gameLoader.style.display = 'flex';
+    gameQuestion.textContent = ''; // Clear previous text
+
+    // 使用 setTimeout 確保 UI 更新，並開始準備資料
+    setTimeout(() => {
+        const gameData = prepareGameData(itemId);
+
+        if (!gameData) {
+            gameLoader.style.display = 'none';
+            alert("此篇章無足夠的「逐字解釋」內容來生成遊戲（至少需要4個不同解釋），請選擇其他篇章。");
+            return;
+        }
+        
+        // 將準備好的資料存到全域遊戲物件中
+        game.questionQueue = gameData.questionQueue;
+        game.allAnswers = gameData.allAnswers;
+
+        gameLoader.style.display = 'none';
+        gameModal.style.display = 'block';
+        document.body.style.overflow = 'hidden'; 
+        initGame();
+    }, 100);
+}
+
+// 一次性準備所有遊戲資料的函數
+function prepareGameData(itemId) {
+    const item = state.history.find(h => h.id === itemId);
+    if (!item || !item.translationHtml) return null;
+
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = item.translationHtml;
+
+    const allBreakdowns = [];
+    tempDiv.querySelectorAll('.character-item').forEach(b_item => {
+        const character = b_item.querySelector('.character')?.textContent.trim();
+        const explanation = b_item.querySelector('.explanation')?.textContent.replace(/：|:/, '').trim().replace(/[。？！；：.,?!;:]/g, '');
+        const originalSentence = b_item.closest('.translation-block')?.querySelector('.original-text')?.textContent.trim();
+        
+        // 確保問題和答案不會太長
+        if (character && explanation && originalSentence && explanation.length < 10) {
+            allBreakdowns.push({
+                question: `在「${originalSentence}」中，「${character}」的意思是？`,
+                answer: explanation
+            });
+        }
+    });
+
+    // 至少需要1個正確答案和3個不同的錯誤答案
+    if (allBreakdowns.length < 4) return null; 
+
+    // 提取所有不重複的答案作為答案池
+    const allAnswers = [...new Set(allBreakdowns.map(b => b.answer))];
+    
+    // 如果去重後答案少于4個，也無法進行
+    if (allAnswers.length < 4) return null;
+
+    // 打亂問題順序
+    const questionQueue = [...allBreakdowns].sort(() => Math.random() - 0.5);
+
+    return { questionQueue, allAnswers };
+}
+
+function initGame() {
+    if (typeof THREE === 'undefined') {
+        alert("Three.js 函式庫未成功載入，無法啟動遊戲。");
+        return;
+    }
+
+    // 清理舊場景
+    if (game.renderer) {
+        while(gameCanvasContainer.firstChild){
+            gameCanvasContainer.removeChild(gameCanvasContainer.firstChild);
+        }
+    }
+    if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+    }
+    
+    const isMobile = window.innerWidth <= 768;
+    
+    game.scene = new THREE.Scene();
+    game.camera = new THREE.PerspectiveCamera(75, gameCanvasContainer.clientWidth / gameCanvasContainer.clientHeight, 0.1, 1000);
+    game.camera.position.z = isMobile ? 55 : 35;
+    
+    game.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    game.renderer.setSize(gameCanvasContainer.clientWidth, gameCanvasContainer.clientHeight);
+    game.renderer.setClearColor(0x000000, 0); 
+    gameCanvasContainer.appendChild(game.renderer.domElement);
+
+    game.labelRenderer = new THREE.CSS2DRenderer();
+    game.labelRenderer.setSize(gameCanvasContainer.clientWidth, gameCanvasContainer.clientHeight);
+    game.labelRenderer.domElement.style.position = 'absolute';
+    game.labelRenderer.domElement.style.top = '0px';
+    game.labelRenderer.domElement.style.pointerEvents = 'none';
+    gameCanvasContainer.appendChild(game.labelRenderer.domElement);
+
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+    game.scene.add(ambientLight);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.9);
+    directionalLight.position.set(5, 10, 7.5);
+    game.scene.add(directionalLight);
+    
+    game.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    
+    game.bricksGroup = new THREE.Group();
+    game.scene.add(game.bricksGroup);
+    game.particles = new THREE.Group();
+    game.scene.add(game.particles);
+
+    createWalls();
+    createPaddle();
+    createBall();
+
+    const moveHandler = (e) => onPointerMove(e.touches ? e.touches[0] : e);
+    window.addEventListener('mousemove', moveHandler, false);
+    window.addEventListener('touchmove', moveHandler, false);
+    
+    startGame();
+}
+
+function startGame() {
+    gameState.isActive = true;
+    gameState.lives = 3;
+    gameState.score = 0;
+    gameState.speedMultiplier = 1.0;
+    updateHUD();
+    
+    clearBricks();
+    loadNextQuestionAndBricks(); // Show first question immediately
+    resetBallAndPaddle();
+    
+    gameOverScreen.style.display = 'none';
+    
+    if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    animate();
+}
+
+function launchBallOnClick() {
+    if (!gameState.isActive || gameState.isBallLaunched) return;
+    
+    gameState.isBallLaunched = true;
+    
+    const initialAngle = (Math.random() * 0.6 - 0.3) * Math.PI;
+    const speed = gameState.baseSpeed * gameState.speedMultiplier;
+    game.ball.velocity = new THREE.Vector3(Math.sin(initialAngle) * speed, Math.cos(initialAngle) * speed, 0);
+
+    playCollisionSound('paddle');
+}
+
+function closeGame() {
+    gameState.isActive = false;
+    if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+    }
+    gameModal.style.display = 'none';
+    gameOverScreen.style.display = 'none';
+    document.body.style.overflow = 'auto'; 
+}
+
+
+function createWalls() {
+    const wallMaterial = new THREE.MeshStandardMaterial({ color: 0x7fb3d5, transparent: true, opacity: 0.5 });
+    const worldWidth = 60; 
+    const worldHeight = 45; 
+    
+    game.leftWall = new THREE.Mesh(new THREE.BoxGeometry(1, worldHeight, 5), wallMaterial);
+    game.leftWall.position.set(-worldWidth / 2, 0, 0);
+    game.scene.add(game.leftWall);
+
+    game.rightWall = new THREE.Mesh(new THREE.BoxGeometry(1, worldHeight, 5), wallMaterial);
+    game.rightWall.position.set(worldWidth / 2, 0, 0);
+    game.scene.add(game.rightWall);
+
+    game.topWall = new THREE.Mesh(new THREE.BoxGeometry(worldWidth, 1, 5), wallMaterial);
+    game.topWall.position.set(0, worldHeight / 2, 0);
+    game.scene.add(game.topWall);
+    
+    game.bottomBoundary = -worldHeight/2 + 2;
+}
+
+function createPaddle() {
+    const geometry = new THREE.BoxGeometry(12, 1.2, 3);
+    const material = new THREE.MeshStandardMaterial({ color:  0x7fb3d5, metalness: 0.5, roughness: 0.2 });
+    game.paddle = new THREE.Mesh(geometry, material);
+    game.scene.add(game.paddle);
+}
+
+function createBall() {
+    const geometry = new THREE.SphereGeometry(1, 32, 32);
+    // MODIFIED: Changed ball color to the requested teal.
+    const material = new THREE.MeshStandardMaterial({ color: 0x006400, emissive: 0x566573, metalness: 0.2, roughness: 0.1 });
+    game.ball = new THREE.Mesh(geometry, material);
+    
+    const pointLight = new THREE.PointLight(0xffffff, 1.2, 100);
+    game.ball.add(pointLight);
+    
+    game.scene.add(game.ball);
+}
+
+function resetBallAndPaddle() {
+    gameState.isBallLaunched = false;
+    game.paddle.position.set(0, game.bottomBoundary + 2, 0);
+    game.ball.position.set(0, game.paddle.position.y + 1.5, 0);
+    game.ball.velocity = new THREE.Vector3(0, 0, 0);
+    
+    gameModal.addEventListener('click', launchBallOnClick, { once: true });
+}
+
+function onPointerMove(event) {
+    if (!gameState.isActive) return;
+    const pointerX = (event.clientX / window.innerWidth) * 2 - 1;
+    const paddleLimit = game.rightWall.position.x - game.paddle.geometry.parameters.width / 2 - 1;
+    game.paddle.position.x = THREE.MathUtils.clamp(pointerX * paddleLimit * 1.5, -paddleLimit, paddleLimit);
+
+    if (!gameState.isBallLaunched) {
+        game.ball.position.x = game.paddle.position.x;
+    }
+}
+
+function clearBricks() {
+    for (let i = game.bricksGroup.children.length - 1; i >= 0; i--) {
+        const obj = game.bricksGroup.children[i];
+        if (obj.isCSS2DObject && obj.element) {
+            obj.element.remove();
+        }
+        game.bricksGroup.remove(obj);
+    }
+}
+
+function loadNextQuestionAndBricks() {
+    clearBricks();
+
+    if (game.questionQueue.length === 0) {
+        gameQuestion.textContent = "恭喜！已完成所有題目！";
+        setTimeout(triggerGameOver, 2000);
+        return;
+    }
+
+    const currentQA = game.questionQueue.shift();
+    gameQuestion.textContent = currentQA.question;
+    
+    const correctAnswer = currentQA.answer;
+    const wrongAnswerPool = game.allAnswers.filter(ans => ans !== correctAnswer);
+    const incorrectAnswers = wrongAnswerPool.sort(() => Math.random() - 0.5).slice(0, 3);
+
+    let brickData = [];
+    brickData.push({ text: correctAnswer, isCorrect: true });
+    incorrectAnswers.forEach(ans => {
+        brickData.push({ text: ans, isCorrect: false });
+    });
+    
+    const isMobile = window.innerWidth <= 768;
+    const cols = isMobile ? 4 : 5;
+    const rows = isMobile ? 5 : 4;
+    const totalBricks = cols * rows;
+    const answerBrickCount = brickData.length;
+
+    for (let i = 0; i < totalBricks - answerBrickCount; i++) {
+        brickData.push({ text: '', isCorrect: null }); // null for blank bricks
+    }
+    brickData.sort(() => Math.random() - 0.5);
+
+    const brickWidth = 11;
+    const brickHeight = 4;
+    const colGap = 1;
+    const rowGap = 1;
+    const totalGridWidth = cols * brickWidth + (cols - 1) * colGap;
+    const startX = -totalGridWidth / 2 + brickWidth / 2;
+    const startY = game.topWall.position.y - 12;
+
+    brickData.forEach((data, index) => {
+        const r = Math.floor(index / cols);
+        const c = index % cols;
+        const x = startX + c * (brickWidth + colGap);
+        const y = startY - r * (brickHeight + rowGap);
+        createBrick(x, y, data.text, data.isCorrect);
+    });
+}
+
+function createBrick(x, y, text, isCorrect) {
+    const geometry = new THREE.BoxGeometry(10, 3, 2); 
+    let material;
+    
+    if (isCorrect !== null) { // Answer bricks (correct or incorrect)
+         material = new THREE.MeshStandardMaterial({ 
+            color: 0xa9cce3, // Unified color for all answer bricks
+            metalness: 0.3, 
+            roughness: 0.4 
+        });
+    } else { // Blank bricks
+        material = new THREE.MeshStandardMaterial({ 
+            color: 0x566573, 
+            metalness: 0.1, 
+            roughness: 0.7, 
+            transparent: true, 
+            opacity: 0.7
+        });
+    }
+
+    const brickMesh = new THREE.Mesh(geometry, material);
+    brickMesh.position.set(x, y, 0);
+    brickMesh.isBrick = true;
+    brickMesh.isCorrect = isCorrect;
+    brickMesh.hit = false;
+    
+    game.bricksGroup.add(brickMesh);
+
+    if (isCorrect !== null) {
+        const el = document.createElement('div');
+        el.className = 'game-answer-brick';
+        el.textContent = text;
+        
+        const label = new THREE.CSS2DObject(el);
+        label.position.set(x, y, 1.01); // Slightly in front of the brick
+        
+        brickMesh.label = label;
+        game.bricksGroup.add(label);
+    }
+}
+
+function updateHUD() {
+    gameScore.textContent = `分數: ${gameState.score}`;
+    // ▼▼▼ 修改後的程式碼 ▼▼▼
+    gameLives.innerHTML = `生命: <span style="color: #e74c3c;">${'♥ '.repeat(Math.max(0, gameState.lives))}</span>`;
+}
+
+function handleBallBrickCollision(brick) {
+    if (brick.hit) return; 
+    brick.hit = true;
+
+    if (brick.label) {
+        brick.label.element.style.transition = 'opacity 0.3s';
+        brick.label.element.style.opacity = '0';
+        setTimeout(() => {
+            if (brick.label) {
+                game.bricksGroup.remove(brick.label);
+                brick.label.element.remove();
+            }
+        }, 300);
+    }
+
+    if (brick.isCorrect === true) {
+        // MODIFIED: Handle correct answer hit
+        playCollisionSound('correct');
+        gameState.score += 100;
+        // Increase speed multiplier for the next launch
+        gameState.speedMultiplier = Math.min(2.5, gameState.speedMultiplier * 1.05);
+        createParticleExplosion(brick.position, 0x2ecc71);
+        updateHUD();
+        game.bricksGroup.remove(brick);
+        
+        // Stop the ball's movement immediately
+        game.ball.velocity.set(0, 0, 0);
+
+        // After a delay, load next question and reset ball for a new serve
+        setTimeout(() => {
+            loadNextQuestionAndBricks();
+            resetBallAndPaddle();
+        }, 500);
+
+    } else if (brick.isCorrect === false) { // Incorrect answer
+        playCollisionSound('lose');
+        createParticleExplosion(brick.position, 0xe74c3c); // Red explosion for error
+        game.bricksGroup.remove(brick);
+        loseLife(); 
+    } else { // Blank bricks
+        playCollisionSound('wall');
+        gameState.score += 10;
+        createParticleExplosion(brick.position, 0xaaaaaa);
+        updateHUD();
+        game.bricksGroup.remove(brick);
+    }
+}
+
+
+function loseLife() {
+    gameState.lives--;
+    updateHUD();
+    playCollisionSound('lose');
+    if (gameState.lives <= 0) {
+        triggerGameOver();
+    } else {
+        resetBallAndPaddle();
+    }
+}
+
+function triggerGameOver() {
+    gameState.isActive = false;
+    game.ball.velocity.set(0,0,0);
+    gameFinalScore.textContent = `最終得分: ${gameState.score}`;
+    gameOverScreen.style.display = 'flex';
+}
+
+function animate() {
+    animationFrameId = requestAnimationFrame(animate);
+    if (!gameState.isActive) return;
+
+    game.particles.children.forEach(p => {
+        p.position.add(p.velocity);
+        p.material.opacity -= 0.02;
+    });
+    game.particles.children = game.particles.children.filter(p => p.material.opacity > 0);
+    
+    if (gameState.isBallLaunched) {
+        game.ball.position.add(game.ball.velocity);
+    }
+
+    const ballBox = new THREE.Box3().setFromObject(game.ball);
+    
+    // Wall collisions
+    if (game.ball.position.x < game.leftWall.position.x + 1 || game.ball.position.x > game.rightWall.position.x - 1) {
+        game.ball.velocity.x *= -1;
+        playCollisionSound('wall');
+    }
+    if (game.ball.position.y > game.topWall.position.y - 1) {
+        game.ball.velocity.y *= -1;
+        playCollisionSound('wall');
+    }
+
+    // Bottom boundary (lose life)
+    if (game.ball.position.y < game.bottomBoundary) {
+        if(gameState.isBallLaunched) loseLife();
+    }
+    
+    // Paddle collision
+    const paddleBox = new THREE.Box3().setFromObject(game.paddle);
+    if (ballBox.intersectsBox(paddleBox) && game.ball.velocity.y < 0) {
+        game.ball.velocity.y *= -1;
+        let offset = (game.ball.position.x - game.paddle.position.x) / (game.paddle.geometry.parameters.width / 2);
+        game.ball.velocity.x = offset * gameState.baseSpeed * gameState.speedMultiplier;
+        playCollisionSound('paddle');
+    }
+
+    // Brick collisions
+    for (let i = game.bricksGroup.children.length - 1; i >= 0; i--) {
+        const brick = game.bricksGroup.children[i];
+        if (!brick.isBrick || brick.hit) continue;
+        
+        const brickBox = new THREE.Box3().setFromObject(brick);
+        if (ballBox.intersectsBox(brickBox)) {
+            const ballCenter = game.ball.position.clone();
+            const brickCenter = brick.position.clone();
+            const dx = ballCenter.x - brickCenter.x;
+            const dy = ballCenter.y - brickCenter.y;
+            const combinedHalfWidths = game.ball.geometry.parameters.radius + brick.geometry.parameters.width / 2;
+            const combinedHalfHeights = game.ball.geometry.parameters.radius + brick.geometry.parameters.height / 2;
+            
+            if (Math.abs(dx) / combinedHalfWidths > Math.abs(dy) / combinedHalfHeights) {
+                game.ball.velocity.x *= -1; 
+            } else {
+                game.ball.velocity.y *= -1;
+            }
+            
+            handleBallBrickCollision(brick);
+            break; 
+        }
+    }
+
+    game.renderer.render(game.scene, game.camera);
+    game.labelRenderer.render(game.scene, game.camera);
+}
+
+// --- 特效與音效 ---
+function createParticleExplosion(position, color) {
+    const particleCount = 50;
+    const particleMaterial = new THREE.PointsMaterial({ color: color, size: 0.5, transparent: true, blending: THREE.AdditiveBlending });
+    
+    for (let i = 0; i < particleCount; i++) {
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute('position', new THREE.Float32BufferAttribute([0,0,0], 3));
+        let p = new THREE.Points(geometry, particleMaterial.clone());
+        p.position.copy(position);
+        p.velocity = new THREE.Vector3(
+            (Math.random() - 0.5) * 0.2,
+            (Math.random() - 0.5) * 0.2,
+            (Math.random() - 0.5) * 0.2
+        );
+        game.particles.add(p);
+    }
+}
+
+function playCollisionSound(type) {
+    if (!game.audioContext || game.audioContext.state === 'suspended') {
+        game.audioContext.resume().catch(e => console.error("Audio resume failed:", e));
+    }
+    if (!game.audioContext) return;
+    const oscillator = game.audioContext.createOscillator();
+    const gainNode = game.audioContext.createGain();
+    oscillator.connect(gainNode);
+    gainNode.connect(game.audioContext.destination);
+
+    const now = game.audioContext.currentTime;
+    gainNode.gain.setValueAtTime(0.3, now);
+    
+    switch (type) {
+        case 'paddle':
+            oscillator.frequency.setValueAtTime(200, now);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+            break;
+        case 'wall':
+            oscillator.frequency.setValueAtTime(150, now);
+            gainNode.gain.setValueAtTime(0.1, now);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+            break;
+        case 'correct':
+            oscillator.type = 'square';
+            oscillator.frequency.setValueAtTime(440, now);
+            oscillator.frequency.linearRampToValueAtTime(880, now + 0.1);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+            break;
+        case 'lose':
+            oscillator.type = 'sawtooth';
+            oscillator.frequency.setValueAtTime(120, now);
+            oscillator.frequency.linearRampToValueAtTime(60, now + 0.3);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+            break;
+    }
+    oscillator.start(now);
+    oscillator.stop(now + 0.4);
+}
+
 });
 </script>
 </body>
