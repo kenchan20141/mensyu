@@ -239,7 +239,7 @@ gap: 8px;
 @media (max-width: 768px) {
 button {
 padding: 12px 20px;
-font-size: 14px;
+font-size: 13px;
 min-width: 100px;
 }
 }
@@ -1663,7 +1663,7 @@ function handleWindowResize() {
 
         game.camera.aspect = width / height;
         // 修改：將手機的攝影機拉得更遠，從 55 改為 68
-        game.camera.position.z = isMobile ? 73 : 35; // Adjust camera on resize
+        game.camera.position.z = isMobile ? 75 : 35; // Adjust camera on resize
         game.camera.updateProjectionMatrix();
         
         game.renderer.setSize(width, height);
@@ -2599,7 +2599,7 @@ function initGame() {
     
     game.scene = new THREE.Scene();
     game.camera = new THREE.PerspectiveCamera(75, gameCanvasContainer.clientWidth / gameCanvasContainer.clientHeight, 0.1, 1000);
-    game.camera.position.z = isMobile ? 73 : 35;
+    game.camera.position.z = isMobile ? 75 : 35;
     
     game.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     game.renderer.setSize(gameCanvasContainer.clientWidth, gameCanvasContainer.clientHeight);
