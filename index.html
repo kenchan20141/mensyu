@@ -191,6 +191,7 @@ overflow-y: hidden;
 /* Hide scrollbar, JS will handle height */
 }
 @media (max-width: 768px) {
+
 textarea {
 font-size: 16px;
 padding: 15px;
@@ -1242,7 +1243,18 @@ opacity: 0.8;
     background-color: rgba(153, 161, 175, 0.15);
     border-top: 2px solid rgba(153, 161, 175, 0.3);
     pointer-events: auto;
+    /*修訂三：增加 flex 屬性以置中圖示*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+/*修訂三：為觸控提示圖示增加樣式*/
+.game-touch-panel > i {
+    font-size: 3rem;
+    color: rgba(44, 62, 80, 0.3);
+    user-select: none; /* 防止用戶選取圖示 */
+}
+
 /* Hide on non-touch (hover-capable) desktop devices */
 @media (hover: hover) and (pointer: fine) {
     .game-touch-panel-container {
@@ -1422,21 +1434,25 @@ transform: scale(1.1);
 </div>
 </div>
 
-<!-- ===== 修訂：3D 打磚塊遊戲模式 Modal ===== -->
+<!-- ===== 3D 打磚塊遊戲模式 Modal ===== -->
 <div id="game-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 4000; color: var(--text-color); cursor: default;">
 <div id="game-canvas-container" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0;"></div>
 
 <div style="position: absolute; top: 0; left: 0; right: 0; height: 100%; pointer-events: none; display: flex; flex-direction: column; justify-content: flex-start; align-items: center;">
 <!-- 頁面頂部 (Top of Page) -->
-<div id="game-top-area" style="width: 100%; text-align: center; padding: 20px;">
-<div id="game-hud" style="display: flex; justify-content: space-between; align-items: center; font-size: clamp(16px, 2vw, 24px); font-weight: bold; max-width: 800px; margin: 0 auto 15px; color: var(--text-color);">
+<!--修訂：減少 padding-top 以便將容器上移，使其不超出頂部牆界-->
+<div id="game-top-area" style="width: 100%; text-align: center; padding: 15px 20px;">
+<div id="game-hud" style="display: flex; justify-content: space-between; align-items: center; font-size: clamp(16px, 2vw, 24px); font-weight: bold; max-width: 800px; margin: 0 auto 5px; color: var(--text-color);">
 <div id="game-score" style="flex: 1; text-align: left;">分數: 0</div>
 <button id="game-close-icon-btn" title="關閉遊戲">
 <i class="fas fa-times"></i>
 </button>
 <div id="game-lives" style="flex: 1; text-align: right;">生命: ♥ ♥ ♥</div>
 </div>
-<div id="game-question" style="font-size: clamp(23px, 2.5vw, 32px); text-align: left; max-width: 650px; width: 90%; margin: 0 auto; font-family: 'Noto Serif TC', serif; line-height: 1.5; min-height: 80px; color: var(--text-color);"></div>
+<!--修訂：增加 max-width 和 width，使容器寬度與頁面（遊戲區域）更相符-->
+<div id="game-question-container" style="background: rgba(255, 255, 255, 0.5); border-radius: var(--border-radius-small); padding: 10px 20px; box-shadow: var(--shadow-light); max-width: 800px; width: 95%; margin: 0 auto; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(127, 179, 213, 0.2);">
+    <div id="game-question" style="font-size: clamp(18px, 2.5vw, 32px); text-align: left; font-family: 'Noto Serif TC', serif; line-height: 1.5; color: var(--text-color); width: 100%;"></div>
+</div>
 </div>
 
 <div id="game-loader" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; pointer-events: auto;">
@@ -1454,10 +1470,14 @@ transform: scale(1.1);
 </div>
 </div>
 
-<!-- ===== 新增：半透明觸控面板 ===== -->
+<!-- 半透明觸控面板，增加提示圖示 -->
 <div class="game-touch-panel-container">
-	<div id="game-touch-left" class="game-touch-panel"></div>
-	<div id="game-touch-right" class="game-touch-panel"></div>
+	<div id="game-touch-left" class="game-touch-panel">
+        <i class="fas fa-chevron-left"></i>
+    </div>
+	<div id="game-touch-right" class="game-touch-panel">
+        <i class="fas fa-chevron-right"></i>
+    </div>
 </div>
 </div>
 
@@ -1716,7 +1736,7 @@ const isMobile = window.innerWidth <= 768;
 
 game.camera.aspect = width / height;
 // 修改：將手機的攝影機拉得更遠，從 55 改為 68
-game.camera.position.z = isMobile ? 77 : 35; // Adjust camera on resize
+game.camera.position.z = isMobile ? 80 : 35; // Adjust camera on resize
 game.camera.updateProjectionMatrix();
 
 game.renderer.setSize(width, height);
@@ -1862,7 +1882,7 @@ ${promptInstruction}
 已閱覽過的文章標題（請勿重複推薦）：[${historyTitles.join(', ')}]
 重要指示：
 1. 你必須找出現實世界中，由真實作家所寫的文言文作品。禁止虛構內容。
-2. 節錄的段落長度需適中，適合一次閱讀完畢。
+2. 節錄の段落長度需適中，適合一次閱讀完畢。
 3. 你的回傳內容必須嚴格遵循以下 JSON 格式，不要包含任何 markdown 語法或額外說明。
 4. 所有文字都必須是繁體中文。
 JSON 格式如下：
@@ -1913,7 +1933,7 @@ const prompt = `你是一個專門生成 JSON 的 AI。請將以下文言文的�
 JSON 物件應包含一個名為 "translations" 的 key，其值為一個陣列 (array)。陣列中的每個元素都是一個物件，代表原文中的一個句子片段。每個句子物件都必須包含以下三個 key：
 1. \`"original"\`：字串 (string)，包含原始的文言文句子片段。
 2. \`"translation"\`：字串 (string)，包含該片段的完整白話文翻譯。
-3. \`"breakdown"\`：一個字串陣列 (array of strings)，其中每個字串是對句子中一個詞的解釋，格式為「詞：解釋」。請將常見的文言實詞或虛詞用 markdown 粗體標示，例如「**之**：的」。
+3. \`"breakdown"\`：一個字串陣列 (array of strings)，其中每個字串是對句子中一個詞的解釋，格式為「詞：解釋」。「解釋」在去除標點符號後，不可以與「詞」完全一樣，反例如「遠：遠。」，合理例子如「遠：遙遠地。」。請將常見的文言實詞或虛詞用 markdown 粗體標示，例如「**之**：的」。
 
 待處理的文言文如下：
 \`\`\`
@@ -2652,7 +2672,7 @@ const isMobile = window.innerWidth <= 768;
 
 game.scene = new THREE.Scene();
 game.camera = new THREE.PerspectiveCamera(75, gameCanvasContainer.clientWidth / gameCanvasContainer.clientHeight, 0.1, 1000);
-game.camera.position.z = isMobile ? 77 : 35;
+game.camera.position.z = isMobile ? 80 : 35;
 
 game.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 game.renderer.setSize(gameCanvasContainer.clientWidth, gameCanvasContainer.clientHeight);
