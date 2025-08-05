@@ -6,8 +6,10 @@
 <title>文樞</title>
 <link rel="manifest" href="manifest.json">
 
+
 <!-- 引入 Font Awesome 圖示庫 -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+
 
 <!-- 引入 Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
@@ -1204,43 +1206,86 @@ transform: none;
 opacity: 0.8;
 }
 /* ===== 新增及修訂：遊戲模式專用樣式 ===== */
+#game-modal {
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    /* Desktop Background - default */
+    background-image: linear-gradient(rgba(240, 248, 255, 0.92), rgba(240, 248, 255, 0.7)), url('https://i.ibb.co/SDhgHzTF/Whats-App-Image-2025-08-05-at-07-31-58.jpg');
+}
+@media (max-width: 1024px) {
+    #game-modal {
+        /* Tablet Background */
+        background-image: linear-gradient(rgba(240, 248, 255, 0.92), rgba(240, 248, 255, 0.7)), url('https://i.ibb.co/23d32t1Y/Whats-App-Image-2025-08-05-at-07-33-22.jpg');
+    }
+}
+@media (max-width: 768px) {
+    #game-modal {
+        /* Mobile Background */
+        background-image: linear-gradient(rgba(240, 248, 255, 0.92), rgba(240, 248, 255, 0.7)), url('https://i.ibb.co/5XJLyN9S/Whats-App-Image-2025-08-05-at-07-32-15.jpg');
+    }
+}
+.game-touch-panel-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 25vh; /* Responsive height */
+    max-height: 200px;
+    display: flex;
+    z-index: 4001;
+    pointer-events: none;
+}
+.game-touch-panel {
+    width: 50%;
+    height: 100%;
+    background-color: rgba(127, 179, 213, 0.15);
+    border-top: 2px solid rgba(127, 179, 213, 0.3);
+    pointer-events: auto;
+}
+/* Hide on non-touch (hover-capable) desktop devices */
+@media (hover: hover) and (pointer: fine) {
+    .game-touch-panel-container {
+        display: none;
+    }
+}
 .game-answer-brick {
-    width: 180px; /* 寬度調整為適合容納文字 */
-    height: 45px; /* 高度調整 */
-    color: var(--text-color);
-    text-align: center;
-    line-height: 45px; /* 與高度一致以垂直居中 */
-    font-size: 18px; /* 字體大小調整 */
-    font-family: 'Noto Sans TC', sans-serif;
-    font-weight: 500;
-    border-radius: 8px;
-    padding: 0 10px; /* 增加內邊距防止文字貼邊 */
-    overflow: hidden; /* 超出部分隱藏 */
-    text-overflow: ellipsis; /* 超出部分顯示省略號 */
-    white-space: nowrap; /* 不換行 */
+width: 180px; /* 寬度調整為適合容納文字 */
+height: 45px; /* 高度調整 */
+color: var(--text-color);
+text-align: center;
+line-height: 45px; /* 與高度一致以垂直居中 */
+font-size: 18px; /* 字體大小調整 */
+font-family: 'Noto Sans TC', sans-serif;
+font-weight: 500;
+border-radius: 8px;
+padding: 0 10px; /* 增加內邊距防止文字貼邊 */
+overflow: hidden; /* 超出部分隱藏 */
+text-overflow: ellipsis; /* 超出部分顯示省略號 */
+white-space: nowrap; /* 不換行 */
 }
 
 
 @media (max-width: 768px) {
-    .game-answer-brick {
-        font-size: 14px; /* 手機版的文字大小 */
-    }
+.game-answer-brick {
+font-size: 14px; /* 手機版的文字大小 */
+}
 }
 
 #game-close-icon-btn {
-    pointer-events: auto;
-    background: transparent;
-    border: none;
-    font-size: clamp(20px, 2.5vw, 26px);
-    cursor: pointer;
-    color: var(--text-color);
-    padding: 0 15px;
-    opacity: 0.7;
-    transition: opacity 0.2s, transform 0.2s;
+pointer-events: auto;
+background: transparent;
+border: none;
+font-size: clamp(20px, 2.5vw, 26px);
+cursor: pointer;
+color: var(--text-color);
+padding: 0 15px;
+opacity: 0.7;
+transition: opacity 0.2s, transform 0.2s;
 }
 #game-close-icon-btn:hover {
-    opacity: 1;
-    transform: scale(1.1);
+opacity: 1;
+transform: scale(1.1);
 }
 </style>
 </head>
@@ -1249,6 +1294,7 @@ opacity: 0.8;
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <!-- 引入 Three.js CSS2DRenderer，用於在 3D 場景中顯示 HTML 標籤 -->
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/renderers/CSS2DRenderer.js"></script>
+
 
 <div class="container">
 <div class="input-section">
@@ -1377,35 +1423,42 @@ opacity: 0.8;
 </div>
 
 <!-- ===== 修訂：3D 打磚塊遊戲模式 Modal ===== -->
-<div id="game-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f0f8ff; z-index: 4000; color: var(--text-color); cursor: default;">
-    <div id="game-canvas-container" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0;"></div>
-    
-    <div style="position: absolute; top: 0; left: 0; right: 0; height: 100%; pointer-events: none; display: flex; flex-direction: column; justify-content: flex-start; align-items: center;">
-        <!-- 頁面頂部 (Top of Page) -->
-        <div id="game-top-area" style="width: 100%; text-align: center; padding: 20px;">
-             <div id="game-hud" style="display: flex; justify-content: space-between; align-items: center; font-size: clamp(16px, 2vw, 24px); font-weight: bold; max-width: 800px; margin: 0 auto 15px; color: var(--text-color);">
-                <div id="game-score" style="flex: 1; text-align: left;">分數: 0</div>
-                <button id="game-close-icon-btn" title="關閉遊戲">
-                    <i class="fas fa-times"></i>
-                </button>
-                <div id="game-lives" style="flex: 1; text-align: right;">生命: ♥ ♥ ♥</div>
-            </div>
-           <div id="game-question" style="font-size: clamp(23px, 2.5vw, 32px); text-align: left; max-width: 650px; width: 90%; margin: 0 auto; font-family: 'Noto Serif TC', serif; line-height: 1.5; min-height: 80px; color: var(--text-color);"></div>
-    </div>
+<div id="game-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 4000; color: var(--text-color); cursor: default;">
+<div id="game-canvas-container" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0;"></div>
 
-    <div id="game-loader" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; pointer-events: auto;">
-        <div class="spinner" style="width: 80px; height: 80px; border-top-color: var(--primary-color); margin: 0 auto 20px;"></div>
-        <p style="font-size: 24px; color: var(--text-color);">正在準備遊戲，請稍候...</p>
-    </div>
+<div style="position: absolute; top: 0; left: 0; right: 0; height: 100%; pointer-events: none; display: flex; flex-direction: column; justify-content: flex-start; align-items: center;">
+<!-- 頁面頂部 (Top of Page) -->
+<div id="game-top-area" style="width: 100%; text-align: center; padding: 20px;">
+<div id="game-hud" style="display: flex; justify-content: space-between; align-items: center; font-size: clamp(16px, 2vw, 24px); font-weight: bold; max-width: 800px; margin: 0 auto 15px; color: var(--text-color);">
+<div id="game-score" style="flex: 1; text-align: left;">分數: 0</div>
+<button id="game-close-icon-btn" title="關閉遊戲">
+<i class="fas fa-times"></i>
+</button>
+<div id="game-lives" style="flex: 1; text-align: right;">生命: ♥ ♥ ♥</div>
+</div>
+<div id="game-question" style="font-size: clamp(23px, 2.5vw, 32px); text-align: left; max-width: 650px; width: 90%; margin: 0 auto; font-family: 'Noto Serif TC', serif; line-height: 1.5; min-height: 80px; color: var(--text-color);"></div>
+</div>
 
-    <div id="game-over-screen" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: #2c3e50; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: default; pointer-events: auto; color: white;">
-        <h2 style="font-size: clamp(32px, 5vw, 48px); font-family: 'Noto Serif TC', serif;">遊戲結束</h2>
-        <p id="game-final-score" style="font-size: clamp(24px, 3.5vw, 32px); margin: 20px 0;">最終得分: 0</p>
-        <div class="button-group" style="flex-direction: row; justify-content: center; gap: 20px;">
-            <button id="game-restart-btn">重新開始</button>
-            <button id="game-close-btn" class="clear-btn">關閉遊戲</button>
-        </div>
-    </div>
+<div id="game-loader" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; pointer-events: auto;">
+<div class="spinner" style="width: 80px; height: 80px; border-top-color: var(--primary-color); margin: 0 auto 20px;"></div>
+<p style="font-size: 24px; color: var(--text-color);">正在準備遊戲，請稍候...</p>
+</div>
+
+<div id="game-over-screen" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: #2c3e50; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: default; pointer-events: auto; color: white;">
+<h2 style="font-size: clamp(32px, 5vw, 48px); font-family: 'Noto Serif TC', serif;">遊戲結束</h2>
+<p id="game-final-score" style="font-size: clamp(24px, 3.5vw, 32px); margin: 20px 0;">最終得分: 0</p>
+<div class="button-group" style="flex-direction: row; justify-content: center; gap: 20px;">
+<button id="game-restart-btn">重新開始</button>
+<button id="game-close-btn" class="clear-btn">關閉遊戲</button>
+</div>
+</div>
+</div>
+
+<!-- ===== 新增：半透明觸控面板 ===== -->
+<div class="game-touch-panel-container">
+	<div id="game-touch-left" class="game-touch-panel"></div>
+	<div id="game-touch-right" class="game-touch-panel"></div>
+</div>
 </div>
 
 <script>
@@ -1441,13 +1494,13 @@ mistakeItems: [],
 
 // ===== 遊戲模式狀態變數 =====
 let gameState = {
-    isActive: false,
-    isBallLaunched: false,
-    lives: 3,
-    score: 0,
-    baseSpeed: 0.22, // MODIFIED: 預設速度稍為加快
-    speedMultiplier: 1.0, 
-    currentItemId: null,
+isActive: false,
+isBallLaunched: false,
+lives: 3,
+score: 0,
+baseSpeed: 0.22, // MODIFIED: 預設速度稍為加快
+speedMultiplier: 1.0, 
+currentItemId: null,
 };
 
 
@@ -1566,8 +1619,8 @@ gameModeBtn.addEventListener('click', prepareGame);
 gameCloseBtn.addEventListener('click', closeGame);
 gameCloseIconBtn.addEventListener('click', closeGame);
 gameRestartBtn.addEventListener('click', () => {
-    gameOverScreen.style.display = 'none';
-    prepareGame();
+gameOverScreen.style.display = 'none';
+prepareGame();
 });
 }
 
@@ -1651,24 +1704,24 @@ toggleTranslationsBtn.title = '顯示所有翻譯及解釋';
 
 
 function handleWindowResize() {
-    initFloatingWindow();
-    if (currentOriginalTexts.length > 0) {
-        showFloatingOriginal();
-    }
-    // Handle game resize if active
-    if (gameState.isActive && game.camera) {
-        const width = gameCanvasContainer.clientWidth;
-        const height = gameCanvasContainer.clientHeight;
-        const isMobile = window.innerWidth <= 768;
+initFloatingWindow();
+if (currentOriginalTexts.length > 0) {
+showFloatingOriginal();
+}
+// Handle game resize if active
+if (gameState.isActive && game.camera) {
+const width = gameCanvasContainer.clientWidth;
+const height = gameCanvasContainer.clientHeight;
+const isMobile = window.innerWidth <= 768;
 
-        game.camera.aspect = width / height;
-        // 修改：將手機的攝影機拉得更遠，從 55 改為 68
-        game.camera.position.z = isMobile ? 77 : 35; // Adjust camera on resize
-        game.camera.updateProjectionMatrix();
-        
-        game.renderer.setSize(width, height);
-        game.labelRenderer.setSize(width, height);
-    }
+game.camera.aspect = width / height;
+// 修改：將手機的攝影機拉得更遠，從 55 改為 68
+game.camera.position.z = isMobile ? 77 : 35; // Adjust camera on resize
+game.camera.updateProjectionMatrix();
+
+game.renderer.setSize(width, height);
+game.labelRenderer.setSize(width, height);
+}
 }
 
 
@@ -2050,11 +2103,11 @@ renderHistory();
 
 // --- 模式選擇功能 ---
 function showModeSelection(itemId) {
-    const item = state.history.find(h => h.id === itemId);
-    if (!item) return;
-    modeSelectionModal.dataset.currentItemId = itemId;
-    modeSelectionTitle.textContent = item.title;
-    modeSelectionModal.classList.add('is-visible');
+const item = state.history.find(h => h.id === itemId);
+if (!item) return;
+modeSelectionModal.dataset.currentItemId = itemId;
+modeSelectionTitle.textContent = item.title;
+modeSelectionModal.classList.add('is-visible');
 }
 
 function hideModeSelection() {
@@ -2507,535 +2560,535 @@ let game = {}; // 全局遊戲物件
 let animationFrameId; // 動畫循環ID
 
 function prepareGame() {
-    const itemId = modeSelectionModal.dataset.currentItemId;
-    if (!itemId) {
-        alert("找不到篇章內容，無法開始遊戲。");
-        return;
-    }
+const itemId = modeSelectionModal.dataset.currentItemId;
+if (!itemId) {
+alert("找不到篇章內容，無法開始遊戲。");
+return;
+}
 
-    gameState.currentItemId = itemId;
-    hideModeSelection();
-    hideHistory();
+gameState.currentItemId = itemId;
+hideModeSelection();
+hideHistory();
 
-    gameLoader.style.display = 'flex';
-    gameQuestion.textContent = ''; // Clear previous text
+gameLoader.style.display = 'flex';
+gameQuestion.textContent = ''; // Clear previous text
 
-    // 使用 setTimeout 確保 UI 更新，並開始準備資料
-    setTimeout(() => {
-        const gameData = prepareGameData(itemId);
+// 使用 setTimeout 確保 UI 更新，並開始準備資料
+setTimeout(() => {
+const gameData = prepareGameData(itemId);
 
-        if (!gameData) {
-            gameLoader.style.display = 'none';
-            alert("此篇章無足夠的「逐字解釋」內容來生成遊戲（至少需要4個不同解釋），請選擇其他篇章。");
-            return;
-        }
-        
-        // 將準備好的資料存到全域遊戲物件中
-        game.questionQueue = gameData.questionQueue;
-        game.allAnswers = gameData.allAnswers;
+if (!gameData) {
+gameLoader.style.display = 'none';
+alert("此篇章無足夠的「逐字解釋」內容來生成遊戲（至少需要4個不同解釋），請選擇其他篇章。");
+return;
+}
 
-        gameLoader.style.display = 'none';
-        gameModal.style.display = 'block';
-        document.body.style.overflow = 'hidden'; 
-        initGame();
-    }, 100);
+// 將準備好的資料存到全域遊戲物件中
+game.questionQueue = gameData.questionQueue;
+game.allAnswers = gameData.allAnswers;
+
+gameLoader.style.display = 'none';
+gameModal.style.display = 'block';
+document.body.style.overflow = 'hidden'; 
+initGame();
+}, 100);
 }
 
 // 一次性準備所有遊戲資料的函數
 function prepareGameData(itemId) {
-    const item = state.history.find(h => h.id === itemId);
-    if (!item || !item.translationHtml) return null;
+const item = state.history.find(h => h.id === itemId);
+if (!item || !item.translationHtml) return null;
 
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = item.translationHtml;
+const tempDiv = document.createElement('div');
+tempDiv.innerHTML = item.translationHtml;
 
-    const allBreakdowns = [];
-    tempDiv.querySelectorAll('.character-item').forEach(b_item => {
-        const character = b_item.querySelector('.character')?.textContent.trim();
-        const explanation = b_item.querySelector('.explanation')?.textContent.replace(/：|:/, '').trim().replace(/[。？！；：.,?!;:]/g, '');
-         const originalSentence = b_item.closest('.translation-block')?.querySelector('.original-text')?.textContent.trim().replace(/\*/g, '');
-        
-        // 確保問題和答案不會太長
-        if (character && explanation && originalSentence && explanation.length < 10) {
-            allBreakdowns.push({
-                question: `在「${originalSentence}」中，「${character}」的意思是？`,
-                answer: explanation
-            });
-        }
-    });
+const allBreakdowns = [];
+tempDiv.querySelectorAll('.character-item').forEach(b_item => {
+const character = b_item.querySelector('.character')?.textContent.trim();
+const explanation = b_item.querySelector('.explanation')?.textContent.replace(/：|:/, '').trim().replace(/[。？！；：.,?!;:]/g, '');
+const originalSentence = b_item.closest('.translation-block')?.querySelector('.original-text')?.textContent.trim().replace(/\*/g, '');
 
-    // 至少需要1個正確答案和3個不同的錯誤答案
-    if (allBreakdowns.length < 4) return null; 
+// 確保問題和答案不會太長
+if (character && explanation && originalSentence && explanation.length < 10) {
+allBreakdowns.push({
+question: `在「${originalSentence}」中，「${character}」的意思是？`,
+answer: explanation
+});
+}
+});
 
-    // 提取所有不重複的答案作為答案池
-    const allAnswers = [...new Set(allBreakdowns.map(b => b.answer))];
-    
-    // 如果去重後答案少于4個，也無法進行
-    if (allAnswers.length < 4) return null;
+// 至少需要1個正確答案和3個不同的錯誤答案
+if (allBreakdowns.length < 4) return null; 
 
-    // 打亂問題順序
-    const questionQueue = [...allBreakdowns].sort(() => Math.random() - 0.5);
+// 提取所有不重複的答案作為答案池
+const allAnswers = [...new Set(allBreakdowns.map(b => b.answer))];
 
-    return { questionQueue, allAnswers };
+// 如果去重後答案少于4個，也無法進行
+if (allAnswers.length < 4) return null;
+
+// 打亂問題順序
+const questionQueue = [...allBreakdowns].sort(() => Math.random() - 0.5);
+
+return { questionQueue, allAnswers };
 }
 
 function initGame() {
-    if (typeof THREE === 'undefined') {
-        alert("Three.js 函式庫未成功載入，無法啟動遊戲。");
-        return;
-    }
+if (typeof THREE === 'undefined') {
+alert("Three.js 函式庫未成功載入，無法啟動遊戲。");
+return;
+}
 
-    // 清理舊場景
-    if (game.renderer) {
-        while(gameCanvasContainer.firstChild){
-            gameCanvasContainer.removeChild(gameCanvasContainer.firstChild);
-        }
-    }
-    if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-    }
-    
-    const isMobile = window.innerWidth <= 768;
-    
-    game.scene = new THREE.Scene();
-    game.camera = new THREE.PerspectiveCamera(75, gameCanvasContainer.clientWidth / gameCanvasContainer.clientHeight, 0.1, 1000);
-    game.camera.position.z = isMobile ? 77 : 35;
-    
-    game.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    game.renderer.setSize(gameCanvasContainer.clientWidth, gameCanvasContainer.clientHeight);
-    game.renderer.setClearColor(0x000000, 0); 
-    gameCanvasContainer.appendChild(game.renderer.domElement);
+// 清理舊場景
+if (game.renderer) {
+while(gameCanvasContainer.firstChild){
+gameCanvasContainer.removeChild(gameCanvasContainer.firstChild);
+}
+}
+if (animationFrameId) {
+cancelAnimationFrame(animationFrameId);
+}
 
-    game.labelRenderer = new THREE.CSS2DRenderer();
-    game.labelRenderer.setSize(gameCanvasContainer.clientWidth, gameCanvasContainer.clientHeight);
-    game.labelRenderer.domElement.style.position = 'absolute';
-    game.labelRenderer.domElement.style.top = '0px';
-    game.labelRenderer.domElement.style.pointerEvents = 'none';
-    gameCanvasContainer.appendChild(game.labelRenderer.domElement);
+const isMobile = window.innerWidth <= 768;
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
-    game.scene.add(ambientLight);
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.9);
-    directionalLight.position.set(5, 10, 7.5);
-    game.scene.add(directionalLight);
-    
-    game.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    
-    game.bricksGroup = new THREE.Group();
-    game.scene.add(game.bricksGroup);
-    game.particles = new THREE.Group();
-    game.scene.add(game.particles);
+game.scene = new THREE.Scene();
+game.camera = new THREE.PerspectiveCamera(75, gameCanvasContainer.clientWidth / gameCanvasContainer.clientHeight, 0.1, 1000);
+game.camera.position.z = isMobile ? 77 : 35;
 
-    createWalls();
-    createPaddle();
-    createBall();
+game.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+game.renderer.setSize(gameCanvasContainer.clientWidth, gameCanvasContainer.clientHeight);
+game.renderer.setClearColor(0x000000, 0); 
+gameCanvasContainer.appendChild(game.renderer.domElement);
 
-    const moveHandler = (e) => onPointerMove(e.touches ? e.touches[0] : e);
-    window.addEventListener('mousemove', moveHandler, false);
-    window.addEventListener('touchmove', moveHandler, false);
-    
-    startGame();
+game.labelRenderer = new THREE.CSS2DRenderer();
+game.labelRenderer.setSize(gameCanvasContainer.clientWidth, gameCanvasContainer.clientHeight);
+game.labelRenderer.domElement.style.position = 'absolute';
+game.labelRenderer.domElement.style.top = '0px';
+game.labelRenderer.domElement.style.pointerEvents = 'none';
+gameCanvasContainer.appendChild(game.labelRenderer.domElement);
+
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+game.scene.add(ambientLight);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.9);
+directionalLight.position.set(5, 10, 7.5);
+game.scene.add(directionalLight);
+
+game.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+game.bricksGroup = new THREE.Group();
+game.scene.add(game.bricksGroup);
+game.particles = new THREE.Group();
+game.scene.add(game.particles);
+
+createWalls();
+createPaddle();
+createBall();
+
+const moveHandler = (e) => onPointerMove(e.touches ? e.touches[0] : e);
+window.addEventListener('mousemove', moveHandler, false);
+window.addEventListener('touchmove', moveHandler, false);
+
+startGame();
 }
 
 function startGame() {
-    gameState.isActive = true;
-    gameState.lives = 3;
-    gameState.score = 0;
-    gameState.speedMultiplier = 1.0;
-    updateHUD();
-    
-    clearBricks();
-    loadNextQuestionAndBricks(); // Show first question immediately
-    resetBallAndPaddle();
-    
-    gameOverScreen.style.display = 'none';
-    
-    if (animationFrameId) cancelAnimationFrame(animationFrameId);
-    animate();
+gameState.isActive = true;
+gameState.lives = 3;
+gameState.score = 0;
+gameState.speedMultiplier = 1.0;
+updateHUD();
+
+clearBricks();
+loadNextQuestionAndBricks(); // Show first question immediately
+resetBallAndPaddle();
+
+gameOverScreen.style.display = 'none';
+
+if (animationFrameId) cancelAnimationFrame(animationFrameId);
+animate();
 }
 
 function launchBallOnClick() {
-    if (!gameState.isActive || gameState.isBallLaunched) return;
-    
-    gameState.isBallLaunched = true;
-    
-    const initialAngle = (Math.random() * 0.6 - 0.3) * Math.PI;
-    const speed = gameState.baseSpeed * gameState.speedMultiplier;
-    game.ball.velocity = new THREE.Vector3(Math.sin(initialAngle) * speed, Math.cos(initialAngle) * speed, 0);
+if (!gameState.isActive || gameState.isBallLaunched) return;
 
-    playCollisionSound('paddle');
+gameState.isBallLaunched = true;
+
+const initialAngle = (Math.random() * 0.6 - 0.3) * Math.PI;
+const speed = gameState.baseSpeed * gameState.speedMultiplier;
+game.ball.velocity = new THREE.Vector3(Math.sin(initialAngle) * speed, Math.cos(initialAngle) * speed, 0);
+
+playCollisionSound('paddle');
 }
 
 function closeGame() {
-    gameState.isActive = false;
-    if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-    }
-    gameModal.style.display = 'none';
-    gameOverScreen.style.display = 'none';
-    document.body.style.overflow = 'auto'; 
+gameState.isActive = false;
+if (animationFrameId) {
+cancelAnimationFrame(animationFrameId);
+}
+gameModal.style.display = 'none';
+gameOverScreen.style.display = 'none';
+document.body.style.overflow = 'auto'; 
 }
 
 
 function createWalls() {
-    const wallMaterial = new THREE.MeshStandardMaterial({ color: 0x7fb3d5, transparent: true, opacity: 0.5 });
-    const worldWidth = 60; 
-    const worldHeight = 45; 
-    
-    game.leftWall = new THREE.Mesh(new THREE.BoxGeometry(1, worldHeight, 5), wallMaterial);
-    game.leftWall.position.set(-worldWidth / 2, 0, 0);
-    game.scene.add(game.leftWall);
+const wallMaterial = new THREE.MeshStandardMaterial({ color: 0x7fb3d5, transparent: true, opacity: 0.5 });
+const worldWidth = 60; 
+const worldHeight = 45; 
 
-    game.rightWall = new THREE.Mesh(new THREE.BoxGeometry(1, worldHeight, 5), wallMaterial);
-    game.rightWall.position.set(worldWidth / 2, 0, 0);
-    game.scene.add(game.rightWall);
+game.leftWall = new THREE.Mesh(new THREE.BoxGeometry(1, worldHeight, 5), wallMaterial);
+game.leftWall.position.set(-worldWidth / 2, 0, 0);
+game.scene.add(game.leftWall);
 
-    game.topWall = new THREE.Mesh(new THREE.BoxGeometry(worldWidth, 1, 5), wallMaterial);
-    game.topWall.position.set(0, worldHeight / 2, 0);
-    game.scene.add(game.topWall);
-    
-    game.bottomBoundary = -worldHeight/2 + 2;
+game.rightWall = new THREE.Mesh(new THREE.BoxGeometry(1, worldHeight, 5), wallMaterial);
+game.rightWall.position.set(worldWidth / 2, 0, 0);
+game.scene.add(game.rightWall);
+
+game.topWall = new THREE.Mesh(new THREE.BoxGeometry(worldWidth, 1, 5), wallMaterial);
+game.topWall.position.set(0, worldHeight / 2, 0);
+game.scene.add(game.topWall);
+
+game.bottomBoundary = -worldHeight/2 + 2;
 }
 
 function createPaddle() {
-    const geometry = new THREE.BoxGeometry(12, 1.2, 3);
-    const material = new THREE.MeshStandardMaterial({ color:  0x7fb3d5, metalness: 0.5, roughness: 0.2 });
-    game.paddle = new THREE.Mesh(geometry, material);
-    game.scene.add(game.paddle);
+const geometry = new THREE.BoxGeometry(12, 1.2, 3);
+const material = new THREE.MeshStandardMaterial({ color: 0x7fb3d5, metalness: 0.5, roughness: 0.2 });
+game.paddle = new THREE.Mesh(geometry, material);
+game.scene.add(game.paddle);
 }
 
 function createBall() {
-    const geometry = new THREE.SphereGeometry(1, 32, 32);
-    // MODIFIED: Changed ball color to the requested teal.
-    const material = new THREE.MeshStandardMaterial({ color: 0x006400, emissive: 0x566573, metalness: 0.2, roughness: 0.1 });
-    game.ball = new THREE.Mesh(geometry, material);
-    
-    const pointLight = new THREE.PointLight(0xffffff, 1.2, 100);
-    game.ball.add(pointLight);
-    
-    game.scene.add(game.ball);
+const geometry = new THREE.SphereGeometry(1, 32, 32);
+// MODIFIED: Changed ball color to the requested teal.
+const material = new THREE.MeshStandardMaterial({ color: 0x006400, emissive: 0x566573, metalness: 0.2, roughness: 0.1 });
+game.ball = new THREE.Mesh(geometry, material);
+
+const pointLight = new THREE.PointLight(0xffffff, 1.2, 100);
+game.ball.add(pointLight);
+
+game.scene.add(game.ball);
 }
 
 function resetBallAndPaddle() {
-    gameState.isBallLaunched = false;
-    game.paddle.position.set(0, game.bottomBoundary + 2, 0);
-    game.ball.position.set(0, game.paddle.position.y + 1.5, 0);
-    game.ball.velocity = new THREE.Vector3(0, 0, 0);
-    
-    gameModal.addEventListener('click', launchBallOnClick, { once: true });
+gameState.isBallLaunched = false;
+game.paddle.position.set(0, game.bottomBoundary + 2, 0);
+game.ball.position.set(0, game.paddle.position.y + 1.5, 0);
+game.ball.velocity = new THREE.Vector3(0, 0, 0);
+
+gameModal.addEventListener('click', launchBallOnClick, { once: true });
 }
 
 function onPointerMove(event) {
-    if (!gameState.isActive) return;
-    const pointerX = (event.clientX / window.innerWidth) * 2 - 1;
-    const paddleLimit = game.rightWall.position.x - game.paddle.geometry.parameters.width / 2 - 1;
-    game.paddle.position.x = THREE.MathUtils.clamp(pointerX * paddleLimit * 1.5, -paddleLimit, paddleLimit);
+if (!gameState.isActive) return;
+const pointerX = (event.clientX / window.innerWidth) * 2 - 1;
+const paddleLimit = game.rightWall.position.x - game.paddle.geometry.parameters.width / 2 - 1;
+game.paddle.position.x = THREE.MathUtils.clamp(pointerX * paddleLimit * 1.5, -paddleLimit, paddleLimit);
 
-    if (!gameState.isBallLaunched) {
-        game.ball.position.x = game.paddle.position.x;
-    }
+if (!gameState.isBallLaunched) {
+game.ball.position.x = game.paddle.position.x;
+}
 }
 
 function clearBricks() {
-    for (let i = game.bricksGroup.children.length - 1; i >= 0; i--) {
-        const obj = game.bricksGroup.children[i];
-        if (obj.isCSS2DObject && obj.element) {
-            obj.element.remove();
-        }
-        game.bricksGroup.remove(obj);
-    }
+for (let i = game.bricksGroup.children.length - 1; i >= 0; i--) {
+const obj = game.bricksGroup.children[i];
+if (obj.isCSS2DObject && obj.element) {
+obj.element.remove();
+}
+game.bricksGroup.remove(obj);
+}
 }
 
 function loadNextQuestionAndBricks() {
-    clearBricks();
+clearBricks();
 
-    if (game.questionQueue.length === 0) {
-        gameQuestion.textContent = "恭喜！已完成所有題目！";
-        setTimeout(triggerGameOver, 2000);
-        return;
-    }
+if (game.questionQueue.length === 0) {
+gameQuestion.textContent = "恭喜！已完成所有題目！";
+setTimeout(triggerGameOver, 2000);
+return;
+}
 
-    const currentQA = game.questionQueue.shift();
-    gameQuestion.textContent = currentQA.question;
-    
-    const correctAnswer = currentQA.answer;
-    const wrongAnswerPool = game.allAnswers.filter(ans => ans !== correctAnswer);
-    const incorrectAnswers = wrongAnswerPool.sort(() => Math.random() - 0.5).slice(0, 3);
+const currentQA = game.questionQueue.shift();
+gameQuestion.textContent = currentQA.question;
 
-    let brickData = [];
-    brickData.push({ text: correctAnswer, isCorrect: true });
-    incorrectAnswers.forEach(ans => {
-        brickData.push({ text: ans, isCorrect: false });
-    });
-    
-    const isMobile = window.innerWidth <= 768;
-    const cols = isMobile ? 4 : 5;
-    const rows = isMobile ? 5 : 4;
-    const totalBricks = cols * rows;
-    const answerBrickCount = brickData.length;
+const correctAnswer = currentQA.answer;
+const wrongAnswerPool = game.allAnswers.filter(ans => ans !== correctAnswer);
+const incorrectAnswers = wrongAnswerPool.sort(() => Math.random() - 0.5).slice(0, 3);
 
-    for (let i = 0; i < totalBricks - answerBrickCount; i++) {
-        brickData.push({ text: '', isCorrect: null }); // null for blank bricks
-    }
-    brickData.sort(() => Math.random() - 0.5);
+let brickData = [];
+brickData.push({ text: correctAnswer, isCorrect: true });
+incorrectAnswers.forEach(ans => {
+brickData.push({ text: ans, isCorrect: false });
+});
 
-    const brickWidth = 11;
-    const brickHeight = 4;
-    const colGap = 1;
-    const rowGap = 1;
-    const totalGridWidth = cols * brickWidth + (cols - 1) * colGap;
-    const startX = -totalGridWidth / 2 + brickWidth / 2;
-    const startY = game.topWall.position.y - 12;
+const isMobile = window.innerWidth <= 768;
+const cols = isMobile ? 4 : 5;
+const rows = isMobile ? 5 : 4;
+const totalBricks = cols * rows;
+const answerBrickCount = brickData.length;
 
-    brickData.forEach((data, index) => {
-        const r = Math.floor(index / cols);
-        const c = index % cols;
-        const x = startX + c * (brickWidth + colGap);
-        const y = startY - r * (brickHeight + rowGap);
-        createBrick(x, y, data.text, data.isCorrect);
-    });
+for (let i = 0; i < totalBricks - answerBrickCount; i++) {
+brickData.push({ text: '', isCorrect: null }); // null for blank bricks
+}
+brickData.sort(() => Math.random() - 0.5);
+
+const brickWidth = 11;
+const brickHeight = 4;
+const colGap = 1;
+const rowGap = 1;
+const totalGridWidth = cols * brickWidth + (cols - 1) * colGap;
+const startX = -totalGridWidth / 2 + brickWidth / 2;
+const startY = game.topWall.position.y - 12;
+
+brickData.forEach((data, index) => {
+const r = Math.floor(index / cols);
+const c = index % cols;
+const x = startX + c * (brickWidth + colGap);
+const y = startY - r * (brickHeight + rowGap);
+createBrick(x, y, data.text, data.isCorrect);
+});
 }
 
 function createBrick(x, y, text, isCorrect) {
-    const geometry = new THREE.BoxGeometry(10, 3, 2); 
-    let material;
-    
-    if (isCorrect !== null) { // Answer bricks (correct or incorrect)
-         material = new THREE.MeshStandardMaterial({ 
-            color: 0xa9cce3, // Unified color for all answer bricks
-            metalness: 0.3, 
-            roughness: 0.4 
-        });
-    } else { // Blank bricks
-        material = new THREE.MeshStandardMaterial({ 
-            color: 0x566573, 
-            metalness: 0.1, 
-            roughness: 0.7, 
-            transparent: true, 
-            opacity: 0.7
-        });
-    }
+const geometry = new THREE.BoxGeometry(10, 3, 2); 
+let material;
 
-    const brickMesh = new THREE.Mesh(geometry, material);
-    brickMesh.position.set(x, y, 0);
-    brickMesh.isBrick = true;
-    brickMesh.isCorrect = isCorrect;
-    brickMesh.hit = false;
-    
-    game.bricksGroup.add(brickMesh);
+if (isCorrect !== null) { // Answer bricks (correct or incorrect)
+material = new THREE.MeshStandardMaterial({ 
+color: 0xa9cce3, // Unified color for all answer bricks
+metalness: 0.3, 
+roughness: 0.4 
+});
+} else { // Blank bricks
+material = new THREE.MeshStandardMaterial({ 
+color: 0x566573, 
+metalness: 0.1, 
+roughness: 0.7, 
+transparent: true, 
+opacity: 0.7
+});
+}
 
-    if (isCorrect !== null) {
-        const el = document.createElement('div');
-        el.className = 'game-answer-brick';
-        el.textContent = text;
-        
-        const label = new THREE.CSS2DObject(el);
-        label.position.set(x, y, 1.01); // Slightly in front of the brick
-        
-        brickMesh.label = label;
-        game.bricksGroup.add(label);
-    }
+const brickMesh = new THREE.Mesh(geometry, material);
+brickMesh.position.set(x, y, 0);
+brickMesh.isBrick = true;
+brickMesh.isCorrect = isCorrect;
+brickMesh.hit = false;
+
+game.bricksGroup.add(brickMesh);
+
+if (isCorrect !== null) {
+const el = document.createElement('div');
+el.className = 'game-answer-brick';
+el.textContent = text;
+
+const label = new THREE.CSS2DObject(el);
+label.position.set(x, y, 1.01); // Slightly in front of the brick
+
+brickMesh.label = label;
+game.bricksGroup.add(label);
+}
 }
 
 function updateHUD() {
-    gameScore.textContent = `分數: ${gameState.score}`;
-    // ▼▼▼ 修改後的程式碼 ▼▼▼
-    gameLives.innerHTML = `生命: <span style="color: #e74c3c;">${'♥ '.repeat(Math.max(0, gameState.lives))}</span>`;
+gameScore.textContent = `分數: ${gameState.score}`;
+// ▼▼▼ 修改後的程式碼 ▼▼▼
+gameLives.innerHTML = `生命: <span style="color: #e74c3c;">${'♥ '.repeat(Math.max(0, gameState.lives))}</span>`;
 }
 
 function handleBallBrickCollision(brick) {
-    if (brick.hit) return; 
-    brick.hit = true;
+if (brick.hit) return; 
+brick.hit = true;
 
-    if (brick.label) {
-        brick.label.element.style.transition = 'opacity 0.3s';
-        brick.label.element.style.opacity = '0';
-        setTimeout(() => {
-            if (brick.label) {
-                game.bricksGroup.remove(brick.label);
-                brick.label.element.remove();
-            }
-        }, 300);
-    }
+if (brick.label) {
+brick.label.element.style.transition = 'opacity 0.3s';
+brick.label.element.style.opacity = '0';
+setTimeout(() => {
+if (brick.label) {
+game.bricksGroup.remove(brick.label);
+brick.label.element.remove();
+}
+}, 300);
+}
 
-    if (brick.isCorrect === true) {
-        // MODIFIED: Handle correct answer hit
-        playCollisionSound('correct');
-        gameState.score += 100;
-        // Increase speed multiplier for the next launch
-        gameState.speedMultiplier = Math.min(2.5, gameState.speedMultiplier * 1.05);
-        createParticleExplosion(brick.position, 0x2ecc71);
-        updateHUD();
-        game.bricksGroup.remove(brick);
-        
-        // Stop the ball's movement immediately
-        game.ball.velocity.set(0, 0, 0);
+if (brick.isCorrect === true) {
+// MODIFIED: Handle correct answer hit
+playCollisionSound('correct');
+gameState.score += 100;
+// Increase speed multiplier for the next launch
+gameState.speedMultiplier = Math.min(2.5, gameState.speedMultiplier * 1.05);
+createParticleExplosion(brick.position, 0x2ecc71);
+updateHUD();
+game.bricksGroup.remove(brick);
 
-        // After a delay, load next question and reset ball for a new serve
-        setTimeout(() => {
-            loadNextQuestionAndBricks();
-            resetBallAndPaddle();
-        }, 500);
+// Stop the ball's movement immediately
+game.ball.velocity.set(0, 0, 0);
 
-    } else if (brick.isCorrect === false) { // Incorrect answer
-        playCollisionSound('lose');
-        createParticleExplosion(brick.position, 0xe74c3c); // Red explosion for error
-        game.bricksGroup.remove(brick);
-        loseLife(); 
-    } else { // Blank bricks
-        playCollisionSound('wall');
-        gameState.score += 10;
-        createParticleExplosion(brick.position, 0xaaaaaa);
-        updateHUD();
-        game.bricksGroup.remove(brick);
-    }
+// After a delay, load next question and reset ball for a new serve
+setTimeout(() => {
+loadNextQuestionAndBricks();
+resetBallAndPaddle();
+}, 500);
+
+} else if (brick.isCorrect === false) { // Incorrect answer
+playCollisionSound('lose');
+createParticleExplosion(brick.position, 0xe74c3c); // Red explosion for error
+game.bricksGroup.remove(brick);
+loseLife(); 
+} else { // Blank bricks
+playCollisionSound('wall');
+gameState.score += 10;
+createParticleExplosion(brick.position, 0xaaaaaa);
+updateHUD();
+game.bricksGroup.remove(brick);
+}
 }
 
 
 function loseLife() {
-    gameState.lives--;
-    updateHUD();
-    playCollisionSound('lose');
-    if (gameState.lives <= 0) {
-        triggerGameOver();
-    } else {
-        resetBallAndPaddle();
-    }
+gameState.lives--;
+updateHUD();
+playCollisionSound('lose');
+if (gameState.lives <= 0) {
+triggerGameOver();
+} else {
+resetBallAndPaddle();
+}
 }
 
 function triggerGameOver() {
-    gameState.isActive = false;
-    game.ball.velocity.set(0,0,0);
-    gameFinalScore.textContent = `最終得分: ${gameState.score}`;
-    gameOverScreen.style.display = 'flex';
+gameState.isActive = false;
+game.ball.velocity.set(0,0,0);
+gameFinalScore.textContent = `最終得分: ${gameState.score}`;
+gameOverScreen.style.display = 'flex';
 }
 
 function animate() {
-    animationFrameId = requestAnimationFrame(animate);
-    if (!gameState.isActive) return;
+animationFrameId = requestAnimationFrame(animate);
+if (!gameState.isActive) return;
 
-    game.particles.children.forEach(p => {
-        p.position.add(p.velocity);
-        p.material.opacity -= 0.02;
-    });
-    game.particles.children = game.particles.children.filter(p => p.material.opacity > 0);
-    
-    if (gameState.isBallLaunched) {
-        game.ball.position.add(game.ball.velocity);
-    }
+game.particles.children.forEach(p => {
+p.position.add(p.velocity);
+p.material.opacity -= 0.02;
+});
+game.particles.children = game.particles.children.filter(p => p.material.opacity > 0);
 
-    const ballBox = new THREE.Box3().setFromObject(game.ball);
-    
-    // Wall collisions
-    if (game.ball.position.x < game.leftWall.position.x + 1 || game.ball.position.x > game.rightWall.position.x - 1) {
-        game.ball.velocity.x *= -1;
-        playCollisionSound('wall');
-    }
-    if (game.ball.position.y > game.topWall.position.y - 1) {
-        game.ball.velocity.y *= -1;
-        playCollisionSound('wall');
-    }
+if (gameState.isBallLaunched) {
+game.ball.position.add(game.ball.velocity);
+}
 
-    // Bottom boundary (lose life)
-    if (game.ball.position.y < game.bottomBoundary) {
-        if(gameState.isBallLaunched) loseLife();
-    }
-    
-    // Paddle collision
-    const paddleBox = new THREE.Box3().setFromObject(game.paddle);
-    if (ballBox.intersectsBox(paddleBox) && game.ball.velocity.y < 0) {
-        game.ball.velocity.y *= -1;
-        let offset = (game.ball.position.x - game.paddle.position.x) / (game.paddle.geometry.parameters.width / 2);
-        game.ball.velocity.x = offset * gameState.baseSpeed * gameState.speedMultiplier;
-        playCollisionSound('paddle');
-    }
+const ballBox = new THREE.Box3().setFromObject(game.ball);
 
-    // Brick collisions
-    for (let i = game.bricksGroup.children.length - 1; i >= 0; i--) {
-        const brick = game.bricksGroup.children[i];
-        if (!brick.isBrick || brick.hit) continue;
-        
-        const brickBox = new THREE.Box3().setFromObject(brick);
-        if (ballBox.intersectsBox(brickBox)) {
-            const ballCenter = game.ball.position.clone();
-            const brickCenter = brick.position.clone();
-            const dx = ballCenter.x - brickCenter.x;
-            const dy = ballCenter.y - brickCenter.y;
-            const combinedHalfWidths = game.ball.geometry.parameters.radius + brick.geometry.parameters.width / 2;
-            const combinedHalfHeights = game.ball.geometry.parameters.radius + brick.geometry.parameters.height / 2;
-            
-            if (Math.abs(dx) / combinedHalfWidths > Math.abs(dy) / combinedHalfHeights) {
-                game.ball.velocity.x *= -1; 
-            } else {
-                game.ball.velocity.y *= -1;
-            }
-            
-            handleBallBrickCollision(brick);
-            break; 
-        }
-    }
+// Wall collisions
+if (game.ball.position.x < game.leftWall.position.x + 1 || game.ball.position.x > game.rightWall.position.x - 1) {
+game.ball.velocity.x *= -1;
+playCollisionSound('wall');
+}
+if (game.ball.position.y > game.topWall.position.y - 1) {
+game.ball.velocity.y *= -1;
+playCollisionSound('wall');
+}
 
-    game.renderer.render(game.scene, game.camera);
-    game.labelRenderer.render(game.scene, game.camera);
+// Bottom boundary (lose life)
+if (game.ball.position.y < game.bottomBoundary) {
+if(gameState.isBallLaunched) loseLife();
+}
+
+// Paddle collision
+const paddleBox = new THREE.Box3().setFromObject(game.paddle);
+if (ballBox.intersectsBox(paddleBox) && game.ball.velocity.y < 0) {
+game.ball.velocity.y *= -1;
+let offset = (game.ball.position.x - game.paddle.position.x) / (game.paddle.geometry.parameters.width / 2);
+game.ball.velocity.x = offset * gameState.baseSpeed * gameState.speedMultiplier;
+playCollisionSound('paddle');
+}
+
+// Brick collisions
+for (let i = game.bricksGroup.children.length - 1; i >= 0; i--) {
+const brick = game.bricksGroup.children[i];
+if (!brick.isBrick || brick.hit) continue;
+
+const brickBox = new THREE.Box3().setFromObject(brick);
+if (ballBox.intersectsBox(brickBox)) {
+const ballCenter = game.ball.position.clone();
+const brickCenter = brick.position.clone();
+const dx = ballCenter.x - brickCenter.x;
+const dy = ballCenter.y - brickCenter.y;
+const combinedHalfWidths = game.ball.geometry.parameters.radius + brick.geometry.parameters.width / 2;
+const combinedHalfHeights = game.ball.geometry.parameters.radius + brick.geometry.parameters.height / 2;
+
+if (Math.abs(dx) / combinedHalfWidths > Math.abs(dy) / combinedHalfHeights) {
+game.ball.velocity.x *= -1; 
+} else {
+game.ball.velocity.y *= -1;
+}
+
+handleBallBrickCollision(brick);
+break; 
+}
+}
+
+game.renderer.render(game.scene, game.camera);
+game.labelRenderer.render(game.scene, game.camera);
 }
 
 // --- 特效與音效 ---
 function createParticleExplosion(position, color) {
-    const particleCount = 50;
-    const particleMaterial = new THREE.PointsMaterial({ color: color, size: 0.5, transparent: true, blending: THREE.AdditiveBlending });
-    
-    for (let i = 0; i < particleCount; i++) {
-        const geometry = new THREE.BufferGeometry();
-        geometry.setAttribute('position', new THREE.Float32BufferAttribute([0,0,0], 3));
-        let p = new THREE.Points(geometry, particleMaterial.clone());
-        p.position.copy(position);
-        p.velocity = new THREE.Vector3(
-            (Math.random() - 0.5) * 0.2,
-            (Math.random() - 0.5) * 0.2,
-            (Math.random() - 0.5) * 0.2
-        );
-        game.particles.add(p);
-    }
+const particleCount = 50;
+const particleMaterial = new THREE.PointsMaterial({ color: color, size: 0.5, transparent: true, blending: THREE.AdditiveBlending });
+
+for (let i = 0; i < particleCount; i++) {
+const geometry = new THREE.BufferGeometry();
+geometry.setAttribute('position', new THREE.Float32BufferAttribute([0,0,0], 3));
+let p = new THREE.Points(geometry, particleMaterial.clone());
+p.position.copy(position);
+p.velocity = new THREE.Vector3(
+(Math.random() - 0.5) * 0.2,
+(Math.random() - 0.5) * 0.2,
+(Math.random() - 0.5) * 0.2
+);
+game.particles.add(p);
+}
 }
 
 function playCollisionSound(type) {
-    if (!game.audioContext || game.audioContext.state === 'suspended') {
-        game.audioContext.resume().catch(e => console.error("Audio resume failed:", e));
-    }
-    if (!game.audioContext) return;
-    const oscillator = game.audioContext.createOscillator();
-    const gainNode = game.audioContext.createGain();
-    oscillator.connect(gainNode);
-    gainNode.connect(game.audioContext.destination);
+if (!game.audioContext || game.audioContext.state === 'suspended') {
+game.audioContext.resume().catch(e => console.error("Audio resume failed:", e));
+}
+if (!game.audioContext) return;
+const oscillator = game.audioContext.createOscillator();
+const gainNode = game.audioContext.createGain();
+oscillator.connect(gainNode);
+gainNode.connect(game.audioContext.destination);
 
-    const now = game.audioContext.currentTime;
-    gainNode.gain.setValueAtTime(0.3, now);
-    
-    switch (type) {
-        case 'paddle':
-            oscillator.frequency.setValueAtTime(200, now);
-            gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
-            break;
-        case 'wall':
-            oscillator.frequency.setValueAtTime(150, now);
-            gainNode.gain.setValueAtTime(0.1, now);
-            gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
-            break;
-        case 'correct':
-            oscillator.type = 'square';
-            oscillator.frequency.setValueAtTime(440, now);
-            oscillator.frequency.linearRampToValueAtTime(880, now + 0.1);
-            gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-            break;
-        case 'lose':
-            oscillator.type = 'sawtooth';
-            oscillator.frequency.setValueAtTime(120, now);
-            oscillator.frequency.linearRampToValueAtTime(60, now + 0.3);
-            gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
-            break;
-    }
-    oscillator.start(now);
-    oscillator.stop(now + 0.4);
+const now = game.audioContext.currentTime;
+gainNode.gain.setValueAtTime(0.3, now);
+
+switch (type) {
+case 'paddle':
+oscillator.frequency.setValueAtTime(200, now);
+gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+break;
+case 'wall':
+oscillator.frequency.setValueAtTime(150, now);
+gainNode.gain.setValueAtTime(0.1, now);
+gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+break;
+case 'correct':
+oscillator.type = 'square';
+oscillator.frequency.setValueAtTime(440, now);
+oscillator.frequency.linearRampToValueAtTime(880, now + 0.1);
+gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+break;
+case 'lose':
+oscillator.type = 'sawtooth';
+oscillator.frequency.setValueAtTime(120, now);
+oscillator.frequency.linearRampToValueAtTime(60, now + 0.3);
+gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+break;
+}
+oscillator.start(now);
+oscillator.stop(now + 0.4);
 }
 
 });
