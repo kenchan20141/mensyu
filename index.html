@@ -1483,8 +1483,13 @@ transform: scale(1.1);
 
 <script>
 // API 配置信息
-const API_KEYS = [
-"sk-H-xNneBeBJENQXfffeaj9A"
+
+	const API_KEYS = [
+    "sk-H-xNneBeBJENQXfffeaj9A",
+    "sk-N2hJEV5h9dQl9K_bUrxLtw",
+"sk-GruTbLTbtSeWof3rEBjtIg",
+"sk-ugZDzju3AbV2QeJS1Y415Q"
+    // 您可以依照這個格式，繼續增加更多行的 API Key
 ];
 let currentApiKeyIndex = 0;
 const API_URL = "https://chatapi.akash.network/api/v1/chat/completions";
@@ -1799,35 +1804,41 @@ aiSearchBtn.disabled = false;
 
 // --- API Calling ---
 async function callApi(prompt) {
-const apiKey = API_KEYS[currentApiKeyIndex];
-try {
-const response = await fetch(API_URL, {
-method: 'POST',
-headers: {
-'Content-Type': 'application/json',
-'Authorization': `Bearer ${apiKey}`
-},
-body: JSON.stringify({
-model: MODEL,
-messages: [{
-role: "user",
-content: prompt
-}],
-temperature: 0.5,
-max_tokens: 64000
-})
-});
-if (!response.ok) throw new Error(`API 請求失敗: ${response.status}`);
-const data = await response.json();
-if (data.error) throw new Error(`API 返回錯誤: ${data.error.message}`);
-return data;
-} catch (error) {
-console.error('API 調用錯誤:', error);
-currentApiKeyIndex = (currentApiKeyIndex + 1) % API_KEYS.length;
-if (currentApiKeyIndex === 0) throw new Error('所有API密鑰嘗試失敗');
-console.warn('正在嘗試下一個 API Key...');
-return callApi(prompt);
-}
+    // 檢查 API_KEYS 陣列是否為空
+    if (API_KEYS.length === 0 || !API_KEYS[0]) {
+        throw new Error('請在 API_KEYS 陣列中設定至少一個有效的 API Key。');
+    }
+
+    // 從 API_KEYS 陣列中隨機抽取一個 KEY
+    const apiKey = API_KEYS[Math.floor(Math.random() * API_KEYS.length)];
+
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}` // 使用隨機抽取的 apiKey
+            },
+            body: JSON.stringify({
+                model: MODEL,
+                messages: [{
+                    role: "user",
+                    content: prompt
+                }],
+                temperature: 0.5,
+                max_tokens: 64000
+            })
+        });
+        if (!response.ok) throw new Error(`API 請求失敗: ${response.status}`);
+        const data = await response.json();
+        if (data.error) throw new Error(`API 返回錯誤: ${data.error.message}`);
+        return data;
+    } catch (error) {
+        // 將原始錯誤向上拋出，由 callApiWithRetry 函式來決定是否重試。
+        // 每次重試時，都會重新執行此函式並再次隨機抽取一個 Key。
+        console.error('API 調用錯誤:', error);
+        throw error;
+    }
 }
 
 function extractJson(text) {
