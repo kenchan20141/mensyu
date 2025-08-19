@@ -1299,6 +1299,194 @@ transition: opacity 0.2s, transform 0.2s;
 opacity: 1;
 transform: scale(1.1);
 }
+
+/* ===== 新增：文言文輸入懸浮視窗獨立 CSS ===== */
+.ocr-modal-overlay {
+    display: none; /* 預設隱藏 */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(44, 62, 80, 0.75); /* 使用與文樞一致的 overlay 背景色 */
+    z-index: 2500; /* 設定一個較高的 z-index */
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    box-sizing: border-box;
+    backdrop-filter: blur(4px);
+}
+
+.ocr-modal-content {
+    background-color: #fdfdfd;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.25);
+    width: 90%;
+    max-width: 750px; /* 視窗最大寬度 */
+    height: 85vh; /* 視窗高度佔視窗的 85% */
+    max-height: 800px;
+    position: relative;
+    animation: ocrModalFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column; /* 讓內部元素垂直排列 */
+}
+
+@keyframes ocrModalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.ocr-modal-content h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: var(--dark-color);
+    font-size: 1.5rem;
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 600;
+    border-bottom: 2px solid var(--light-accent);
+    padding-bottom: 15px;
+}
+
+#ocr-modal-textarea {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 1.2em; /* 稍大的字體，方便閱讀 */
+    line-height: 1.8;
+    border: 2px solid var(--light-accent);
+    border-radius: 8px;
+    padding: 15px;
+    flex-grow: 1; /* 佔據所有剩餘空間 */
+    resize: none; /* 禁止手動調整大小 */
+    font-family: 'Noto Serif TC', serif;
+    background-color: #fcfdff;
+    transition: all 0.3s ease;
+}
+
+#ocr-modal-textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(127, 179, 213, 0.15);
+}
+
+/* ===== 最終修訂：文言文輸入懸浮視窗按鈕 (完全隔離樣式) ===== */
+
+.ocr-modal-buttons {
+    /* 移除所有 display: flex 相關屬性 */
+    text-align: right; /* 核心：這會讓所有 inline-block 的子元素靠右對齊 */
+    margin-top: 20px;
+}
+
+/* 2. 按鈕本身 */
+.ocr-modal-btn {
+    /* --- 佈局與外觀 --- */
+    display: inline-block; /* 必須是 inline 或 inline-block 才能被 text-align 影響 */
+    vertical-align: middle; /* 確保垂直對齊一致 */
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: var(--shadow-light);
+    text-decoration: none; /* 移除可能的下劃線 */
+    
+    /* --- 為按鈕之間添加間距 --- */
+    margin-left: 10px; /* 為每個按鈕左側添加間距 */
+
+    /* --- 強制尺寸隔離 (使用 !important) --- */
+    /* 這些規則確保按鈕大小不受任何通用樣式影響 */
+    padding: 10px 20px !important;
+    font-size: 14px !important;
+    min-width: 0 !important;
+    width: auto !important;
+    flex: none !important; /* 確保 flex 屬性被重置 */
+}
+
+/* 讓第一個按鈕沒有左邊距，更美觀 */
+.ocr-modal-btn:first-child {
+    margin-left: 0;
+}
+
+.ocr-modal-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+    filter: brightness(110%);
+}
+
+/* 3. 按鈕的圖示 (需要手動添加) */
+.ocr-modal-btn .fas {
+    margin-right: 8px; /* 讓圖示和文字之間有空隙 */
+}
+
+
+/* 4. 按鈕顏色 (保持不變) */
+.ocr-btn-confirm {
+    background: var(--gradient-primary);
+    color: white;
+}
+
+.ocr-btn-special {
+    background: linear-gradient(135deg, #1abc9c, #16a085);
+    color: white;
+}
+
+
+/* 5. 簡化手機版 CSS */
+@media (max-width: 768px) {
+    .ocr-modal-content {
+        height: 90vh;
+        padding: 20px;
+    }
+    #ocr-modal-textarea {
+        font-size: 1.1em;
+    }
+    /* 按鈕容器和按鈕的樣式已在上方全局定義，此處無需再做任何修改，
+       它們會自然地適應並保持在右上角。*/
+}
+
+.ocr-modal-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: transparent;
+    border: none;
+    font-size: 2rem;
+    color: #999;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s, transform 0.2s;
+}
+
+.ocr-modal-close-btn:hover {
+    color: var(--dark-color);
+    transform: rotate(90deg);
+}
+
+@media (max-width: 768px) {
+    .ocr-modal-content {
+        height: 90vh;
+        padding: 20px;
+    }
+    #ocr-modal-textarea {
+        font-size: 1.1em;
+    }
+    .ocr-modal-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .ocr-modal-btn {
+        width: 100%;
+        padding: 14px;
+    }
+}
+
+	
 </style>
 </head>
 <body>
@@ -1647,7 +1835,102 @@ gameRestartBtn.addEventListener('click', () => {
 gameOverScreen.style.display = 'none';
 prepareGame();
 });
+
+// ===== 新增：文言文輸入懸浮視窗與 OCR 邏輯 =====
+
+// 1. 獲取相關 DOM 元素
+const classicalTextInput = document.getElementById('classical-text');
+const ocrModal = document.getElementById('ocr-input-modal');
+const ocrModalTextarea = document.getElementById('ocr-modal-textarea');
+const ocrModalSaveBtn = document.getElementById('ocr-modal-save-btn');
+const ocrModalCloseBtn = document.getElementById('ocr-modal-close-btn');
+const ocrModalOcrBtn = document.getElementById('ocr-modal-ocr-btn');
+
+let ocrWindow = null; // 用於存放 OCR 子視窗的參照
+const OCR_TOOL_URL = 'https://gemini-ocr-proxy.vercel.app/'; // 您的 OCR 工具 URL
+
+// 2. 為原文輸入框添加點擊事件監聽
+classicalTextInput.addEventListener('click', (event) => {
+    event.preventDefault(); // 防止可能的預設行為
+    openOcrModal();
+});
+
+// 3. 定義開啟懸浮視窗的函數
+function openOcrModal() {
+    // 將原文輸入框的現有內容，複製到懸浮視窗的 textaera 中
+    ocrModalTextarea.value = classicalTextInput.value;
+    
+    // 顯示懸浮視窗
+    ocrModal.style.display = 'flex';
+    ocrModalTextarea.focus(); // 自動聚焦，方便用戶立即輸入
 }
+
+// 4. 定義關閉懸浮視窗的函數
+function closeOcrModal() {
+    ocrModal.style.display = 'none';
+}
+
+// 5. 定義保存並關閉的函數
+function saveAndCloseOcrModal() {
+    // 將懸浮視窗 textaera 的內容，回寫到原文輸入框
+    classicalTextInput.value = ocrModalTextarea.value;
+    
+    // 手動觸發 input 事件，以確保 autoResizeTextarea 等相關監聽器能夠被觸發
+    classicalTextInput.dispatchEvent(new Event('input', { bubbles: true }));
+    
+    closeOcrModal();
+}
+
+// 6. 為懸浮視窗的各個按鈕綁定事件
+ocrModalSaveBtn.addEventListener('click', saveAndCloseOcrModal);
+ocrModalCloseBtn.addEventListener('click', closeOcrModal);
+ocrModal.addEventListener('click', (event) => {
+    // 如果點擊的是半透明的背景層，則關閉視窗
+    if (event.target === ocrModal) {
+        closeOcrModal();
+    }
+});
+
+// 7. OCR 功能邏輯
+ocrModalOcrBtn.addEventListener('click', () => {
+    if (ocrWindow && !ocrWindow.closed) {
+        ocrWindow.focus();
+        return;
+    }
+    // 打開一個新的子視窗來載入 OCR 工具
+    ocrWindow = window.open(OCR_TOOL_URL, 'OCRWindow', 'width=650,height=850,scrollbars=yes,resizable=yes');
+});
+
+// 8. 監聽來自 OCR 子視窗的訊息
+window.addEventListener('message', (event) => {
+    // 安全性檢查：確保訊息來自於我們信任的 OCR 工具源
+    if (event.origin !== new URL(OCR_TOOL_URL).origin) {
+        return;
+    }
+
+    // 檢查訊息格式是否為我們定義的 OCR 結果
+    if (event.data && event.data.type === 'ocrResult') {
+        const ocrText = event.data.text;
+        
+        // 將辨識結果附加到懸浮視窗的 textarea 中
+        ocrModalTextarea.value += (ocrModalTextarea.value.trim() ? '\n\n' : '') + ocrText;
+        
+        // 收到結果後，自動關閉 OCR 子視窗
+        if (ocrWindow) {
+            ocrWindow.close();
+        }
+        
+        // 將焦點移回輸入框，方便用戶繼續編輯
+        ocrModalTextarea.focus();
+    }
+});
+
+	
+}
+
+
+
+
 
 // --- Event Handlers & Core Logic ---
 function autoResizeTextarea() {
@@ -3124,5 +3407,24 @@ oscillator.stop(now + 0.4);
 
 });
 </script>
+
+<!-- ===== 新增：文言文輸入懸浮視窗 ===== -->
+<div id="ocr-input-modal" class="ocr-modal-overlay">
+    <div class="ocr-modal-content">
+        <h3 id="ocr-modal-title">編輯原文</h3>
+        <textarea id="ocr-modal-textarea"></textarea>
+        <div class="ocr-modal-buttons">
+            <button id="ocr-modal-ocr-btn" class="ocr-modal-btn ocr-btn-special">
+                <i class="fas fa-camera"></i> OCR
+            </button>
+            <button id="ocr-modal-save-btn" class="ocr-modal-btn ocr-btn-confirm">
+                <i class="fas fa-check"></i> 輸入
+            </button>
+        </div>
+        <button id="ocr-modal-close-btn" class="ocr-modal-close-btn" title="關閉">&times;</button>
+    </div>
+</div>
+
+	
 </body>
 </html>
