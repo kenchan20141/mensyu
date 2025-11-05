@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -1673,16 +1672,16 @@ transform: scale(1.1);
 <script>
 // API 配置信息
 
-const API_KEYS = [
-   "Jeq-UCxbpvrqUEzN",
-"F6uI8FZMRyGMAFaz",
-"VaFpRKCV9L60sYla",
-"zkQBAzGMKVY7BcHs",
-"hoew4Zqe5HerDgXf"
+	const API_KEYS = [
+    "sk-H-xNneBeBJENQXfffeaj9A",
+    "sk-N2hJEV5h9dQl9K_bUrxLtw",
+"sk-GruTbLTbtSeWof3rEBjtIg",
+"sk-ugZDzju3AbV2QeJS1Y415Q"
+    // 您可以依照這個格式，繼續增加更多行的 API Key
 ];
-// let currentApiKeyIndex = 0; // 這個變數不再需要，可以刪除或註解掉
-const API_URL = "https://text.pollinations.ai/v1/chat/completions";
-const MODEL = "gemini";
+let currentApiKeyIndex = 0;
+const API_URL = "https://chatapi.akash.network/api/v1/chat/completions";
+const MODEL = "Qwen3-235B-A22B-Instruct-2507-FP8";
 
 // 懸浮窗狀態管理
 let isFloatingEnabled = true;
@@ -2171,7 +2170,7 @@ async function generateProse() {
 const userPromptText = aiPromptTextarea.value.trim();
 const historyTitles = state.history.map(item => item.title).filter(t => !t.startsWith('手動輸入'));
 const promptInstruction = userPromptText ? `用戶的個性化主題要求： "${userPromptText}"。` : '請隨機推薦一篇符合上述難度的文章。';
-const systemPrompt = `你是一位精通中國古籍的學者。你的任務是根據用戶要求，從浩瀚的文言文典籍中，找出一篇真實存在的短篇章。絕對不可以有英文。
+const systemPrompt = `你是一位精通中國古籍的學者。你的任務是根據用戶要求，從浩瀚的文言文典籍中，找出一篇真實存在的短篇章。
 用戶的文學鑑賞難度偏好（1星最淺白，5星最艱深）：${state.difficulty}顆星。
 ${promptInstruction}
 已閱覽過的文章標題（請勿重複推薦）：[${historyTitles.join(', ')}]
