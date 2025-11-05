@@ -1674,22 +1674,15 @@ transform: scale(1.1);
 // API 配置信息
 
 const API_KEYS = [
-  "cmKZ75oSib3G+6/1NqmPKPAAsDuSQ9INaolor2+HQ7rvVu0IAs7WYDNI+4BuxdQUP09EDxdYLU4ugD5qfJFdtIvSVndvfb7nGPtwI++Si/KiAWXjzD7egGWEfdkKZtmzmMMxvmY=",
-    "PFVb0HlCBMxnNxRFDTSR9dGDYZDkRM2onHvM+O55WZqUfIrrEaXkho3N/nNTS3X9MrbJxL7uiiRnYgXsWQS3ijNpEGo5WhyudiBgAPq82BQ9J92kzQHzbirPNYjdNRF1vNkBrDs=",
-    "QI8AeIfibGAj9B0YLK0PS5JIhsKASC1NYe4WJOX6vgV46l+yHWYx5x5o4F+E6SNnegyVbbp3cLoNycWZIPPb+YurR8/DtKTvawpC7HEJKxOJDbwEW+Z1tETVUZUCCeYHucHyvng=",
-    "2shFmXOalAW01Uk5NgnWC0Tn5Jx68lRttomTrFSB3E9V88CMpWdAn5l0IK9Wlrx0Y/uZT5+p4M37LAMza/Bb0O3YGrYA+DNodh+ZK8VGJ3iYaRtc3AVAFguox/AbvO6TEQ6jdXc=",
-    "WSFgAildbs/aSs9zLuFrg+CpsI0IhqI8DExC1bggR/tJ6oxwmwlENch24tnpsXATuNi9XxN88ytVu3Wjxx5exUAYmXqmnb+z9NzFwpfIra4QP9HPl61DejIwEMubLe5ABQcDaV8=",
-    "/yPYPfAboI9nDkEi4Xz5tXTR9oXDqEQ4K+8AArquZkNBLlX8Fa0PaZmo7xm3vdb0KcZ49CYmVZazbg9ZhoHxLgdT5Zd5Jy9wda2iq9v1tCZj94ujwQKrLN9vLKvovZ+bNKNoyqQ=",
-    "XqCcSqpa6zEjlsF4eunLYAdo17OwXrkxRDDNQztwNAyTxVyvhmBMOUmCRWqi2/OIDTQZ1S8KQlH8cOJO8WKzb1ih1GOMt0ry3pdtahdX5K1VtnImcekFRPZxSO1yB+CyTQQDYEc=",
-    "1iZRTIbLtVE5H32tAEWmh9yxYOTt55l3CZ/AFEo/Wo5jR6JsaEc5eo/YGt/UoDIIMQPopBITzixs3i96DnLO2SItMPlSfhSu5PiyqwQOAfXKoTYzaIaq2wVKnb2/hUTMSOwojxw=",
-    "WLNrXFRX1IYiPNzfTNbwp/aOZNnsgOucWyxPgJfW/AbDF0pn+A0rBrHv1n+dn4NPabXYgafd2iP692Qmx8ee8lajuik5XIEExwwAYTCVJhD/qRZSTD6Ng+r0BtVH/S7kN8XxIUg=",
-    "/Fe302EcZcvWfGDwtYBG1VhONf/tUSCz2AOaFL/gmg6ShNYAq3B7KqbvHYiCO8u28JTegRoOYEImjzHFS2tvEa0JjEJ+ULB5A/wuDm0wFN8GIkWNomwOXyBhTjLF3KBDyDXOa6o=",
-    "Y+VEHx3H9A0Nhvz53msdEIRRGaS864UALJ/VGFD6M35Lqg9USD5hhDG2808C2/McScCOpb9l86Peso+bmsA2RhfsbiozTkOPuXgv3FUat3hEUMib9kpqhO8EalWfjVcq7YB2wcM=",
-    "r9mlA6MiQK6CbCHfRqdy2hf2nIp+4jvzZEPbfG1BwdBm6yxLSgy6jJtlpO0x58YoRm/xSqWrARUE4IQ1idviZ3lLPnI6afcSAvUrO03h2vQ4veyLOANxPzNv1AL3L9dgxxPCYUM="
+   "Jeq-UCxbpvrqUEzN",
+"F6uI8FZMRyGMAFaz",
+"VaFpRKCV9L60sYla",
+"zkQBAzGMKVY7BcHs",
+"hoew4Zqe5HerDgXf"
 ];
 // let currentApiKeyIndex = 0; // 這個變數不再需要，可以刪除或註解掉
-const API_URL = "https://api.llm7.io/v1/chat/completions";
-const MODEL = "gemini-search";
+const API_URL = "https://text.pollinations.ai/v1/chat/completions";
+const MODEL = "gemini";
 
 // 懸浮窗狀態管理
 let isFloatingEnabled = true;
@@ -2178,7 +2171,7 @@ async function generateProse() {
 const userPromptText = aiPromptTextarea.value.trim();
 const historyTitles = state.history.map(item => item.title).filter(t => !t.startsWith('手動輸入'));
 const promptInstruction = userPromptText ? `用戶的個性化主題要求： "${userPromptText}"。` : '請隨機推薦一篇符合上述難度的文章。';
-const systemPrompt = `你是一位精通中國古籍的學者。你的任務是根據用戶要求，從浩瀚的文言文典籍中，找出一篇真實存在的短篇章。
+const systemPrompt = `你是一位精通中國古籍的學者。你的任務是根據用戶要求，從浩瀚的文言文典籍中，找出一篇真實存在的短篇章。絕對不可以有英文。
 用戶的文學鑑賞難度偏好（1星最淺白，5星最艱深）：${state.difficulty}顆星。
 ${promptInstruction}
 已閱覽過的文章標題（請勿重複推薦）：[${historyTitles.join(', ')}]
