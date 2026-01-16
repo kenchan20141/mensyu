@@ -3427,43 +3427,13 @@ oscillator.stop(now + 0.4);
     </div>
 </div>
 
-	<!-- ======================================================= -->
-<!-- === [神思系統] Firebase SDK 與 大數據收集模組  === -->
-<!-- ======================================================= -->
-
-<!-- 1. Firebase SDK (必須引入才能傳數據) -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-
+<!-- === [新增] 神思大數據收集模組 (雙軌制寫入版) === -->
 <script>
-// 2. Firebase 設定初始化 (與神思完全一致)
-const firebaseConfig = {
-  apiKey: "AIzaSyBgwrgn2m343mRJb0WjzUhteiospegXhvI",
-  authDomain: "sansidata.firebaseapp.com",
-  projectId: "sansidata",
-  storageBucket: "sansidata.firebasestorage.app",
-  messagingSenderId: "580288358575",
-  appId: "1:580288358575:web:35dcf4e79bcef530de4c5a",
-  databaseURL: "https://sansidata-default-rtdb.firebaseio.com" 
-};
-
-// 確保只初始化一次
-if (typeof firebase !== 'undefined' && !firebase.apps.length) {
-    try {
-        firebase.initializeApp(firebaseConfig);
-        console.log("Firebase 初始化成功！");
-    } catch (e) {
-        console.error("Firebase 初始化失敗：", e);
-    }
-}
-
-// 3. 大數據收集邏輯 (訪客/學生 瀏覽時間統計)
 document.addEventListener('DOMContentLoaded', function() {
     let totalSeconds = 0;
     let timerInterval = null;
-
-    // A. 獲取日期路徑
+ 
+    // 1. 獲取詳細日期路徑 (給 analytics 用) -> 2025/01/16
     function getDatePath() {
         const now = new Date();
         const y = now.getFullYear();
@@ -3471,8 +3441,16 @@ document.addEventListener('DOMContentLoaded', function() {
         const d = String(now.getDate()).padStart(2, '0');
         return `${y}/${m}/${d}`;
     }
-
-    // B. 獲取或生成訪客唯一 ID
+ 
+    // ★★★ 新增：獲取月度總結路徑 (給 stats_summary 用) -> 2025/01 ★★★
+    function getSummaryPath() {
+        const now = new Date();
+        const y = now.getFullYear();
+        const m = String(now.getMonth() + 1).padStart(2, '0');
+        return `${y}/${m}`;
+    }
+ 
+    // 2. 獲取或生成訪客唯一 ID
     function getGuestID() {
         let id = localStorage.getItem('sansi_guest_uuid');
         if (!id) {
@@ -3481,22 +3459,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         return id;
     }
-
-    // C. 記錄訪問 (Log Visit)
+ 
+    // 3. 記錄訪問 (Log Visit)
     function logVisitOnce() {
         if (typeof firebase === 'undefined') return;
         const db = firebase.database();
-        const pathSuffix = getDatePath();
+        const pathSuffix = getDatePath();       // 詳細路徑
+        const summarySuffix = getSummaryPath(); // ★ 輕量路徑
         
-        // 嘗試讀取神思的登入資料 (如果是在同一網域下)
         const rawProfile = localStorage.getItem('studentProfile');
         let s = null;
         try { if(rawProfile) s = JSON.parse(rawProfile); } catch (e) {}
-
-        // 定義當前身份
+ 
         let currentIdentityID = '';
         let isStudent = false;
-
+ 
         if (s && s.grade && s.class && s.name) {
             currentIdentityID = `student_${s.grade}${s.class}_${s.name}`;
             isStudent = true;
@@ -3504,23 +3481,24 @@ document.addEventListener('DOMContentLoaded', function() {
             currentIdentityID = `guest_${getGuestID()}`;
             isStudent = false;
         }
-
-        // 檢查本次 Session 是否已記錄過
+ 
         const lastLoggedID = sessionStorage.getItem('sansi_logged_identity_id');
+ 
         if (currentIdentityID === lastLoggedID) {
             return;
         }
-
-        console.log(`📍 偵測到新身份訪問 (${isStudent ? '學生' : '訪客'}), 正在記錄...`);
-
+ 
+        console.log(`📍 [System] 偵測到新身份訪問 (${isStudent ? '學生' : '訪客'}), 正在記錄...`);
+ 
+        // 通用加法器
         const incrementData = (path) => {
             db.ref(path).transaction(data => {
                 if (data === null) return { visits: 1, duration: 0 };
                 return { visits: (data.visits || 0) + 1, duration: (data.duration || 0) };
             });
         };
-
-        // 寫入特定路徑 (數據會合併在神思的數據庫中)
+ 
+        // A. 寫入詳細日誌 (Analytics)
         if (isStudent) {
             incrementData(`analytics/${pathSuffix}/students/${s.grade}/${s.class}/${s.name}`);
             incrementData(`analytics/${pathSuffix}/classes/${s.grade}${s.class}`);
@@ -3528,37 +3506,49 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             incrementData(`analytics/${pathSuffix}/guests/${getGuestID()}`);
         }
-
-        // 寫入全網總計 (防止重複計算)
+ 
+        // B. 寫入全域統計 (及 ★★★ 新增的輕量統計 ★★★)
         if (!sessionStorage.getItem('sansi_global_visit_logged')) {
+            // 1. 寫入舊的詳細全域統計
             incrementData(`analytics/${pathSuffix}/global_summary`);
+            
+            // 2. ★★★ 寫入新的輕量級月度統計 (這是給教師端省流量用的關鍵) ★★★
+            // 路徑例如: stats_summary/2025/01
+            incrementData(`stats_summary/${summarySuffix}`);
+ 
             sessionStorage.setItem('sansi_global_visit_logged', 'true');
         }
-
+ 
         sessionStorage.setItem('sansi_logged_identity_id', currentIdentityID);
     }
-
-    // D. 上傳時間 (每分鐘)
+ 
+    // 4. 上傳時間
     function uploadOneMinute() {
+        // console.log(`⬆️ [System] 觸發上傳機制 (目前累計逗留: ${totalSeconds} 秒)`);
+ 
         if (typeof firebase === 'undefined') return;
         
-        logVisitOnce(); // 確保訪問次數已記錄
-
+        // 確保至少有一次訪問記錄
+        logVisitOnce();
+ 
         const db = firebase.database();
-        const pathSuffix = getDatePath();
+        const pathSuffix = getDatePath();       // 詳細路徑
+        const summarySuffix = getSummaryPath(); // ★ 輕量路徑
+        
         const rawProfile = localStorage.getItem('studentProfile');
         let s = null;
         try { if(rawProfile) s = JSON.parse(rawProfile); } catch (e) {}
-
+ 
         const add60s = (path) => {
             db.ref(path).transaction(data => {
                 if (data === null) return { visits: 0, duration: 60 };
                 return { visits: (data.visits || 0), duration: (data.duration || 0) + 60 };
             });
         };
-
+ 
+        // A. 更新詳細日誌時長
         add60s(`analytics/${pathSuffix}/global_summary`);
-
+ 
         if (s && s.grade && s.class && s.name) {
             add60s(`analytics/${pathSuffix}/school`);
             add60s(`analytics/${pathSuffix}/classes/${s.grade}${s.class}`);
@@ -3567,40 +3557,39 @@ document.addEventListener('DOMContentLoaded', function() {
             const guestID = getGuestID();
             add60s(`analytics/${pathSuffix}/guests/${guestID}`);
         }
-        
-        console.log("⏱️ 已上傳 60秒 數據");
+ 
+        // B. ★★★ 更新輕量級月度統計時長 ★★★
+        add60s(`stats_summary/${summarySuffix}`);
     }
-
-    // E. 計時器啟動
+ 
+    // 5. 計時器啟動
     function startTimer() {
         if (timerInterval) return;
         
-        console.log("⏱️ 計時器已啟動 (F12可見)"); 
-
+        console.log("▶️ [System] 計時器已啟動/恢復");
+ 
         timerInterval = setInterval(() => {
             totalSeconds++;
-            // 第 30 秒先傳一次，之後每 60 秒傳一次
+            
             if (totalSeconds === 30 || (totalSeconds > 30 && (totalSeconds - 30) % 60 === 0)) {
                 uploadOneMinute();
             }
         }, 1000);
     }
-
+ 
     function pauseTimer() {
         if (timerInterval) {
             clearInterval(timerInterval);
             timerInterval = null;
-            console.log("⏸️ 頁面隱藏，計時暫停");
+            console.log("⏸️ [System] 頁面隱藏/切換，計時已暫停");
         }
     }
-
-    // 延遲 3 秒記錄首次訪問
-    setTimeout(logVisitOnce, 3000); 
+ 
+    setTimeout(logVisitOnce, 3000);
     
-    // 立即啟動計時
-    startTimer(); 
-
-    // 偵測頁面切換 (離開暫停，回來繼續)
+    startTimer();
+ 
+    // 偵測頁面切換
     document.addEventListener('visibilitychange', function() {
         if (document.visibilityState === 'hidden') {
             pauseTimer();
@@ -3608,6 +3597,8 @@ document.addEventListener('DOMContentLoaded', function() {
             startTimer();
         }
     });
+    
+    window.forceLogVisit = logVisitOnce;
 });
 </script>
 
