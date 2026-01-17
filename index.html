@@ -3459,7 +3459,8 @@ oscillator.stop(now + 0.4);
   });
 </script>
 
-<!-- === 3. [還原版] 神思大數據收集模組 (30秒=1分鐘邏輯) === -->
+
+<!-- === [還原版] 神思大數據收集模組 (30秒=1分鐘邏輯) === -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     let totalSeconds = 0;
@@ -3493,91 +3494,109 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-   // 3. 記錄訪問 (Log Visit)
-    async function logVisitOnce() {
-        // 這裡會檢查 database 是否存在，現在上面有初始化了，所以會通過
-        if (typeof firebase === 'undefined' || !database) return;
-        
-        const { y, m, d } = getDateParts();
-        const identity = getIdentity();
-        const uid = identity.id;
+// === 3. 記錄訪問 (Log Visit) - 高效分流版 ===
+async function logVisitOnce() {
+    if (typeof firebase === 'undefined' || !database) return;
+    
+    const { y, m, d } = getDateParts();
+    const identity = getIdentity();
+    const uid = identity.id;
 
-        const sessionKey = `sansi_visit_logged_${y}${m}${d}_${uid}`;
-        if (sessionStorage.getItem(sessionKey)) return; 
+    // Session 鎖
+    const sessionKey = `sansi_visit_logged_${y}${m}${d}_${uid}`;
+    if (sessionStorage.getItem(sessionKey)) return; 
 
-        const trackingRef = database.ref(`stats_tracking/${y}/${m}/${d}/unique_users/${uid}`);
-        
-        try {
-            const snap = await trackingRef.once('value');
-            const isFirstTimeToday = !snap.exists();
+    // 檢查 Tracking (判斷是否為今日首次)
+    const trackingRef = database.ref(`stats_tracking/${y}/${m}/${d}/unique_users/${uid}`);
+    
+    try {
+        const snap = await trackingRef.once('value');
+        const isFirstTimeToday = !snap.exists();
 
-            const updates = {};
-            const increment1 = firebase.database.ServerValue.increment(1);
-            
-            const globalPath = `stats_view/${y}/${m}/${d}/global`;
-            updates[`${globalPath}/visits`] = increment1;
-
-            if (identity.type === 'student') {
-                const classPath = `stats_view/${y}/${m}/${d}/classes/${identity.grade}${identity.class}`;
-                updates[`${classPath}/visits`] = increment1;
-
-                const studentPath = `stats_view/${y}/${m}/${d}/students/${identity.grade}/${identity.class}/${identity.id.split('_').pop()}`; 
-                updates[`${studentPath}/visits`] = increment1;
-
-                if (isFirstTimeToday) {
-                    updates[`stats_tracking/${y}/${m}/${d}/unique_users/${uid}`] = true;
-                    updates[`${globalPath}/unique`] = increment1;
-                    updates[`${classPath}/unique`] = increment1;
-                }
-            } else {
-                if (isFirstTimeToday) {
-                    updates[`stats_tracking/${y}/${m}/${d}/unique_users/${uid}`] = true;
-                    updates[`${globalPath}/unique`] = increment1;
-                }
-            }
-
-            await database.ref().update(updates);
-            sessionStorage.setItem(sessionKey, 'true');
-            console.log("📍 [Stats] 訪問次數已上傳");
-
-        } catch (e) {
-            console.error("Stats Error:", e);
-        }
-    }
-
-    // 4. 上傳 1 分鐘
-    function uploadOneMinute() {
-        if (typeof firebase === 'undefined' || !database) return;
-        
-        logVisitOnce();
-
-        const { y, m, d } = getDateParts();
-        const identity = getIdentity();
-        
         const updates = {};
-        const increment60 = firebase.database.ServerValue.increment(60);
-
-        updates[`stats_view/${y}/${m}/${d}/global/duration`] = increment60;
+        const increment1 = firebase.database.ServerValue.increment(1);
+        
+        // 1. 全校路徑 (stats_global/YYYY/MM/DD)
+        const globalPath = `stats_global/${y}/${m}/${d}`;
+        updates[`${globalPath}/visits`] = increment1;
 
         if (identity.type === 'student') {
-            updates[`stats_view/${y}/${m}/${d}/classes/${identity.grade}${identity.class}/duration`] = increment60;
-            
-            const studentPath = `stats_view/${y}/${m}/${d}/students/${identity.grade}/${identity.class}/${identity.id.split('_').pop()}`;
-            updates[`${studentPath}/duration`] = increment60;
+            const classKey = `${identity.grade}${identity.class}`;
+            const studentKey = identity.id.split('_').pop(); // 名字
+
+            // 2. 班級路徑 (stats_classes/6A/YYYY/MM/DD)
+            const classPath = `stats_classes/${classKey}/${y}/${m}/${d}`;
+            updates[`${classPath}/visits`] = increment1;
+
+            // 3. 學生路徑 (stats_students/6A/陳大文/YYYY/MM/DD)
+            // 注意：Firebase Key 不能含 '.' '$' '#' '[' ']'，名字需已在 getIdentity 處理過
+            const studentPath = `stats_students/${classKey}/${studentKey}/${y}/${m}/${d}`;
+            updates[`${studentPath}/visits`] = increment1;
+
+            if (isFirstTimeToday) {
+                updates[`stats_tracking/${y}/${m}/${d}/unique_users/${uid}`] = true;
+                updates[`${globalPath}/unique`] = increment1;
+                updates[`${classPath}/unique`] = increment1;
+                // 個別學生不需要 unique，因為他就是一個人
+            }
+        } else {
+            // 訪客
+            if (isFirstTimeToday) {
+                updates[`stats_tracking/${y}/${m}/${d}/unique_users/${uid}`] = true;
+                updates[`${globalPath}/unique`] = increment1;
+            }
         }
 
-        database.ref().update(updates).catch(e => console.error(e));
+        await database.ref().update(updates);
+        sessionStorage.setItem(sessionKey, 'true');
+        console.log("📍 [Stats] 訪問計數已分流上傳");
+
+    } catch (e) {
+        console.error("Stats Error:", e);
+    }
+}
+
+// 4. 上傳 1 分鐘 (分流版)
+function uploadOneMinute() {
+    if (typeof firebase === 'undefined' || !database) return;
+    
+    logVisitOnce(); // 確保有點名
+
+    const { y, m, d } = getDateParts();
+    const identity = getIdentity();
+    const studentKey = identity.id.split('_').pop();
+    
+    const updates = {};
+    const increment60 = firebase.database.ServerValue.increment(60);
+
+    // 1. 全校
+    updates[`stats_global/${y}/${m}/${d}/duration`] = increment60;
+
+    if (identity.type === 'student') {
+        const classKey = `${identity.grade}${identity.class}`;
+        
+        // 2. 班級
+        updates[`stats_classes/${classKey}/${y}/${m}/${d}/duration`] = increment60;
+        
+        // 3. 學生
+        updates[`stats_students/${classKey}/${studentKey}/${y}/${m}/${d}/duration`] = increment60;
     }
 
-    // 5. 計時器啟動
+    database.ref().update(updates).catch(e => console.error(e));
+}
+
+    // 5. 計時器啟動 (還原你的邏輯)
     function startTimer() {
         if (timerInterval) return;
         console.log("▶️ [Stats] 計時器啟動");
         
         timerInterval = setInterval(() => {
             totalSeconds++;
+            
+            // ★★★ 你的原始邏輯 ★★★
             // 30秒 -> 傳送 (算1分鐘)
             // 90秒 (1分30秒) -> 傳送 (算2分鐘)
+            // 150秒 (2分30秒) -> 傳送 (算3分鐘)
             if (totalSeconds === 30 || (totalSeconds > 30 && (totalSeconds - 30) % 60 === 0)) {
                 uploadOneMinute();
             }
@@ -3588,15 +3607,18 @@ document.addEventListener('DOMContentLoaded', function() {
         if (timerInterval) {
             clearInterval(timerInterval);
             timerInterval = null;
-            console.log("⏸️ [Stats] 暫停計時");
+            console.log("⏸️ [Stats] 暫停計時 (當前累計: " + totalSeconds + "s)");
+            // 注意：這裡不再有 uploadDuration(unsaved)，未滿的部分直接捨棄
         }
     }
 
+    // 延遲啟動
     setTimeout(() => {
         logVisitOnce();
         startTimer();
     }, 3000);
 
+    // 偵測頁面狀態
     document.addEventListener('visibilitychange', function() {
         if (document.visibilityState === 'hidden') pauseTimer();
         else startTimer();
@@ -3605,6 +3627,7 @@ document.addEventListener('DOMContentLoaded', function() {
     window.forceLogVisit = logVisitOnce;
 });
 </script>
+
 
 	
 	
