@@ -3663,6 +3663,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 // === 3. 記錄訪問 (Log Visit) - 高效分流版 ===
+// === 3. 記錄訪問 (Log Visit) - 高效分流版 (含 stats_school 邏輯) ===
 async function logVisitOnce() {
     if (typeof firebase === 'undefined' || !database) return;
     
@@ -3684,31 +3685,42 @@ async function logVisitOnce() {
         const updates = {};
         const increment1 = firebase.database.ServerValue.increment(1);
         
-        // 1. 全校路徑 (stats_global/YYYY/MM/DD)
+        // 1. 全校總覽路徑 (含訪客) - stats_global
         const globalPath = `stats_global/${y}/${m}/${d}`;
         updates[`${globalPath}/visits`] = increment1;
+
+        // ★★★ 新增：純學校路徑 (僅學生) - stats_school ★★★
+        const schoolPath = `stats_school/${y}/${m}/${d}`;
 
         if (identity.type === 'student') {
             const classKey = `${identity.grade}${identity.class}`;
             const studentKey = identity.id.split('_').pop(); // 名字
+
+            // 學生同時寫入 stats_school
+            updates[`${schoolPath}/visits`] = increment1;
 
             // 2. 班級路徑 (stats_classes/6A/YYYY/MM/DD)
             const classPath = `stats_classes/${classKey}/${y}/${m}/${d}`;
             updates[`${classPath}/visits`] = increment1;
 
             // 3. 學生路徑 (stats_students/6A/陳大文/YYYY/MM/DD)
-            // 注意：Firebase Key 不能含 '.' '$' '#' '[' ']'，名字需已在 getIdentity 處理過
             const studentPath = `stats_students/${classKey}/${studentKey}/${y}/${m}/${d}`;
             updates[`${studentPath}/visits`] = increment1;
 
             if (isFirstTimeToday) {
                 updates[`stats_tracking/${y}/${m}/${d}/unique_users/${uid}`] = true;
+                
+                // 更新 global unique
                 updates[`${globalPath}/unique`] = increment1;
+                
+                // ★ 更新 school unique (僅學生)
+                updates[`${schoolPath}/unique`] = increment1;
+                
+                // 更新 class unique
                 updates[`${classPath}/unique`] = increment1;
-                // 個別學生不需要 unique，因為他就是一個人
             }
         } else {
-            // 訪客
+            // 訪客 (只寫入 global，不寫入 school)
             if (isFirstTimeToday) {
                 updates[`stats_tracking/${y}/${m}/${d}/unique_users/${uid}`] = true;
                 updates[`${globalPath}/unique`] = increment1;
@@ -3717,7 +3729,7 @@ async function logVisitOnce() {
 
         await database.ref().update(updates);
         sessionStorage.setItem(sessionKey, 'true');
-        console.log("📍 [Stats] 訪問計數已分流上傳");
+        console.log("📍 [Stats] 訪問計數已分流上傳 (含 stats_school)");
 
     } catch (e) {
         console.error("Stats Error:", e);
@@ -3795,7 +3807,6 @@ function uploadOneMinute() {
     window.forceLogVisit = logVisitOnce;
 });
 </script>
-
 
 	
 	
