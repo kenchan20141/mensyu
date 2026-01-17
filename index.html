@@ -3428,7 +3428,38 @@ oscillator.stop(now + 0.4);
 </div>
 
 
-<!-- === [還原版] 神思大數據收集模組 (30秒=1分鐘邏輯) === -->
+<!-- === 1. Firebase SDK 引入 === -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+<!-- === 2. Firebase 初始化與配置 (這裡修復了您漏掉的啟動碼) === -->
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyBgwrgn2m343mRJb0WjzUhteiospegXhvI",
+    authDomain: "sansidata.firebaseapp.com",
+    projectId: "sansidata",
+    storageBucket: "sansidata.firebasestorage.app",
+    messagingSenderId: "580288358575",
+    appId: "1:580288358575:web:35dcf4e79bcef530de4c5a",
+    databaseURL: "https://sansidata-default-rtdb.firebaseio.com" 
+  };
+
+  // ★★★ 修正重點：補上初始化指令 ★★★
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+  
+  // ★★★ 修正重點：定義 database 變數，下面的程式才抓得到 ★★★
+  var database = firebase.database();
+
+  // (選用) 啟用匿名驗證，確保連線權限更穩定
+  firebase.auth().signInAnonymously().catch((error) => {
+      console.error("Auth Error:", error);
+  });
+</script>
+
+<!-- === 3. [還原版] 神思大數據收集模組 (30秒=1分鐘邏輯) === -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     let totalSeconds = 0;
@@ -3462,19 +3493,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // 3. 記錄訪問 (Log Visit) - 僅增加 Visits 和 Unique
+   // 3. 記錄訪問 (Log Visit)
     async function logVisitOnce() {
+        // 這裡會檢查 database 是否存在，現在上面有初始化了，所以會通過
         if (typeof firebase === 'undefined' || !database) return;
         
         const { y, m, d } = getDateParts();
         const identity = getIdentity();
         const uid = identity.id;
 
-        // Session 鎖
         const sessionKey = `sansi_visit_logged_${y}${m}${d}_${uid}`;
         if (sessionStorage.getItem(sessionKey)) return; 
 
-        // 檢查 Tracking
         const trackingRef = database.ref(`stats_tracking/${y}/${m}/${d}/unique_users/${uid}`);
         
         try {
@@ -3485,19 +3515,26 @@ document.addEventListener('DOMContentLoaded', function() {
             const increment1 = firebase.database.ServerValue.increment(1);
             
             const globalPath = `stats_view/${y}/${m}/${d}/global`;
-            const classPath = identity.type === 'student' 
-                ? `stats_view/${y}/${m}/${d}/classes/${identity.grade}${identity.class}` 
-                : null;
-
-            if (isFirstTimeToday) {
-                updates[`stats_tracking/${y}/${m}/${d}/unique_users/${uid}`] = true;
-                updates[`${globalPath}/unique`] = increment1;
-                if (classPath) updates[`${classPath}/unique`] = increment1;
-                console.log("📍 [Stats] 新增訪客記錄");
-            }
-
             updates[`${globalPath}/visits`] = increment1;
-            if (classPath) updates[`${classPath}/visits`] = increment1;
+
+            if (identity.type === 'student') {
+                const classPath = `stats_view/${y}/${m}/${d}/classes/${identity.grade}${identity.class}`;
+                updates[`${classPath}/visits`] = increment1;
+
+                const studentPath = `stats_view/${y}/${m}/${d}/students/${identity.grade}/${identity.class}/${identity.id.split('_').pop()}`; 
+                updates[`${studentPath}/visits`] = increment1;
+
+                if (isFirstTimeToday) {
+                    updates[`stats_tracking/${y}/${m}/${d}/unique_users/${uid}`] = true;
+                    updates[`${globalPath}/unique`] = increment1;
+                    updates[`${classPath}/unique`] = increment1;
+                }
+            } else {
+                if (isFirstTimeToday) {
+                    updates[`stats_tracking/${y}/${m}/${d}/unique_users/${uid}`] = true;
+                    updates[`${globalPath}/unique`] = increment1;
+                }
+            }
 
             await database.ref().update(updates);
             sessionStorage.setItem(sessionKey, 'true');
@@ -3508,18 +3545,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // 4. 上傳 1 分鐘 (固定 +60s)
+    // 4. 上傳 1 分鐘
     function uploadOneMinute() {
         if (typeof firebase === 'undefined' || !database) return;
         
-        logVisitOnce(); // 確保有点名
+        logVisitOnce();
 
         const { y, m, d } = getDateParts();
         const identity = getIdentity();
         
-        // 這裡就是你要的邏輯：觸發一次就是 +60秒 (1分鐘)
-        console.log(`⬆️ [Stats] 滿足時長條件，上傳 +60s`);
-
         const updates = {};
         const increment60 = firebase.database.ServerValue.increment(60);
 
@@ -3527,23 +3561,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (identity.type === 'student') {
             updates[`stats_view/${y}/${m}/${d}/classes/${identity.grade}${identity.class}/duration`] = increment60;
+            
+            const studentPath = `stats_view/${y}/${m}/${d}/students/${identity.grade}/${identity.class}/${identity.id.split('_').pop()}`;
+            updates[`${studentPath}/duration`] = increment60;
         }
 
         database.ref().update(updates).catch(e => console.error(e));
     }
 
-    // 5. 計時器啟動 (還原你的邏輯)
+    // 5. 計時器啟動
     function startTimer() {
         if (timerInterval) return;
         console.log("▶️ [Stats] 計時器啟動");
         
         timerInterval = setInterval(() => {
             totalSeconds++;
-            
-            // ★★★ 你的原始邏輯 ★★★
             // 30秒 -> 傳送 (算1分鐘)
             // 90秒 (1分30秒) -> 傳送 (算2分鐘)
-            // 150秒 (2分30秒) -> 傳送 (算3分鐘)
             if (totalSeconds === 30 || (totalSeconds > 30 && (totalSeconds - 30) % 60 === 0)) {
                 uploadOneMinute();
             }
@@ -3554,18 +3588,15 @@ document.addEventListener('DOMContentLoaded', function() {
         if (timerInterval) {
             clearInterval(timerInterval);
             timerInterval = null;
-            console.log("⏸️ [Stats] 暫停計時 (當前累計: " + totalSeconds + "s)");
-            // 注意：這裡不再有 uploadDuration(unsaved)，未滿的部分直接捨棄
+            console.log("⏸️ [Stats] 暫停計時");
         }
     }
 
-    // 延遲啟動
     setTimeout(() => {
         logVisitOnce();
         startTimer();
     }, 3000);
 
-    // 偵測頁面狀態
     document.addEventListener('visibilitychange', function() {
         if (document.visibilityState === 'hidden') pauseTimer();
         else startTimer();
@@ -3574,7 +3605,6 @@ document.addEventListener('DOMContentLoaded', function() {
     window.forceLogVisit = logVisitOnce;
 });
 </script>
-
 
 	
 	
